@@ -1,0 +1,237 @@
+[
+  {
+    "url": "https://webinars.co.kr/services2/",
+    "fileName": "services2",
+    "componentName": "Services2"
+  },
+  {
+    "url": "https://webinars.co.kr/",
+    "fileName": "index",
+    "componentName": "Index"
+  },
+  {
+    "url": "https://webinars.co.kr/about/",
+    "fileName": "about",
+    "componentName": "About"
+  },
+  {
+    "url": "https://webinars.co.kr/reference/",
+    "fileName": "reference",
+    "componentName": "Reference"
+  },
+  {
+    "url": "https://webinars.co.kr/contact/",
+    "fileName": "contact",
+    "componentName": "Contact"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/about/",
+    "fileName": "wp_about",
+    "componentName": "WpAbout"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/services2/",
+    "fileName": "wp_services2",
+    "componentName": "WpServices2"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/contact/",
+    "fileName": "wp_contact",
+    "componentName": "WpContact"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/contact",
+    "fileName": "wp_contact",
+    "componentName": "WpContact"
+  },
+  {
+    "url": "https://webinars.co.kr/webinars.co.kr/contact",
+    "fileName": "webinars_co_kr_contact",
+    "componentName": "WebinarsCoKrContact"
+  },
+  {
+    "url": "http://webinars.co.kr/",
+    "fileName": "index",
+    "componentName": "Index"
+  },
+  {
+    "url": "http://www.webinars.co.kr/contact",
+    "fileName": "contact",
+    "componentName": "Contact"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_1028",
+    "fileName": "wp_2024_offline_1028",
+    "componentName": "Wp2024Offline1028"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_1010",
+    "fileName": "wp_2024_offline_1010",
+    "componentName": "Wp2024Offline1010"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_0927",
+    "fileName": "wp_2024_offline_0927",
+    "componentName": "Wp2024Offline0927"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_0904",
+    "fileName": "wp_2024_offline_0904",
+    "componentName": "Wp2024Offline0904"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2023_offline_1201",
+    "fileName": "wp_2023_offline_1201",
+    "componentName": "Wp2023Offline1201"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_0705",
+    "fileName": "wp_2024_offline_0705",
+    "componentName": "Wp2024Offline0705"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_rmaf0715",
+    "fileName": "wp_2024_offline_rmaf0715",
+    "componentName": "Wp2024OfflineRmaf0715"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_3",
+    "fileName": "wp_2024_offline_3",
+    "componentName": "Wp2024Offline3"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_acts2024",
+    "fileName": "wp_2024_offline_acts2024",
+    "componentName": "Wp2024OfflineActs2024"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_2",
+    "fileName": "wp_2024_offline_2",
+    "componentName": "Wp2024Offline2"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_hybrid_4",
+    "fileName": "wp_2024_hybrid_4",
+    "componentName": "Wp2024Hybrid4"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_hybrid_5",
+    "fileName": "wp_2024_hybrid_5",
+    "componentName": "Wp2024Hybrid5"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_6",
+    "fileName": "wp_2024_offline_6",
+    "componentName": "Wp2024Offline6"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_hybrid_8",
+    "fileName": "wp_2024_hybrid_8",
+    "componentName": "Wp2024Hybrid8"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/2024_offline_9",
+    "fileName": "wp_2024_offline_9",
+    "componentName": "Wp2024Offline9"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_1",
+    "fileName": "wp_hybrid_1",
+    "componentName": "WpHybrid1"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_2",
+    "fileName": "wp_hybrid_2",
+    "componentName": "WpHybrid2"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/solution_4",
+    "fileName": "wp_solution_4",
+    "componentName": "WpSolution4"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_3",
+    "fileName": "wp_hybrid_3",
+    "componentName": "WpHybrid3"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_5",
+    "fileName": "wp_hybrid_5",
+    "componentName": "WpHybrid5"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_6",
+    "fileName": "wp_hybrid_6",
+    "componentName": "WpHybrid6"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_8",
+    "fileName": "wp_hybrid_8",
+    "componentName": "WpHybrid8"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_7",
+    "fileName": "wp_hybrid_7",
+    "componentName": "WpHybrid7"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_9",
+    "fileName": "wp_hybrid_9",
+    "componentName": "WpHybrid9"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_11",
+    "fileName": "wp_hybrid_11",
+    "componentName": "WpHybrid11"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/hybrid_12",
+    "fileName": "wp_hybrid_12",
+    "componentName": "WpHybrid12"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/webinar_live-streaming_13",
+    "fileName": "wp_webinar_live-streaming_13",
+    "componentName": "WpWebinarLiveStreaming13"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/webinar_live-streaming_14",
+    "fileName": "wp_webinar_live-streaming_14",
+    "componentName": "WpWebinarLiveStreaming14"
+  },
+  {
+    "url": "https://webinars.co.kr/wp/webinar_live-streaming_15",
+    "fileName": "wp_webinar_live-streaming_15",
+    "componentName": "WpWebinarLiveStreaming15"
+  },
+  {
+    "url": "https://webinars.co.kr/2024_offline_1028/",
+    "fileName": "2024_offline_1028",
+    "componentName": "2024Offline1028"
+  },
+  {
+    "url": "https://webinars.co.kr/category/%eb%af%b8-%eb%b6%84%eb%a5%98/",
+    "fileName": "category__eb_af_b8-_eb_b6_84_eb_a5_98",
+    "componentName": "CategoryEbAfB8EbB684EbA598"
+  },
+  {
+    "url": "https://webinars.co.kr/2024_offline_0705/",
+    "fileName": "2024_offline_0705",
+    "componentName": "2024Offline0705"
+  },
+  {
+    "url": "https://webinars.co.kr/author/webihome/",
+    "fileName": "author_webihome",
+    "componentName": "AuthorWebihome"
+  },
+  {
+    "url": "https://webinars.co.kr/2024_offline_0904/",
+    "fileName": "2024_offline_0904",
+    "componentName": "2024Offline0904"
+  },
+  {
+    "url": "https://webinars.co.kr/2023_offline_1201/",
+    "fileName": "2023_offline_1201",
+    "componentName": "2023Offline1201"
+  }
+]

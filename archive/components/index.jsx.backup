@@ -1,0 +1,632 @@
+import React from 'react';
+
+const IndexPage = () => {
+    return (
+        <div className="page-container">
+            <h1>WEBINARS - 통합 프로모션의 새로운 표준</h1>
+            <div dangerouslySetInnerHTML={{__html: `
+	
+	<a href="#ajax-content-wrap" className="nectar-skip-to-content">Skip to main content</a><div className="ocm-effect-wrap"><div className="ocm-effect-wrap-inner"><div id="ajax-loading-screen" data-disable-mobile="1" data-disable-fade-on-click="0" data-effect="standard" data-method="standard" className="loaded hidden" style={{opacity: "0", display: "none"}}><div className="loading-icon none"><div className="material-icon">
+						<svg className="nectar-material-spinner" width="60px" height="60px" viewBox="0 0 60 60">
+							<circle stroke-linecap="round" cx="30" cy="30" r="26" fill="none" stroke-width="6"></circle>
+				  		</svg>	 
+					</div></div></div>	
+	<div id="header-space" data-header-mobile-fixed="1"></div> 
+	
+		<div id="header-outer" data-has-menu="true" data-has-buttons="no" data-header-button_style={{default: "undefined"}} data-using-pr-menu="false" data-mobile-fixed="1" data-ptnm="false" data-lhe="animated_underline" data-user-set-bg="#ffffff" data-format="default" data-permanent-transparent="false" data-megamenu-rt="1" data-remove-fixed="0" data-header-resize="0" data-cart="false" data-transparency-option="1" data-box-shadow="none" data-shrink-num="6" data-using-secondary="0" data-using-logo="1" data-logo-height="24" data-m-logo-height="21" data-padding="36" data-full-width="true" data-condense="false" data-transparent-header="true" data-transparent-shadow-helper="false" data-remove-border="true" className="transparent entrance-animation">
+		
+<div id="search-outer" className="nectar">
+	<div id="search">
+		<div className="container">
+			 <div id="search-box">
+				 <div className="inner-wrap">
+					 <div className="col span_12">
+						  <form role="search" action="https://webinars.co.kr/" method="GET">
+														 <input type="text" name="s" value="" aria-label="Search" placeholder="Search" />
+							 
+						<span>Hit enter to search or ESC to close</span>
+												</form>
+					</div>
+				</div>
+			 </div>
+			 <div id="close"><a href="#"><span className="screen-reader-text">Close Search</span>
+				<span className="close-wrap"> <span className="close-line close-line1"></span> <span className="close-line close-line2"></span> </span>				 </a></div>
+		 </div>
+	</div>
+</div>
+
+<header id="top">
+	<div className="container">
+		<div className="row">
+			<div className="col span_3">
+								<a id="logo" href="https://webinars.co.kr" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false">
+					<img className="stnd skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 2x" /><img className="starting-logo skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png 2x" /><img className="starting-logo dark-version skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 2x" />				</a>
+							</div>
+
+			<div className="col span_9 col_last">
+									<div className="nectar-mobile-only mobile-header"><div className="inner"></div></div>
+													<div className="slide-out-widget-area-toggle mobile-icon fullscreen-alt" data-custom-color="false" data-icon-animation="simple-transform">
+						<div> <a href="#sidewidgetarea" aria-label="Navigation Menu" aria-expanded="false" className="closed">
+							<span className="screen-reader-text">Menu<i className="lines-button x2 hover-effect"> <i className="lines"></i> </i><span className="close-wrap loaded"> <span className="close-line close-line1"></span> <span className="close-line close-line2"></span> </span></span><span aria-hidden="true"> <i className="lines-button x2"> <i className="lines"></i> </i> <i className="lines-button x2 hover-effect"> <i className="lines"></i> </i><span className="close-wrap loaded"> <span className="close-line close-line1"></span> <span className="close-line close-line2"></span> </span></span>
+						</a></div>
+					</div>
+				
+									<nav style={{display: "none"}}>
+													<ul className="sf-menu sf-js-enabled sf-arrows">
+								<li id="menu-item-1685" className="menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1685"><a href="https://webinars.co.kr/about/"><span className="menu-title-text">about</span></a></li>
+<li id="menu-item-1689" className="menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1689"><a href="https://webinars.co.kr/services2/"><span className="menu-title-text">services</span></a></li>
+<li id="menu-item-1688" className="menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1688"><a href="https://webinars.co.kr/reference/"><span className="menu-title-text">reference</span></a></li>
+<li id="menu-item-1686" className="menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1686"><a href="https://webinars.co.kr/contact/"><span className="menu-title-text">Contact</span></a></li>
+							</ul>
+													<ul className="buttons sf-menu" data-user-set-ocm="off">
+
+								
+							</ul>
+						
+					</nav>
+
+					
+				</div>
+
+				
+			</div>
+					</div>
+	</header>		
+	<div className="bg-color-stripe"></div></div>
+		<div id="ajax-content-wrap">
+<div className="container-wrap" style={{paddingTop: "0px", paddingBottom: "0px", marginBottom: "0px", minHeight: "600px"}}>
+	<div className="container main-content" role="main">
+		<div className="row">
+			<div id="modal-ready">
+		<div id="main1" data-column-margin="default" data-midnight="light" className="wpb_row vc_row-fluid vc_row top-level full-width-content vc_row-o-full-height vc_row-o-columns-middle vc_row-o-equal-height vc_row-flex vc_row-o-content-top zindex-set mobile-disable-bg-image-animation nectar-overflow-hidden first-section loaded" style={{paddingTop: "0px", paddingBottom: "0px", zIndex: "1"}}><div className="row-bg-wrap" data-bg-animation="fade-in" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer using-image" style={{backgroundColor: "#2b323a"}}><div className="row-bg viewport-desktop using-image using-bg-color" style={{backgroundPosition: "left top", backgroundRepeat: "no-repeat", backgroundColor: "#2b323a"}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/11/main.jpg"></div></div><div className="row-bg-overlay row-bg-layer" style={{}}></div></div><div className="row_col_wrap_12 col span_12 light left">
+	<div className="vc_col-sm-12 wpb_column column_container vc_column_container col column_position_static el_spacing_0px left_padding_desktop_60px left_padding_phone_20px top_padding_desktop_480px top_padding_phone_360px bottom_padding_desktop_100px bottom_padding_phone_53px " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+			<div className="wpb_wrapper">
+				<div id="fws_691d762646109" data-midnight="" data-column-margin="none" className="wpb_row vc_row-fluid vc_row inner_row  right_padding_20px left_padding_20px" style={{zIndex: "10"}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 vc_hidden-xs maintxt1 wpb_column column_container vc_column_container col child_column no-extra-padding force-desktop-text-align-left inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<h3 style={{fontSize: "109px", color: "#ffffff", lineHeight: "1", textAlign: "left"}} className="vc_custom_heading txt109 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">WE DESIGN THE EVENT</h3><h3 style={{fontSize: "109px", color: "#ffffff", lineHeight: "1", textAlign: "left"}} className="vc_custom_heading txt109 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">To meet The deeper worth</h3>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d762646b23" data-midnight="" data-column-margin="none" className="wpb_row vc_row-fluid vc_row inner_row  right_padding_20px left_padding_20px" style={{zIndex: "10"}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 vc_hidden-lg vc_hidden-md vc_hidden-sm maintxt1 wpb_column column_container vc_column_container col child_column no-extra-padding force-desktop-text-align-left inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<h3 style={{fontSize: "109px", color: "#ffffff", lineHeight: "1.1", textAlign: "left"}} className="vc_custom_heading txt109">WE DESIGN<br />
+THE EVENT<br />
+TO MEET THE<br />
+DEEPER WORTH</h3>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d762646e71" data-midnight="" data-column-margin="none" className="wpb_row vc_row-fluid vc_row inner_row  right_padding_20px left_padding_20px top_padding_phone_0px" style={{paddingTop: "20px", zIndex: "10"}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 vc_hidden-xs wpb_column column_container vc_column_container col child_column no-extra-padding force-desktop-text-align-left inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="nectar-split-heading font_size_tablet_22px font_size_phone_18px font_line_height_1-3 markup-generated" data-align="left" data-m-align="left" data-text-effect="letter-reveal-bottom" data-animation-type="line-reveal-by-space" data-animation-delay="150" data-animation-offset="" data-m-rm-animation="" data-stagger="true" data-custom-font-size="true" style={{fontSize: "28px", lineHeight: "30.24px"}}><h5 style={{color: "#ffffff"}}><span><span className="inner">고</span><span className="inner">객</span><span className="inner">의</span></span> <span><span className="inner">가</span><span className="inner">치</span><span className="inner">실</span><span className="inner">현</span><span className="inner">을</span></span> <span><span className="inner">위</span><span className="inner">한</span></span> <span><span className="inner">차</span><span className="inner">별</span><span className="inner">화</span><span className="inner">된</span></span> <span><span className="inner">온</span></span> <span><span className="inner">·</span></span> <span><span className="inner">오</span><span className="inner">프</span><span className="inner">라</span><span className="inner">인</span></span> <span><span className="inner">통</span><span className="inner">합</span></span> <span><span className="inner">서</span><span className="inner">비</span><span className="inner">스</span><span className="inner">를</span></span> <span><span className="inner">디</span><span className="inner">자</span><span className="inner">인</span><span className="inner">합</span><span className="inner">니</span><span className="inner">다</span><span className="inner">.</span></span> </h5></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264724c" data-midnight="" data-column-margin="none" className="wpb_row vc_row-fluid vc_row inner_row  right_padding_20px left_padding_20px" style={{paddingTop: "20px", zIndex: "10"}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 vc_hidden-lg vc_hidden-md vc_hidden-sm main_s1 wpb_column column_container vc_column_container col child_column no-extra-padding force-desktop-text-align-left inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			
+<div className="wpb_text_column wpb_content_element  wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">
+	<div className="wpb_wrapper">
+		<h5 className="txt18 b line27">고객의 가치실현을 위한 차별화된<br />
+온 · 오프라인 통합 서비스를<br />
+디자인합니다.</h5>
+	</div>
+</div>
+
+
+
+
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d762647714" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 wh_btn wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="divider-wrap" data-alignment="default"><div style={{height: "30px"}} className="divider"></div></div><div className="nectar-cta  text_hover_color_ffffff border_color_ffffff hover_border_color_ffffff alignment_tablet_default alignment_phone_default display_tablet_inherit display_phone_inherit font_size_desktop_26px font_size_phone_20px " data-color="default" data-using-bg="false" data-display="block" data-style={{underline: "undefined"}} data-alignment="left" data-text-color="custom"><h6 style={{color: "#ffffff"}}> <span className="link_wrap"><a className="link_text" style={{borderColor: "#ffffff"}} href="/wp/contact/">문의하기</a></span></h6></div>
+		</div> 
+	</div>
+	</div> 
+</div></div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_691d7626488ee" data-column-margin="default" data-midnight="dark" className="wpb_row vc_row-fluid vc_row" style={{paddingTop: "0px", paddingBottom: "0px"}}><div className="row-bg-wrap" data-bg-animation="none" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer"><div className="row-bg viewport-desktop" style={{}}></div></div></div><div className="row_col_wrap_12 col span_12 dark left">
+	<div className="vc_col-sm-12 wpb_column column_container vc_column_container col left_padding_tablet_80px left_padding_phone_0px top_padding_desktop_160px top_padding_phone_74px right_padding_tablet_80px right_padding_phone_0px " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+			<div className="wpb_wrapper">
+				<h2 style={{fontSize: "60px", textAlign: "center"}} className="vc_custom_heading txt60 upp wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">ScopE of services</h2><div className="divider-wrap height_phone_13px " data-alignment="default"><div style={{height: "85px"}} className="divider"></div></div><div id="fws_691d762648eb1" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row m_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-6 service_div ms_1 wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6153.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">이벤트 기획</h4>
+<h5 className="txt18 w400">행사성격과 주제 등을 고려하여<br />
+최적화된 온&nbsp;·&nbsp;오프라인 행사 컨셉 제안 및 기획</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6154.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">현장운영</h4>
+<h5 className="txt18 w400">온 · 오프라인 전문인력에 의한 체계적이고<br />
+전문적인 운영 서비스 제공</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264af35" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row pc_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-6 service_div ms_1 wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6153.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">이벤트 기획</h4>
+<h5 className="txt18 w400">행사성격과 주제 등을 고려하여<br />
+최적화된 온 · 오프라인 행사 컨셉 제안<br />
+및 기획</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6154.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">현장운영</h4>
+<h5 className="txt18 w400">온 · 오프라인 전문인력에 의한 체계적<br />
+이고 전문적인 운영 서비스 제공</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264b3fd" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row m_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6156.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">스트리밍</h4>
+<h5 className="txt18 w400">다양한 형태의 플랫폼에 맞추어 인원 수 제한 없는 안정적인 온라인 라이브 스트리밍 서비스 지원</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6155.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">참가자관리</h4>
+<h5 className="txt18 w400">자체 참가자 관리 시스템으로 정확하고 빠른 Database 관리 및 개인정보보호 · 보안</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264c55a" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row pc_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6156.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">스트리밍</h4>
+<h5 className="txt18 w400">다양한 형태의 플랫폼에 맞추어 인원 수<br />
+제한 없는 안정적인 온라인 라이브 스트<br />
+리밍 서비스 지원</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6155.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">참가자관리</h4>
+<h5 className="txt18 w400">자체 참가자 관리 시스템으로<br />
+정확하고 빠른 Database 관리 및<br />
+개인정보보호 · 보안</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264ca20" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row m_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6157.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">영상 제작</h4>
+<h5 className="txt18 w400">홍보, 인터뷰, 강의영상 등<br />
+이벤트별 목적과 활용도를 고려한 전문 영상제작</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6158.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">디자인</h4>
+<h5 className="txt18 w400">행사주제 및 제품 브랜드 특성을 고려한 Key Visual 및 현장 인쇄·제작물 제작 (초청장, 브로셔, 강연집 등)</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264d8a1" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row pc_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6157.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">영상 제작</h4>
+<h5 className="txt18 w400">홍보, 인터뷰, 강의영상 등<br />
+이벤트별 목적과 활용도를 고려한 전문<br />
+영상제작</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6158.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">디자인</h4>
+<h5 className="txt18 w400">행사주제 및 제품 브랜드 특성을 고려한<br />
+Key Visual 및 현장 인쇄·제작물 제작<br />
+(초청장, 브로셔, 강연집 등)</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264dd25" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row m_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6159.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">이벤트 플랫폼</h4>
+<h5 className="txt18 w400">고객사 요구에 맞춘 Customized된 이벤트 플랫폼<br />
+(행사개요, 프로그램, 사전등록, 온라인 시청 등 가능)</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6160.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b"><b>통 · </b><b>번역 </b></h4>
+<h5 className="txt18 w400">각 분야별 전문 통 · 번역사 인력 Pool 보유 및 실시간<br />
+온 · 오프라인 동시통역 운영</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76264e9d4" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row pc_no" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6159.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b">이벤트 플랫폼</h4>
+<h5 className="txt18 w400">고객사 요구에 맞춘 Customized된<br />
+이벤트 플랫폼<br />
+(행사개요, 프로그램, 사전등록, 온라인<br />
+시청 등 가능)</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{marginTop: "60px"}} className="vc_col-sm-6 service_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding top_margin_phone_20px inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="iwithtext"><div className="iwt-icon"> <img decoding="async" src="https://webinars.co.kr/wp-content/uploads/2022/11/그룹-6160.png" alt="" /> </div><div className="iwt-text"> 
+<h4 className="txt26 b"><b>통 </b><b>· </b><b></b><b>번역 </b></h4>
+<h5 className="txt18 w400">각 분야별 전문 <b>통 </b><b>· </b><b></b><b>번역 </b>사 인력 Pool<br />
+보유 및 실시간온 · 오프라인 동시통역<br />
+운영</h5>
+ </div><div className="clear"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div className="divider-wrap height_phone_60px " data-alignment="default"><div style={{height: "175px"}} className="divider"></div></div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_691d76264f0fd" data-column-margin="default" data-midnight="dark" className="wpb_row vc_row-fluid vc_row full-width-content vc_row-o-equal-height vc_row-flex vc_row-o-content-top why_div" style={{paddingTop: "0px", paddingBottom: "0px"}}><div className="row-bg-wrap" data-bg-animation="none" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer"><div className="row-bg viewport-desktop using-bg-color" style={{backgroundColor: "#2c2c2c"}}></div></div></div><div className="row_col_wrap_12 col span_12 dark left">
+	<div style={{}} className="vc_col-sm-12 main_counter_bg wpb_column column_container vc_column_container col force-desktop-text-align-center top_padding_desktop_125px top_padding_phone_74px " data-using-bg="true" data-bg-cover="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner"><div className="column-image-bg-wrap column-bg-layer viewport-desktop has-phone" data-bg-pos="center center" data-bg-animation="none" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg" style={{}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/11/why_we-scaled.jpg"></div></div></div><div className="column-image-bg-wrap column-bg-layer viewport-phone" data-bg-pos="center center" data-bg-animation="none" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg" style={{}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/11/main_logo_bg.png"></div></div></div>
+			<div className="wpb_wrapper">
+				<div id="fws_691d76264fee9" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 width1180 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<h2 style={{fontSize: "60px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading txt60 upp le02 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">Why webinars</h2><div className="divider-wrap" data-alignment="default"><div style={{height: "32px"}} className="divider"></div></div>
+<div className="wpb_text_column wpb_content_element  wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp m_no">
+	<div className="wpb_wrapper">
+		<h5 className="txt26 b wh line13">온 · 오프라인 통합 이벤트 제공 / 자체 이벤트 솔루션 보유 / 국내 최대 규모 경험 및 노하우</h5>
+	</div>
+</div>
+
+
+
+
+<div className="wpb_text_column wpb_content_element  wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp pc_no">
+	<div className="wpb_wrapper">
+		<h5 className="mtxt20 b wh line16">온 · 오프라인 통합 이벤트 제공<br />
+자체 이벤트 솔루션 보유<br />
+국내 최대 규모 경험 및 노하우</h5>
+	</div>
+</div>
+
+
+
+<div className="divider-wrap height_phone_60px " data-alignment="default"><div style={{height: "120px"}} className="divider"></div></div><div className="stats-block stats-left  counter_txt "><div className="aio-icon-left"><div className="ult-just-icon-wrapper  "><div className="align-icon" style={{textAlign: "center"}}></div></div></div><div className="stats-desc" id="counter-responsv-wrap-4031"><div id="counter_2595997447691d7626505d7" data-id="counter_2595997447691d7626505d7" data-ultimate-target="#counter-responsv-wrap-4031 .stats-number" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:80px;tablet:70px;tablet_portrait:60px;mobile_landscape:60px;mobile:60px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-number ult-responsive" style={{color: "#ffffff", color: "#ffffff"}} data-speed="3" data-counter-value="1000" data-separator="," data-decimal=".">0</div><div id="counter_2595997447691d7626505d7" data-ultimate-target="#counter-responsv-wrap-4031 .stats-text" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:16px;mobile:16px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-text ult-responsive" style={{fontSize: "px", color: "#ffffff", fontWeight: "bold"}}></div></div></div><div className="stats-block stats-left  counter_txt2 "><div className="aio-icon-left"><div className="ult-just-icon-wrapper  "><div className="align-icon" style={{textAlign: "center"}}></div></div></div><div className="stats-desc" id="counter-responsv-wrap-1005"><div id="counter_3212079597691d762650666" data-id="counter_3212079597691d762650666" data-ultimate-target="#counter-responsv-wrap-1005 .stats-number" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:80px;tablet:70px;tablet_portrait:60px;mobile_landscape:60px;mobile:60px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-number ult-responsive" style={{color: "#ffffff", color: "#ffffff"}} data-speed="3" data-counter-value="5000" data-separator="," data-decimal=".">0</div><div id="counter_3212079597691d762650666" data-ultimate-target="#counter-responsv-wrap-1005 .stats-text" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:16px;mobile:16px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-text ult-responsive" style={{fontSize: "px", color: "#ffffff", fontWeight: "bold"}}></div></div></div><div className="stats-block stats-left  counter_txt3 "><div className="aio-icon-left"><div className="ult-just-icon-wrapper  "><div className="align-icon" style={{textAlign: "center"}}></div></div></div><div className="stats-desc" id="counter-responsv-wrap-7012"><div id="counter_2220952245691d7626506e2" data-id="counter_2220952245691d7626506e2" data-ultimate-target="#counter-responsv-wrap-7012 .stats-number" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:80px;tablet:70px;tablet_portrait:60px;mobile_landscape:60px;mobile:60px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-number ult-responsive" style={{color: "#ffffff", color: "#ffffff"}} data-speed="3" data-counter-value="10" data-separator="," data-decimal=".">0</div><div id="counter_2220952245691d7626506e2" data-ultimate-target="#counter-responsv-wrap-7012 .stats-text" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:16px;mobile:16px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-text ult-responsive" style={{fontSize: "px", color: "#ffffff", fontWeight: "bold"}}></div></div></div><div className="stats-block stats-left  counter_txt4 "><div className="aio-icon-left"><div className="ult-just-icon-wrapper  "><div className="align-icon" style={{textAlign: "center"}}></div></div></div><div className="stats-desc" id="counter-responsv-wrap-1912"><div id="counter_744549510691d762650773" data-id="counter_744549510691d762650773" data-ultimate-target="#counter-responsv-wrap-1912 .stats-number" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:80px;tablet:70px;tablet_portrait:60px;mobile_landscape:60px;mobile:60px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-number ult-responsive" style={{color: "#ffffff", color: "#ffffff"}} data-speed="3" data-counter-value="100" data-separator="," data-decimal=".">0</div><div id="counter_744549510691d762650773" data-ultimate-target="#counter-responsv-wrap-1912 .stats-text" data-responsive-json-new="{&quot;font-size&quot;:&quot;desktop:16px;mobile:16px;&quot;,&quot;line-height&quot;:&quot;&quot;}" className="stats-text ult-responsive" style={{fontSize: "px", color: "#ffffff", fontWeight: "bold"}}></div></div></div><div className="divider-wrap height_phone_60px " data-alignment="default"><div style={{height: "35px"}} className="divider"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76265090c" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 wh_btn wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<div className="nectar-cta  text_hover_color_ffffff alignment_tablet_default alignment_phone_default display_tablet_inherit display_phone_inherit font_size_desktop_26px font_size_phone_20px " data-color="default" data-using-bg="false" data-display="block" data-style={{underline: "undefined"}} data-alignment="left" data-text-color="custom"><h6 style={{color: "#ffffff"}}> <span className="link_wrap"><a className="link_text" style={{borderColor: "#ffffff"}} href="/wp/about/">더보기</a></span></h6></div><div className="divider-wrap height_phone_60px " data-alignment="default"><div style={{height: "140px"}} className="divider"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_691d762650dfa" data-column-margin="default" data-midnight="dark" className="wpb_row vc_row-fluid vc_row" style={{paddingTop: "0px", paddingBottom: "0px"}}><div className="row-bg-wrap" data-bg-animation="none" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer"><div className="row-bg viewport-desktop" style={{}}></div></div></div><div className="row_col_wrap_12 col span_12 dark left">
+	<div className="vc_col-sm-12 vc_hidden-md vc_hidden-sm vc_hidden-xs m_no wpb_column column_container vc_column_container col top_padding_desktop_125px " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+			<div className="wpb_wrapper">
+				<h2 style={{fontSize: "60px", textAlign: "center"}} className="vc_custom_heading txt60 upp wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">Our services to boost your event</h2><div className="divider-wrap height_phone_60px " data-alignment="default"><div style={{height: "100px"}} className="divider"></div></div><div id="fws_691d762651284" data-midnight="" data-column-margin="20px" className="wpb_row vc_row-fluid vc_row inner_row vc_row-o-content-middle" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{color: "#ffffff"}} className="vc_col-sm-1/5 service1_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding force-desktop-text-align-center inherit_tablet inherit_phone nectar-mask-reveal-bg nectar-mask-reveal-bg-top-dir nectar-mask-reveal-bg-straight-shape " data-cfc="true" data-using-bg="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0" data-scroll-animation="true" data-scroll-animation-movement="default" data-scroll-animation-mobile="" data-scroll-animation-intensity="1">
+		<div className="vc_column-inner"><a className="column-link" target="_self" href="/wp/services2/#service1"></a><div className="column-image-bg-wrap column-bg-layer viewport-desktop nectar-parallax-enabled" data-n-parallax-bg="true" data-parallax-speed="minimum" data-bg-pos="center center" data-bg-animation="mask-reveal" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg parallax-layer translate" style={{height: "54px", transform: "translate3d(0px, 54px, 0px) scale(1.005)", willChange: "transform"}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/12/fbg_02.jpg"></div></div></div>
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "26px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading txt26 upp s_1 en wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">Webinar<br />
+streaming</h5>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{}} className="vc_col-sm-1/5 service2_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone nectar-mask-reveal-bg nectar-mask-reveal-bg-top-dir nectar-mask-reveal-bg-straight-shape " data-using-bg="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in" data-delay="0" data-scroll-animation="true" data-scroll-animation-movement="default" data-scroll-animation-mobile="" data-scroll-animation-intensity="-1">
+		<div className="vc_column-inner"><a className="column-link" target="_self" href="/wp/services2/#service2"></a><div className="column-image-bg-wrap column-bg-layer viewport-desktop nectar-parallax-enabled" data-n-parallax-bg="true" data-parallax-speed="minimum" data-bg-pos="center center" data-bg-animation="mask-reveal" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg parallax-layer translate" style={{height: "54px", transform: "translate3d(0px, 54px, 0px) scale(1.005)", willChange: "transform"}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/12/fbg_04.jpg"></div></div></div>
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "26px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading txt26 upp s_1 en wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">hybrid</h5>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{}} className="vc_col-sm-1/5 service3_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone nectar-mask-reveal-bg nectar-mask-reveal-bg-top-dir nectar-mask-reveal-bg-straight-shape " data-using-bg="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0" data-scroll-animation="true" data-scroll-animation-movement="default" data-scroll-animation-mobile="" data-scroll-animation-intensity="1">
+		<div className="vc_column-inner"><a className="column-link" target="_self" href="/wp/services2/#service3"></a><div className="column-image-bg-wrap column-bg-layer viewport-desktop nectar-parallax-enabled" data-n-parallax-bg="true" data-parallax-speed="minimum" data-bg-pos="center center" data-bg-animation="mask-reveal" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg parallax-layer translate" style={{height: "54px", transform: "translate3d(0px, 54px, 0px) scale(1.005)", willChange: "transform"}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/12/fbg_06.jpg"></div></div></div>
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "26px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading txt26 upp s_1 en wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">Visual<br />
+production</h5>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{}} className="vc_col-sm-1/5 service4_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone nectar-mask-reveal-bg nectar-mask-reveal-bg-top-dir nectar-mask-reveal-bg-straight-shape " data-using-bg="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in" data-delay="0" data-scroll-animation="true" data-scroll-animation-movement="default" data-scroll-animation-mobile="" data-scroll-animation-intensity="-1">
+		<div className="vc_column-inner"><a className="column-link" target="_self" href="/wp/services2/#service4"></a><div className="column-image-bg-wrap column-bg-layer viewport-desktop nectar-parallax-enabled" data-n-parallax-bg="true" data-parallax-speed="minimum" data-bg-pos="center center" data-bg-animation="mask-reveal" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg parallax-layer translate" style={{height: "54px", transform: "translate3d(0px, 54px, 0px) scale(1.005)", willChange: "transform"}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/12/fbg_08.jpg"></div></div></div>
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "26px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading txt26 upp s_1 en wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">platform</h5>
+		</div> 
+	</div>
+	</div> 
+
+	<div style={{}} className="vc_col-sm-1/5 service5_div wpb_column column_container vc_column_container col child_column has-animation no-extra-padding inherit_tablet inherit_phone nectar-mask-reveal-bg nectar-mask-reveal-bg-top-dir nectar-mask-reveal-bg-straight-shape " data-using-bg="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="fade-in-from-bottom" data-delay="0" data-scroll-animation="true" data-scroll-animation-movement="default" data-scroll-animation-mobile="" data-scroll-animation-intensity="2">
+		<div className="vc_column-inner"><a className="column-link" target="_self" href="/wp/services2/#service5"></a><div className="column-image-bg-wrap column-bg-layer viewport-desktop nectar-parallax-enabled" data-n-parallax-bg="true" data-parallax-speed="minimum" data-bg-pos="center center" data-bg-animation="mask-reveal" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg parallax-layer translate" style={{height: "54px", transform: "translate3d(0px, 54px, 0px) scale(1.005)", willChange: "transform"}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/12/fbg_10.jpg"></div></div></div>
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "26px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading txt26 upp s_1 en wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">solution</h5>
+		</div> 
+	</div>
+	</div> 
+</div></div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_691d76265416e" data-column-margin="default" data-midnight="dark" className="wpb_row vc_row-fluid vc_row" style={{paddingTop: "0px", paddingBottom: "0px"}}><div className="row-bg-wrap" data-bg-animation="none" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer"><div className="row-bg viewport-desktop" style={{}}></div></div></div><div className="row_col_wrap_12 col span_12 dark left">
+	<div className="vc_col-sm-12 vc_hidden-lg pc_no table_show wpb_column column_container vc_column_container col top_padding_desktop_70px top_padding_phone_70px " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+			<div className="wpb_wrapper">
+				<h1 style={{fontSize: "60px", textAlign: "center"}} className="vc_custom_heading txt60 upp wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">Our services to boost your event</h1><div className="divider-wrap height_phone_28px " data-alignment="default"><div style={{height: "58px"}} className="divider"></div></div><div id="fws_691d76265451d" data-midnight="" data-column-margin="20px" className="wpb_row vc_row-fluid vc_row inner_row vc_row-o-content-middle" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div style={{color: "#ffffff", marginTop: "13px"}} className="vc_col-sm-12 main_fix_m wpb_column column_container vc_column_container col child_column force-desktop-text-align-center nectar-mask-reveal-bg nectar-mask-reveal-bg-top-dir nectar-mask-reveal-bg-straight-shape top_padding_phone_0px bottom_padding_phone_0px " data-cfc="true" data-using-bg="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner"><div className="column-image-bg-wrap column-bg-layer viewport-desktop has-phone" data-bg-pos="center center" data-bg-animation="mask-reveal" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg" style={{}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/11/mask_m_bg.jpg"></div></div></div><div className="column-image-bg-wrap column-bg-layer viewport-phone" data-bg-pos="center center" data-bg-animation="mask-reveal" data-bg-overlay="false"><div className="inner-wrap"><div className="column-image-bg" style={{}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/11/mask_m_bg.jpg"></div></div></div>
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "20px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading upp s_1 en mask1 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp vc_custom_1686646560774"><a href="/wp/services2/#service1" title="services2">Webinar streaming</a></h5><h5 style={{fontSize: "20px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading upp s_1 en mask1 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp vc_custom_1686646582471"><a href="/wp/services2/#service2">hybrid</a></h5><h5 style={{fontSize: "20px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading upp s_1 en mask1 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp vc_custom_1686646601337"><a href="/wp/services2/#service3">Visual production</a></h5><h5 style={{fontSize: "20px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading upp s_1 en mask1 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp vc_custom_1686646620915"><a href="/wp/services2/#service4">platform</a></h5><h5 style={{fontSize: "20px", color: "#ffffff", textAlign: "center"}} className="vc_custom_heading upp s_1 en mask1 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp vc_custom_1686646637646"><a href="/wp/services2/#service5">solution</a></h5>
+		</div> 
+	</div>
+	</div> 
+</div></div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_691d7626558ae" data-column-margin="default" data-midnight="dark" className="wpb_row vc_row-fluid vc_row full-width-content vc_row-o-equal-height vc_row-flex vc_row-o-content-top  top_margin_-129px top_margin_phone_-50px" style={{paddingTop: "0px", paddingBottom: "0px"}}><div className="row-bg-wrap" data-bg-animation="none" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer using-image"><div className="row-bg viewport-desktop using-image" style={{backgroundPosition: "center top", backgroundRepeat: "no-repeat"}} data-nectar-img-src="https://webinars.co.kr/wp-content/uploads/2022/11/footer.jpg"></div></div></div><div className="row_col_wrap_12 col span_12 dark left">
+	<div className="vc_col-sm-12 wpb_column column_container vc_column_container col top_padding_desktop_263px top_padding_phone_137px " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+			<div className="wpb_wrapper">
+				<div id="fws_691d762655c04" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row t_70 right_padding_tablet_80px right_padding_phone_0px left_padding_tablet_80px left_padding_phone_0px" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 width1180 mainfooter wpb_column column_container vc_column_container col child_column left_padding_phone_20px right_padding_phone_20px " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<h2 style={{fontSize: "60px", color: "#ffffff", textAlign: "left"}} className="vc_custom_heading txt60 upp wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">We make your project stand out</h2><div className="divider-wrap height_phone_25px " data-alignment="default"><div style={{height: "35px"}} className="divider"></div></div><h5 style={{fontSize: "28px", color: "#ffffff", textAlign: "left"}} className="vc_custom_heading txt28 upp fl b en wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">02-6342-6834</h5><h5 style={{fontSize: "28px", color: "#ffffff", textAlign: "left"}} className="vc_custom_heading txt28 upp en fl le0 wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">sales@webinars.co.kr</h5><div className="divider-wrap height_phone_25px " data-alignment="default"><div style={{height: "35px"}} className="divider"></div></div><div className="nectar-cta wh_btn text_hover_color_ffffff alignment_tablet_default alignment_phone_default display_tablet_inherit display_phone_inherit font_size_desktop_26px font_size_phone_20px " data-color="default" data-using-bg="false" data-display="block" data-style={{underline: "undefined"}} data-alignment="left" data-text-color="custom"><h6 style={{color: "#ffffff"}}> <span className="link_wrap"><a className="link_text" style={{borderColor: "#ffffff"}} href="/wp/contact">문의하기</a></span></h6></div><div className="divider-wrap" data-alignment="default"><div style={{height: "240px"}} className="divider"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d762656400" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row  left_padding_60px left_padding_tablet_80px left_padding_phone_20px" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-12 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "16px", color: "#ffffff", textAlign: "left"}} className="vc_custom_heading mtxt20 b m_no wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">© 2023년 주식회사 웨비나스. 모든 저작권 소유.</h5><h5 style={{fontSize: "16px", color: "#ffffff", textAlign: "left"}} className="vc_custom_heading mtxt20 b pc_no wpb_animate_when_almost_visible wpb_fadeInUp fadeInUp">© 2023년 주식회사 웨비나스.<br />
+모든 저작권 소유.</h5><div className="divider-wrap height_phone_20px " data-alignment="default"><div style={{height: "20px"}} className="divider"></div></div>
+		</div> 
+	</div>
+	</div> 
+</div></div><div id="fws_691d76265685a" data-midnight="" data-column-margin="default" className="wpb_row vc_row-fluid vc_row inner_row  left_padding_60px left_padding_tablet_80px left_padding_phone_20px" style={{}}><div className="row-bg-wrap"> <div className="row-bg"></div> </div><div className="row_col_wrap_12_inner col span_12  left">
+	<div className="vc_col-sm-3 InnerRow_Footer wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone one-fourths clear-both" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "14px", color: "#ffffff", lineHeight: "24px", textAlign: "left"}} className="vc_custom_heading txt14 w700 vc_custom_1736400214320">대표 박재오<br />
+07208 서울특별시 영등포구 선유로49길 23, 209호</h5><h5 style={{fontSize: "14px", color: "#ffffff", textAlign: "left"}} className="vc_custom_heading txt14 w700 footer_inform">전화 02 6342 6834, 팩스 02 6342 6849, <span>이메일 sales@webinars.co.kr</span></h5><div className="divider-wrap height_phone_25px " data-alignment="default"><div style={{height: "35px"}} className="divider"></div></div>
+		</div> 
+	</div>
+	</div> 
+
+	<div className="vc_col-sm-3 InnerRow_Footer wpb_column column_container vc_column_container col child_column no-extra-padding left_margin_phone_0px inherit_tablet inherit_phone one-fourths right-edge" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			<h5 style={{fontSize: "14px", color: "#ffffff", textAlign: "left"}} className="vc_custom_heading txt14 w700 footer_partner vc_custom_1686207656732">PARTNERSHIP</h5>
+<div className="wpb_text_column wpb_content_element ">
+	<div className="wpb_wrapper">
+		<p><a style={{display: "inline-block", marginRight: "30px"}} title="공식 MSP 계약을 체결한 서비스 파트너" href="webinars.co.kr/contact" target="_blank" rel="noopener"><img decoding="async" className="alignnone size-full wp-image-2255 partnership_img" src="http://webinars.co.kr/wp-content/uploads/2023/06/34-1.png" alt="" width="200" height="34" /></a><a style={{display: "inline-block", marginRight: "30px"}} title="공식 마스터 파트너 계약을 체결한 리셀러" href="webinars.co.kr/contact" target="_blank" rel="noopener"><img decoding="async" className="alignnone size-full wp-image-2257" src="http://webinars.co.kr/wp-content/uploads/2023/06/35-2.png" alt="" width="108" height="34" /></a><a style={{display: "inline-block"}} title="공식 워크스페이스 리셀러" href="webinars.co.kr/contact" target="_blank" rel="noopener"><img decoding="async" className="alignnone size-full wp-image-2311" src="http://webinars.co.kr/wp-content/uploads/2023/06/20.png" alt="" width="219" height="28" /></a></p>
+	</div>
+</div>
+
+
+
+
+		</div> 
+	</div>
+	</div> 
+
+	<div className="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+		<div className="wpb_wrapper">
+			
+	<div className="wpb_raw_code wpb_content_element wpb_raw_html">
+		<div className="wpb_wrapper">
+			<div className="teldiv"><a href="/wp/contact"><img decoding="async" src="/wp-content/uploads/2022/11/tel.png" /></a></div>
+		</div>
+	</div>
+
+		</div> 
+	</div>
+	</div> 
+</div></div><div className="divider-wrap height_phone_65px " data-alignment="default"><div style={{height: "20px"}} className="divider"></div></div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_691d76265752b" data-column-margin="default" data-midnight="dark" className="wpb_row vc_row-fluid vc_row" style={{paddingTop: "0px", paddingBottom: "0px"}}><div className="row-bg-wrap" data-bg-animation="none" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer"><div className="row-bg viewport-desktop" style={{}}></div></div></div><div className="row_col_wrap_12 col span_12 dark left">
+	<div className="vc_col-sm-12 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+			<div className="wpb_wrapper">
+				
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_691d762657817" data-column-margin="default" data-midnight="dark" className="wpb_row vc_row-fluid vc_row" style={{paddingTop: "0px", paddingBottom: "0px"}}><div className="row-bg-wrap" data-bg-animation="none" data-bg-animation-delay="" data-bg-overlay="false"><div className="inner-wrap row-bg-layer"><div className="row-bg viewport-desktop" style={{}}></div></div></div><div className="row_col_wrap_12 col span_12 dark left">
+	<div className="vc_col-sm-12 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div className="vc_column-inner">
+			<div className="wpb_wrapper">
+				
+			</div> 
+		</div>
+	</div> 
+</div></div>
+</div>		</div>
+	</div>
+	</div>
+
+<div id="footer-outer" data-cols="4" data-custom-color="false" data-disable-copyright="true" data-matching-section-color="true" data-copyright-line="false" data-using-bg-img="false" data-bg-img-overlay="0.8" data-full-width="1" data-using-widget-area="false" data-link-hover="default" data-midnight="light">
+	
+		
+</div>
+
+
+	<div id="slide-out-widget-area-bg" className="fullscreen-alt dark">
+		<div className="bg-inner"></div>		</div>
+
+		<div id="slide-out-widget-area" className="fullscreen-alt" data-dropdown-func="default" data-back-txt="Back">
+
+			<div className="inner-wrap">
+			<div className="inner" data-prepend-menu-mobile="false">
+
+				<a className="slide_out_area_close" href="#"><span className="screen-reader-text">Close Menu</span>
+					<span className="close-wrap"> <span className="close-line close-line1"></span> <span className="close-line close-line2"></span> </span>				</a>
+
+
+									<div className="off-canvas-menu-container mobile-only" role="navigation">
+
+						
+						<div className="menu-wrap menuwrapper"><ul className="menu menuopen">
+							<li className="menu-item menu-item-type-post_type menu-item-object-page menu-item-1685"><a href="https://webinars.co.kr/about/">about</a></li>
+<li className="menu-item menu-item-type-post_type menu-item-object-page menu-item-1689"><a href="https://webinars.co.kr/services2/">services</a></li>
+<li className="menu-item menu-item-type-post_type menu-item-object-page menu-item-1688"><a href="https://webinars.co.kr/reference/">reference</a></li>
+<li className="menu-item menu-item-type-post_type menu-item-object-page menu-item-1686"><a href="https://webinars.co.kr/contact/">Contact</a></li>
+
+						</ul></div>
+
+						<div className="menu-wrap menuwrapper"><ul className="menu secondary-header-items menuopen">
+													</ul></div>
+					</div>
+					<div id="block-2" className="widget widget_block"><h5 className="txt14 w700">07995<br />
+서울시 양천구 목동동로 233-1, 8층</h5>
+<h5 className="txt14 w700 mt20">전화  02 6342 6834<br />
+팩스  02 6342-6849<br />
+이메일  sales@webinars.co.kr</h5></div>
+				</div>
+
+				<div className="bottom-meta-wrap"><ul className="off-canvas-social-links"></ul></div></div> 
+				</div>
+		
+</div> 
+
+	<a id="to-top" href="#" className="
+	mobile-enabled	"><i className="fa fa-angle-up top-icon"></i><i className="fa fa-angle-up"></i></a>
+	</div></div>
+<div className="modal-wrapper styled" role="dialog" aria-modal="true" aria-label="Popup Dialog"><div className="wp-post-modal"><button type="button" aria-label="Close" className="close-modal"> × </button><div id="modal-content"></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+`}} />
+        </div>
+    );
+};
+
+export default IndexPage;
