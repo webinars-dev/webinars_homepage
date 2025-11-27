@@ -38,34 +38,34 @@ html:not(.page-trans-loaded) { background-color: #ffffff; }
   font-family: 'hyphen';
   font-style: normal;
   font-weight: 400;
-  src: url(//webinars.co.kr/wp/font/Hyphen-Sans.woff2) format('woff2'),
-        url(//webinars.co.kr/wp/font/Hyphen-Sans.woff) format('woff'),
-        url(//webinars.co.kr/wp/font/Hyphen-Sans.otf) format('opentype');
+  src: url('https://webinars.co.kr/wp/font/Hyphen-Sans.woff2') format('woff2'),
+        url('https://webinars.co.kr/wp/font/Hyphen-Sans.woff') format('woff'),
+        url('https://webinars.co.kr/wp/font/Hyphen-Sans.otf') format('opentype');
 }
 
 @font-face {
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 400;
-  src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),
-        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),
-        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');
+  src: url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2') format('woff2'),
+        url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff') format('woff'),
+        url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 700;
-  src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),
-        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),
-        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');
+  src: url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2') format('woff2'),
+        url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff') format('woff'),
+        url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf') format('opentype');
 }
 @font-face {
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 900;
-  src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),
-        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),
-        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
+  src: url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2') format('woff2'),
+        url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff') format('woff'),
+        url('//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf') format('opentype');
 }
 body {word-break: keep-all!important;  word-wrap: break-word!important;  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;}
@@ -198,28 +198,28 @@ body[data-col-gap="50px"] .wpb_row:not(.full-width-section):not(.full-width-cont
 /*main*/
 .service1_div .column-image-bg{background-attachment:fixed;  background-clip: padding-box;
 background-size:100%; 
-mask-image: url('/wp-content/uploads/2022/11/1.png'); 
--webkit-mask-image: url('/wp-content/uploads/2022/11/1.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/1.png'); 
+-webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/1.png');}
 .service2_div .column-image-bg{background-attachment:fixed ; background-clip: padding-box;
 background-size:100%; 
-mask-image: url('/wp-content/uploads/2022/11/2.png'); 
--webkit-mask-image: url('/wp-content/uploads/2022/11/2.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/2.png'); 
+-webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/2.png');}
 .service3_div .column-image-bg{background-attachment:fixed; background-clip: padding-box;
 background-size:100%; 
-mask-image: url('/wp-content/uploads/2022/11/3.png'); 
--webkit-mask-image: url('/wp-content/uploads/2022/11/3.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/3.png'); 
+-webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/3.png');}
 .service4_div .column-image-bg{background-attachment:fixed; background-clip: padding-box;
 background-size:100%; 
-mask-image: url('/wp-content/uploads/2022/11/4.png'); 
--webkit-mask-image: url('/wp-content/uploads/2022/11/4.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/4.png'); 
+-webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/4.png');}
 .service5_div .column-image-bg{background-attachment:fixed; background-clip: padding-box;
 background-size:100%; 
-mask-image: url('/wp-content/uploads/2022/11/5.png'); 
--webkit-mask-image: url('/wp-content/uploads/2022/11/5.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/5.png'); 
+-webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/5.png');}
 .mask_all .column-image-bg{background-attachment:fixed; background-clip: padding-box;
 background-size:100%; 
-mask-image: url('/wp-content/uploads/2022/12/mask_all.png'); 
--webkit-mask-image: url('/wp-content/uploads/2022/12/mask_all.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/12/mask_all.png'); 
+-webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/12/mask_all.png');}
 
 .stats-block .stats-number {font-family:'hyphen'!important;}
 .why_div .row-bg{background-size:100%!important; filter: grayscale(100%);}
@@ -273,11 +273,11 @@ span.ult-align-left {  display: block;}
 .about_2 .about_txt {width:80%; display: inline-block;}
 .about_2 .about_img {float:right; width:20%;}
 .about_2 .about_img  {width:32px!important;height:32px; float:right; position:absolute; right:20px; top:25px;
-background:url(/wp/wp-content/uploads/2022/11/about_right.png); background-size: contain;}
+background:url('https://webinars.co.kr/wp-content/uploads/2022/11/about_right.png'); background-size: contain;}
 .about_2:hover span {color:#fff!important;}
 .about_2:hover .about_txt .txt20 {color:#fff!important;}
 .about_2:hover .about_txt .txt18 {color:#fff!important;}
-.about_2:hover .about_img {background:url(/wp-content/uploads/2022/11/about_right_hover.png); }
+.about_2:hover .about_img {background:url('https://webinars.co.kr/wp-content/uploads/2022/11/about_right_hover.png'); }
 
 .grey {filter: grayscale(100%);}
 
@@ -287,8 +287,8 @@ background:url(/wp/wp-content/uploads/2022/11/about_right.png); background-size:
 .ult-modal-input-wrapper span:hover {background:#000; color:#fff;}
 
 .ult-modal-input-wrapper span:before {width:32px!important;height:32px; float:right; position:absolute; right:20px; top:20px;
-background:url(/wp-content/uploads/2022/11/about_right.png); background-size: contain;}
-.ult-modal-input-wrapper:hover span:before{background:url(/wp-content/uploads/2022/11/about_right_hover.png); }
+background:url('https://webinars.co.kr/wp-content/uploads/2022/11/about_right.png'); background-size: contain;}
+.ult-modal-input-wrapper:hover span:before{background:url('https://webinars.co.kr/wp-content/uploads/2022/11/about_right_hover.png'); }
 /*modal*/
 
 .linkdiv {width:100%; height:100%;}
@@ -297,7 +297,7 @@ background:url(/wp-content/uploads/2022/11/about_right.png); background-size: co
     outline: 0px dashed skyblue;
     border-radius: 0px;
 }
-.modal-wrapper.styled .wp-post-modal .close-modal {background:url(/wp-content/uploads/2022/11/close.png)!important; 
+.modal-wrapper.styled .wp-post-modal .close-modal {background:url('https://webinars.co.kr/wp-content/uploads/2022/11/close.png')!important; 
 width:40px!Important; height:40px!important; top:12px!important;
     right:13px!important; 
     font-size:0px!important; color:transparent!important; background-size: 100%!important;
@@ -310,7 +310,7 @@ width:40px!Important; height:40px!important; top:12px!important;
 .ult_modal.ult-small {
     width: 960px!important;
 }
-.ult-overlay-close-inside {background:url(/wp-content/uploads/2022/11/close.png)!important; background-size:28px 28px;}
+.ult-overlay-close-inside {background:url('https://webinars.co.kr/wp-content/uploads/2022/11/close.png')!important; background-size:28px 28px;}
 .ult-overlay-close {width:35px!important; height:35px!important; top:24px!important; right:19px!important;}
 /*service*/
 
@@ -318,7 +318,7 @@ width:40px!Important; height:40px!important; top:12px!important;
 
 .service_ul li { padding:3px!important;  font-family:'hyphen'!important; font-size:20px; line-height:50px; list-style:none; text-transform: uppercase;}
 .service_ul li:hover a{border:3px solid #000; padding:3px; display: inline; color:#000!important;}
-.service2_bg {width:1620px!important; margin:0 auto!important; background:url(/wp-content/uploads/2022/11/david-laws-1qNqM062H9A-unsplash.jpg);}
+.service2_bg {width:1620px!important; margin:0 auto!important; background:url('https://webinars.co.kr/wp-content/uploads/2022/11/david-laws-1qNqM062H9A-unsplash.jpg');}
 
 /** styled modal **/
 .modal-wrapper img {width:100%!important; height:auto;}
@@ -365,15 +365,19 @@ input[type="radio"] {display:none;}
 
 input[type="radio"] + label span:before{ content:'';
   display:inline-block;
-  width: 22px;height: 22px;
-  margin: -4px 5px 0 0px;
+  width: 20px;height: 20px;
+  margin: -4px 8px 0 0px;
   font-size: 0;
   vertical-align: middle;
-  background: url('/wp-content/uploads/2022/11/radio.png') no-repeat;cursor:pointer;
+  cursor:pointer;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  box-sizing: border-box;
 }
 
 input[type="radio"]:checked + label span:before {content:'';
-  background: url('/wp-content/uploads/2022/11/radio_check.png') no-repeat;
+  background: radial-gradient(circle, #333 0%, #333 35%, #fff 35%, #fff 100%);
 }
 
 .ult_expheader {font-weight:900;    display: inline-block;}
@@ -468,12 +472,12 @@ body[data-form-submit="regular"] button[type=submit] {float:right; background:rg
 .fancybox-iframe {   padding: 20px!important;}
 .le02{letter-spacing:0.02em!important;}
 .main_fix_m .column-image-bg{background-attachment:fixed; background-clip: padding-box;background-size:120%; height:420px;
-mask-image: url('/wp/wp-content/uploads/2022/11/mask_m.png'); -webkit-mask-image: url('/wp/wp-content/uploads/2022/11/mask_m.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/mask_m.png'); -webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/mask_m.png');}
 .mask1 {height: 78px;padding-top: 29px;margin-bottom: 10px;} 
 .main_counter_bg .column-image-bg{filter: grayscale(100%); background-size:230%!important; background-position:center;} 
 .aio-icon-img .img-icon {padding-top:20px; width:32px!important;}
 .stats-left .stats-desc:before {content:''; width:28px;display:inline-block; height:28px; margin-right:15px;
-background:url(/wp-content/uploads/2022/11/plus.svg);}
+background:url('https://webinars.co.kr/wp-content/uploads/2022/11/plus.svg');}
 .stats-block .stats-text {text-align:center!important;}
 .modal-link { }
 .quform-error>.quform-error-inner {
@@ -517,10 +521,10 @@ button[type=submit] span:after{ display:none;}
     
 .mtxt24 {font-size:24px!important;}    
 .modal-wrapper.styled .wp-post-modal .close-modal {width:22px!important; height:22px!important;}
-.modal-wrapper.styled .wp-post-modal .close-modal {background:url(/wp-content/uploads/2022/12/m_close.png)no-repeat!important; background-size:21px 21px!important;}
+.modal-wrapper.styled .wp-post-modal .close-modal {background:url('https://webinars.co.kr/wp-content/uploads/2022/12/m_close.png')no-repeat!important; background-size:21px 21px!important;}
 .modal-wrapper.styled .wp-post-modal .close-modal {top:10px!important; right:15px!important;}
 
-.ult-overlay-close-inside {background:url(/wp-content/uploads/2022/12/m_close.png)no-repeat!important; background-size:21px 21px!important;}
+.ult-overlay-close-inside {background:url('https://webinars.co.kr/wp-content/uploads/2022/12/m_close.png')no-repeat!important; background-size:21px 21px!important;}
 .ult-overlay-close {width:22px!important; height:22px!important; top:21px!important; right:18px!important;}    
     
     
@@ -627,7 +631,7 @@ body .container-wrap .vc_row-fluid[data-column-margin="20px"] .wpb_column:not(.c
     padding-left: 5px;
     padding-right: 5px;
 }
-.service2_bg {width:100%!important; margin:0 auto!important; background:url(/wp/wp-content/uploads/2022/11/m_bg2.jpg);}
+.service2_bg {width:100%!important; margin:0 auto!important; background:url('https://webinars.co.kr/wp-content/uploads/2022/11/m_bg2.jpg');}
 
 .nectar-sticky-row-wrap {
     position: sticky;
@@ -756,7 +760,7 @@ padding:0px 80px;}
 .m_no {display:none!important;}
 .table_show {display:block!important;}
 .main_fix_m .column-image-bg{background-attachment:fixed; background-clip: padding-box;background-size:120%; height:420px;
-mask-image: url('/wp/wp-content/uploads/2022/11/mask_m.png'); -webkit-mask-image: url('/wp/wp-content/uploads/2022/11/mask_m.png');}
+mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/mask_m.png'); -webkit-mask-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/mask_m.png');}
 /*menu*/
 .slide-out-widget-area-toggle.mobile-icon .lines:after {height: 6px!important;
     width: 24px!important;}
@@ -908,7 +912,140 @@ margin-right:30px;}
 
 .service_div .txt18 {line-height:1.6em!important;}
 
-.vc_custom_1686646560774{background-image: url(http://webinars.co.kr/wp-content/uploads/2022/11/b1.jpg?id=733) !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646582471{background-image: url(http://webinars.co.kr/wp-content/uploads/2022/11/b2.jpg?id=734) !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646601337{background-image: url(http://webinars.co.kr/wp-content/uploads/2022/11/b3.jpg?id=735) !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646620915{background-image: url(http://webinars.co.kr/wp-content/uploads/2022/11/b4.jpg?id=736) !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646637646{background-image: url(http://webinars.co.kr/wp-content/uploads/2022/11/b5.jpg?id=737) !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1736400214320{margin-bottom: 18px !important;}.vc_custom_1686207656732{margin-bottom: 28px !important;}
+.vc_custom_1686646560774{background-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/b1.jpg?id=733') !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646582471{background-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/b2.jpg?id=734') !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646601337{background-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/b3.jpg?id=735') !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646620915{background-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/b4.jpg?id=736') !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1686646637646{background-image: url('https://webinars.co.kr/wp-content/uploads/2022/11/b5.jpg?id=737') !important;background-position: center !important;background-repeat: no-repeat !important;background-size: contain !important;}.vc_custom_1736400214320{margin-bottom: 18px !important;}.vc_custom_1686207656732{margin-bottom: 28px !important;}
 
 /** Ultimate: Media Responsive **/ #counter-responsv-wrap-4815 .stats-number{font-size:80px;}#counter-responsv-wrap-4815 .stats-text{font-size:16px;}#counter-responsv-wrap-5504 .stats-number{font-size:80px;}#counter-responsv-wrap-5504 .stats-text{font-size:16px;}#counter-responsv-wrap-8455 .stats-number{font-size:80px;}#counter-responsv-wrap-8455 .stats-text{font-size:16px;}#counter-responsv-wrap-5187 .stats-number{font-size:80px;}#counter-responsv-wrap-5187 .stats-text{font-size:16px;}@media (max-width: 1199px) { #counter-responsv-wrap-4815 .stats-number{font-size:70px;}#counter-responsv-wrap-5504 .stats-number{font-size:70px;}#counter-responsv-wrap-8455 .stats-number{font-size:70px;}#counter-responsv-wrap-5187 .stats-number{font-size:70px;}}@media (max-width: 991px)  { #counter-responsv-wrap-4815 .stats-number{font-size:60px;}#counter-responsv-wrap-5504 .stats-number{font-size:60px;}#counter-responsv-wrap-8455 .stats-number{font-size:60px;}#counter-responsv-wrap-5187 .stats-number{font-size:60px;}}@media (max-width: 767px)  { #counter-responsv-wrap-4815 .stats-number{font-size:60px;}#counter-responsv-wrap-5504 .stats-number{font-size:60px;}#counter-responsv-wrap-8455 .stats-number{font-size:60px;}#counter-responsv-wrap-5187 .stats-number{font-size:60px;}}@media (max-width: 479px)  { #counter-responsv-wrap-4815 .stats-number{font-size:60px;}#counter-responsv-wrap-4815 .stats-text{font-size:16px;}#counter-responsv-wrap-5504 .stats-number{font-size:60px;}#counter-responsv-wrap-5504 .stats-text{font-size:16px;}#counter-responsv-wrap-8455 .stats-number{font-size:60px;}#counter-responsv-wrap-8455 .stats-text{font-size:16px;}#counter-responsv-wrap-5187 .stats-number{font-size:60px;}#counter-responsv-wrap-5187 .stats-text{font-size:16px;}}/** Ultimate: Media Responsive - **/
+
+/* local overrides for services page (page-id-1162) */
+.page-id-1162 #header-outer {
+  background: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  box-shadow: none !important;
+  padding: 24px 0 !important;
+}
+.page-id-1162 #header-outer #top nav > ul > li > a,
+.page-id-1162 #header-outer .sf-menu > li > a {
+  color: #000 !important;
+}
+.page-id-1162 #header-outer #logo img,
+.page-id-1162 #header-outer #logo .starting-logo {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.page-id-1162 .sticky-wrapper {
+  height: auto !important;
+}
+.page-id-1162 .page-submenu.stuck {
+  position: sticky;
+  top: 140px !important;
+  transform: translateY(0) !important;
+  -webkit-transform: translateY(0) !important;
+}
+.page-id-1162 .page-submenu:not(.stuck) {
+  transform: translateY(0) !important;
+  -webkit-transform: translateY(0) !important;
+}
+.page-id-1162 .page-submenu .full-width-section {
+  background: transparent !important;
+}
+.page-id-1162 .page-submenu ul {
+  margin-top: 0 !important;
+}
+
+/* force row background visibility (hero sections) */
+.row-bg-wrap .row-bg {
+  opacity: 1 !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+}
+
+/* header/nav color overrides for about/reference/services pages */
+.page-id-1162 #header-outer,
+.page-id-905 #header-outer,
+.page-id-547 #header-outer {
+  background: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  box-shadow: none !important;
+  padding: 24px 0 !important;
+}
+.page-id-1162 #header-outer #top nav > ul > li > a,
+.page-id-905 #header-outer #top nav > ul > li > a,
+.page-id-547 #header-outer #top nav > ul > li > a,
+.page-id-1162 #header-outer .sf-menu > li > a,
+.page-id-905 #header-outer .sf-menu > li > a,
+.page-id-547 #header-outer .sf-menu > li > a {
+  color: #000 !important;
+}
+.page-id-1162 #header-outer #logo img,
+.page-id-905 #header-outer #logo img,
+.page-id-547 #header-outer #logo img,
+.page-id-1162 #header-outer #logo .starting-logo,
+.page-id-905 #header-outer #logo .starting-logo,
+.page-id-547 #header-outer #logo .starting-logo {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix full-width-section background images to span 100vw on SPA navigation */
+.full-width-section {
+  width: 100vw !important;
+  margin-left: calc(-50vw + 50%) !important;
+  max-width: none !important;
+  position: relative !important;
+}
+
+/* Override Salient theme's left: 50% positioning with more specific selectors */
+body .full-width-section .row-bg-wrap,
+body .full-width-section.parallax_section .row-bg-wrap,
+body .full-width-section > .row-bg-wrap {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+  margin-left: 0 !important;
+}
+
+body .full-width-section .row-bg-wrap .inner-wrap,
+body .full-width-section > .row-bg-wrap > .inner-wrap {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: scale(1) !important;
+}
+
+body .full-width-section .row-bg-wrap .inner-wrap .row-bg,
+body .full-width-section > .row-bg-wrap > .inner-wrap > .row-bg {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  background-size: cover !important;
+}
+
+/* 서브페이지 헤더 위치 수정 - 홈페이지와 동일하게 */
+body:not(.home) #header-outer {
+  background-color: transparent !important;
+  height: 96px !important;
+  padding-top: 0 !important;
+}
+
+body:not(.home) #header-outer:not(.scrolled-down) {
+  box-shadow: none !important;
+}
+
+/* 서브페이지 로고/nav 상단 패딩 - data-padding="36" 값과 동일하게 */
+body:not(.home) #header-outer header#top {
+  padding-top: 0 !important;
+}
+
+body:not(.home) #header-outer #logo {
+  margin-top: 36px !important;
+  padding-top: 0 !important;
+}
+
+body:not(.home) #header-outer nav {
+  margin-top: 0 !important;
+}
 
