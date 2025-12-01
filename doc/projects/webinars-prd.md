@@ -1,85 +1,173 @@
-# Webinars V3 PRD (Vercel + Supabase)
+# Webinars V3 PRD
 
 ## 개요
-- 목적: 기존 정적 아카이브 페이지를 React/Vite 기반으로 재구성하고, Vercel 호스팅 + Supabase(Postgres/Auth/Storage)로 동적 콘텐츠와 신청 플로우를 제공.
-- 우선 순위: 빠른 배포/프리뷰, 인증된 신청/문의, 세션/웨비나 리스트 관리, 성능/SEO 유지.
-- 성공 지표: 신청 전환율, 페이지 로드 TTFB/CLS, 이메일/소셜 로그인 성공률, 오류 없는 배포 비율.
 
-## 대상 사용자 & 핵심 여정
-- 마케터/운영자: 세션 생성·수정·비공개/공개, 문의 확인, 기초 분석 조회.
-- 참여자: 세션 탐색 → 상세 보기 → 신청/문의 → 확인 메일 수신.
-- 관리자: 스팸/부정 신청 차단, 콘텐츠 버전 관리, 배포 상태 확인.
+- **프로젝트명**: Webinars V3
+- **목적**: 기존 WordPress 기반 웹사이트(webinars.co.kr)를 React/Vite 기반 SPA로 재구성
+- **현재 상태**: Phase 1 완료 - 정적 페이지 마이그레이션 및 모달 시스템 구현
+- **배포**: GitHub Pages (https://github.com/webinarsDev/webinars)
 
-## 기능 범위
-- MVP
-  - 세션 리스트/필터/검색(카테고리/분류/태그).
-  - 세션 상세: 일정, 발표자, 장소/온라인 링크, 첨부.
-  - 신청/문의 폼: Supabase Auth(이메일/소셜) + RLS로 본인 데이터만 접근.
-  - 알림: 신청 완료 이메일(웹훅/Edge Function) + 대시보드용 단순 리스트.
-  - 정적 페이지 SEO 유지(메타 태그/OG/사이트맵).
-- 확장
-  - 웨비나 실시간 시청 링크 보호(서명 URL 또는 뷰 토큰).
-  - 결제/유료 세션 연동(추후).
-  - 관리자용 간단 CMS UI.
+## 기술 스택 (현재 구현)
 
-## 기술 스택
-- FE: React 19 + Vite, 라우팅은 `react-router-dom`. 스타일은 기존 정적 CSS 재사용 후 단계별 개선.
-- 배포: Vercel(프리뷰/프로덕션), ISR/Edge Middleware로 리다이렉트·캐싱 제어.
-- BE: Supabase(Postgres + Auth + Storage + Edge Functions). 서비스 키는 서버 전용 환경변수에만 두고, 클라이언트는 anon 키만 사용.
-- QA: Playwright(E2E), Vercel Preview에서 실행 가능하도록 설정.
+| 분류 | 기술 | 버전 |
+|------|------|------|
+| Frontend | React | 19.2.0 |
+| Router | react-router-dom | 7.9.6 |
+| Build Tool | Vite | 7.2.2 |
+| Testing | Playwright | 1.56.1 |
+| HTTP Client | Axios | 1.13.2 |
+| HTML Parser | Cheerio | 1.1.2 |
 
-## 아키텍처 개요
-- Public routes: 목록/상세/정적 페이지(about, contact 등).
-- Auth + API: Vercel Serverless/Edge 또는 Supabase Functions에서 처리. 클라이언트 호출은 Supabase JS 클라이언트 사용.
-- 데이터 모델(초안)
-  - `sessions`: id, title, type(hybrid/offline/online), start_at, end_at, location, city, tags, capacity, status, hero_image_url, description, created_by.
-  - `speakers`: id, name, title, company, bio, avatar_url.
-  - `session_speakers`: session_id, speaker_id, order.
-  - `registrations`: id, session_id, user_id(nullable), name, email, company, phone, consent_flags, status, created_at.
-  - `inquiries`: id, name, email, message, session_id(optional), created_at.
-  - RLS: 등록/문의는 본인만 조회, 운영자 역할(role claim)만 전체 조회 가능.
+## 프로젝트 구조
 
-## 단계별 개발 계획
-- Phase 0: 준비
-  - Vercel 프로젝트 생성, env 템플릿(`.env.example`) 작성, `npm run build` 동작 확인.
-  - Supabase 프로젝트 생성, DB 스키마 마이그레이션 초안 작성(SQL).
-  - Playwright 기본 시나리오 셋업(홈 로드, 404, 주요 CTA 클릭).
-- Phase 1: 정적 → 동적 기초
-  - 기존 아카이브 페이지를 라우트 별 컴포넌트로 정리(현재 `archive` → `src/pages` 이전).
-  - 세션 리스트/상세에 더미 데이터 주입 후 레이아웃/SEO 검증.
-  - Vercel Preview 배포 + 헬스체크.
-- Phase 2: 데이터/폼 연동
-  - Supabase JS로 세션 리스트/상세 조회, 태그/카테고리 필터 구현.
-  - 신청/문의 폼 작성 → Supabase Edge Function 또는 Row Insert API로 저장.
-  - 이메일 알림: Edge Function에서 webhooks 또는 Supabase Functions + 외부 이메일(SendGrid 등) 호출.
-  - Auth: 이메일 링크/소셜(OAuth) 로그인 연결, 보호된 마이페이지(내 신청 목록).
-- Phase 3: 운영 기능/최적화
-  - 간단한 운영자 페이지(신청/문의 리스트) + role 기반 접근.
-  - 이미지/정적 파일은 Supabase Storage 또는 Vercel Assets로 이관, 캐싱 헤더 점검.
-  - 성능: 코드 스플리팅, 폰트 최적화, 메타 태그/OG/사이트맵 자동 생성.
-  - 모니터링: Vercel Logs + Supabase Observability 대시보드 점검.
+```
+webinars_v3/
+├── src/
+│   ├── App.jsx              # 메인 앱 + 라우팅 설정
+│   ├── main.jsx             # Vite 엔트리 포인트
+│   ├── assets/
+│   │   └── images/          # 모달용 이미지 에셋 (8개)
+│   └── components/
+│       ├── PageRenderer.jsx # 페이지 렌더러 + 모달 컴포넌트
+│       └── ModalContent.jsx # 모달 콘텐츠 매핑 (33개 페이지)
+├── archive/
+│   ├── components/          # WordPress에서 변환된 JSX 컴포넌트 (48개)
+│   └── pages/               # 원본 HTML 페이지 (44개)
+├── public/
+│   ├── css/                 # WordPress 스타일시트 (34개)
+│   ├── fonts/               # 웹폰트 파일
+│   └── js/                  # WordPress JavaScript
+├── doc/
+│   └── projects/
+│       └── webinars-prd.md  # 이 문서
+├── index.html               # Vite HTML 템플릿
+├── vite.config.mjs          # Vite 설정
+├── package.json             # 프로젝트 설정
+└── playwright.config.js     # E2E 테스트 설정
+```
+
+## 구현 완료 기능
+
+### 1. 페이지 라우팅 (5개 메인 페이지)
+
+| 경로 | 컴포넌트 | 설명 |
+|------|----------|------|
+| `/` | IndexPage | 홈페이지 (메인 비주얼 + 레퍼런스 그리드) |
+| `/about` | AboutPage | 회사 소개 |
+| `/services`, `/services2` | Services2Page | 서비스 소개 |
+| `/reference` | ReferencePage | 레퍼런스 목록 |
+| `/contact` | ContactPage | 문의하기 |
+
+### 2. 모달 시스템
+
+- **구현 방식**: React Portal 기반 모달
+- **지원 페이지**: 33개 이벤트/웨비나 상세 페이지
+- **기능**:
+  - 모달 열기: 레퍼런스 카드 클릭
+  - 모달 닫기: X 버튼, ESC 키, 배경 클릭
+  - 스크롤바: 호버 시에만 표시 (overlay 방식)
+  - 페이지 스크롤 방지: body overflow hidden
+
+### 3. 이벤트 페이지 라우트 (33개)
+
+**오프라인 이벤트:**
+- `/2023_offline_1201/`, `/2024_offline_0705/`, `/2024_offline_0904/`
+- `/2024_offline_0927/`, `/2024_offline_1010/`, `/2024_offline_1028/`
+- `/2024_offline_2/`, `/2024_offline_3/`, `/2024_offline_6/`, `/2024_offline_9/`
+- `/2024_offline_acts2024/`, `/2024_offline_rmaf0715/`
+
+**하이브리드 이벤트:**
+- `/2024_hybrid_4/`, `/2024_hybrid_5/`, `/2024_hybrid_8/`
+- `/hybrid_1/` ~ `/hybrid_12/`
+
+**라이브 스트리밍:**
+- `/webinar_live-streaming_13/`, `/webinar_live-streaming_14/`, `/webinar_live-streaming_15/`
+
+**WEBINAR 서브디렉토리:**
+- `/WEBINAR/2024_design_publication_1/`
+- `/WEBINAR/2024_offline_7/`
+- `/WEBINAR/webinar_live-streaming_10/`
+
+### 4. UI/UX 개선사항
+
+- **헤더 위치**: 서브페이지 헤더가 홈페이지와 동일하게 표시
+- **모달 스크롤바**: overflow: overlay로 레이아웃 시프트 방지
+- **CONTACT 라디오 버튼**: 가시성 개선
+- **에러 바운더리**: 페이지 오류 시 사용자 친화적 에러 화면
+
+### 5. 링크 어댑터
+
+- WordPress URL (`https://webinars.co.kr/*`)을 로컬 경로로 자동 변환
+- GNB 네비게이션 클릭 시 SPA 라우팅 적용
+- 모달 링크와 일반 링크 구분 처리
+
+## 디자인/스타일
+
+### CSS 구조
+- WordPress에서 추출한 34개 CSS 파일 사용
+- `inline-styles.css`에 커스텀 오버라이드 추가
+- Salient 테마 기반 (Nectar 컴포넌트)
+
+### 주요 CSS 클래스
+- `.page-container`: 페이지 래퍼
+- `.section`, `.row`: 콘텐츠 섹션
+- `#header-outer`: 메인 헤더
+- `.modal-overlay`, `.modal-container`: 모달 시스템
+
+## 개발 명령어
+
+```bash
+# 개발 서버 실행 (포트 5173)
+npm run dev
+
+# 프로덕션 빌드
+npm run build
+
+# 빌드 미리보기
+npm run preview
+```
+
+## 향후 계획
+
+### Phase 2: 백엔드 연동 (예정)
+- [ ] Supabase 또는 다른 BaaS 연동
+- [ ] 이벤트 데이터 동적 로딩
+- [ ] 문의 폼 백엔드 처리
+
+### Phase 3: 기능 확장 (예정)
+- [ ] 이벤트 신청 시스템
+- [ ] 사용자 인증
+- [ ] 관리자 대시보드
+
+### 기술 개선 (예정)
+- [ ] TypeScript 마이그레이션
+- [ ] CSS 모듈 또는 Tailwind CSS 적용
+- [ ] SEO 메타 태그 동적 생성
+- [ ] 이미지 최적화 (WebP, lazy loading)
 
 ## 체크리스트
-- 환경/보안
-  - [ ] `.env`/Vercel env 분리(anon/service 키, DATABASE_URL, JWT_SECRET).
-  - [ ] 서비스 키는 서버 전용 함수에서만 사용, 클라이언트는 anon 키만.
-  - [ ] RLS 정책 적용 확인(등록/문의, 운영자 역할).
-  - [ ] HTTPS/도메인 설정, 쿠키 SameSite/HttpOnly 설정.
-- FE/UX
-  - [ ] 주요 페이지 라우트 연결(홈, about, contact, 리스트, 상세, 404).
-  - [ ] 신청/문의 폼 유효성 + 오류/성공 피드백.
-  - [ ] 접근성: 기본 ARIA, 포커스 트랩, 키보드 내비게이션.
-  - [ ] SEO: title/description/OG, sitemap, robots.txt.
-- 데이터/백엔드
-  - [ ] 세션/스피커/신청/문의 테이블 생성 및 인덱스.
-  - [ ] Edge Function/Serverless에서 입력 검증, 레이트 리밋(간단히 IP/캡차).
-  - [ ] 이메일 알림 템플릿/발신자 도메인 설정.
-- 배포/테스트
-  - [ ] `npm run build` 성공, Vercel Preview 정상.
-  - [ ] Playwright: 홈 로드, 세션 리스트/필터, 신청/문의 제출 플로우.
-  - [ ] 롤백 계획/릴리즈 태그, 변경 로그 기록.
 
-## 산출물/운영
-- 마이그레이션: `/supabase/migrations`(추가 예정).
-- 테스트: `tests/`에 Playwright 스펙 유지, CI에서 Vercel Preview URL로 실행 가능하게 설정.
-- 모니터링: 배포 후 로그/오류 알림(이메일/Slack) 설정.
+### 완료
+- [x] React/Vite 프로젝트 설정
+- [x] WordPress HTML → JSX 변환 (48개 컴포넌트)
+- [x] 메인 페이지 라우팅 (5개)
+- [x] 이벤트 상세 페이지 라우팅 (33개)
+- [x] 모달 시스템 구현
+- [x] 링크 어댑터 (WordPress URL 변환)
+- [x] 에러 바운더리
+- [x] GitHub 배포
+
+### 진행 중
+- [ ] 모바일 반응형 최적화
+- [ ] 성능 최적화
+
+### 예정
+- [ ] Playwright E2E 테스트 작성
+- [ ] CI/CD 파이프라인 구축
+- [ ] 프로덕션 도메인 연결
+
+## 참고 자료
+
+- **원본 사이트**: https://webinars.co.kr
+- **GitHub 저장소**: https://github.com/webinarsDev/webinars
+- **개발 서버**: http://localhost:5173

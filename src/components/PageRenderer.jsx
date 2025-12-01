@@ -162,8 +162,13 @@ const hydrateNectarMedia = (root) => {
 
   // Fix opacity for elements hidden by Salient theme lazy loading animations
   // Including .menu-item for GNB navigation items that get hidden after modal close
+  // IMPORTANT: Exclude .has-animation elements to preserve their scroll-triggered animations
   const hiddenElements = root.querySelectorAll('.column-image-bg, .wpb_column, .img-with-animation, .wpb_row, .menu-item');
   hiddenElements.forEach((node) => {
+    // Skip elements that have has-animation class - let Waypoint handle their opacity
+    if (node.classList.contains('has-animation') && !node.classList.contains('animated-in')) {
+      return;
+    }
     const computedStyle = window.getComputedStyle(node);
     if (computedStyle.opacity === '0') {
       node.style.opacity = '1';
@@ -222,6 +227,23 @@ const hydrateNectarMedia = (root) => {
     if (navStyle.display === 'none') {
       headerNav.style.display = 'flex';
     }
+  }
+
+  // Fix header-outer visibility - trigger entrance animation
+  // The header starts with opacity: 0 and needs the entrance-animation class to become visible
+  const headerOuter = document.querySelector('#header-outer');
+  if (headerOuter) {
+    // Ensure the header has the entrance-animation class for the CSS animation to work
+    if (!headerOuter.classList.contains('entrance-animation')) {
+      headerOuter.classList.add('entrance-animation');
+    }
+    // Also ensure opacity is set correctly after animation delay
+    setTimeout(() => {
+      const computedStyle = window.getComputedStyle(headerOuter);
+      if (computedStyle.opacity === '0') {
+        headerOuter.style.opacity = '1';
+      }
+    }, 200);
   }
 
   // Note: full-width-section styling is now handled by CSS in inline-styles.css
@@ -385,9 +407,285 @@ const PageRenderer = ({ html }) => {
   }, [pageData.headNodes, isInsideModal]);
 
   useEffect(() => {
+    // CRITICAL: Reset animation elements BEFORE hydrateNectarMedia runs
+    // This ensures they stay at opacity: 0 for smooth scroll-triggered animations
+    const resetAnimationElements = () => {
+      const animationElements = document.querySelectorAll('.has-animation:not(.animated-in)');
+      animationElements.forEach((el) => {
+        // Reset inline styles that would override CSS opacity: 0
+        el.style.opacity = '';
+        el.style.transform = '';
+        // Ensure the element is visible but ready for animation
+        el.classList.remove('animated-in');
+      });
+    };
+
+    // Reset before hydration
+    resetAnimationElements();
+
+    // Now hydrate (but this will skip .has-animation elements due to our fix)
     hydrateNectarMedia(containerRef.current);
-    window.dispatchEvent(new Event('load'));
-    window.dispatchEvent(new Event('resize'));
+
+    // Reset again after hydration to be safe
+    resetAnimationElements();
+
+    // Trigger load event for Salient theme's Waypoint initialization
+    // Use double requestAnimationFrame to ensure CSS has been fully applied
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event('load'));
+        window.dispatchEvent(new Event('resize'));
+      });
+    });
+
+    // Fix #header-space height for fixed header
+    // Salient theme's script sometimes sets it to 0 incorrectly
+    const fixHeaderSpace = () => {
+      const headerSpace = document.querySelector('#header-space');
+      const headerOuter = document.querySelector('#header-outer');
+
+      if (headerSpace && headerOuter) {
+        const headerHeight = headerOuter.offsetHeight || 96;
+        const currentHeight = headerSpace.offsetHeight;
+
+        // If header-space height is 0 or significantly different from header height, fix it
+        if (currentHeight === 0 || Math.abs(currentHeight - headerHeight) > 10) {
+          headerSpace.style.height = `${headerHeight}px`;
+        }
+      }
+    };
+
+    // Run after theme scripts have executed
+    setTimeout(fixHeaderSpace, 100);
+    setTimeout(fixHeaderSpace, 500);
+    setTimeout(fixHeaderSpace, 1000);
+
+    // Fallback header scroll handler for SPA navigation
+    // Salient theme's scroll handler doesn't reinitialize on SPA route changes
+    // This provides the same hide-on-scroll-down, show-on-scroll-up behavior
+    const initHeaderScrollHandler = () => {
+      const headerOuter = document.querySelector('#header-outer');
+      const body = document.body;
+
+      // Only apply if data-hhun="1" is set (header hide up/down on scroll)
+      if (!body.getAttribute('data-hhun') || body.getAttribute('data-hhun') !== '1') {
+        return;
+      }
+
+      if (!headerOuter) return;
+
+      // Check if handler is already working by testing classList changes
+      let handlerWorking = false;
+      const testScroll = () => {
+        const initialClass = headerOuter.className;
+        window.scrollTo(0, 50);
+        setTimeout(() => {
+          handlerWorking = headerOuter.className !== initialClass || headerOuter.className.includes('scrolling');
+          window.scrollTo(0, 0);
+
+          if (!handlerWorking) {
+            // Theme handler not working, apply our own
+            setupFallbackScrollHandler(headerOuter);
+          }
+        }, 100);
+      };
+
+      // Wait a bit for theme scripts to potentially initialize
+      setTimeout(testScroll, 200);
+    };
+
+    const setupFallbackScrollHandler = (headerOuter) => {
+      let lastScrollY = window.scrollY;
+      let ticking = false;
+      const headerHeight = headerOuter.offsetHeight || 96;
+
+      const updateHeader = () => {
+        const currentScrollY = window.scrollY;
+        const scrollingDown = currentScrollY > lastScrollY;
+        const scrollingUp = currentScrollY < lastScrollY;
+
+        // At top of page
+        if (currentScrollY <= 10) {
+          headerOuter.classList.add('at-top');
+          headerOuter.classList.remove('scrolling', 'invisible');
+          headerOuter.style.transform = '';
+        }
+        // Scrolling down - hide header
+        else if (scrollingDown && currentScrollY > headerHeight) {
+          headerOuter.classList.remove('at-top');
+          headerOuter.classList.add('scrolling', 'invisible');
+          headerOuter.style.transform = `translateY(-${headerHeight}px)`;
+        }
+        // Scrolling up - show header
+        else if (scrollingUp) {
+          headerOuter.classList.remove('invisible');
+          headerOuter.classList.add('scrolling');
+          headerOuter.style.transform = 'translateY(0)';
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+      };
+
+      const onScroll = () => {
+        if (!ticking) {
+          requestAnimationFrame(updateHeader);
+          ticking = true;
+        }
+      };
+
+      // Store handler reference for cleanup
+      window.__salientFallbackScrollHandler = onScroll;
+      window.addEventListener('scroll', onScroll, { passive: true });
+    };
+
+    // Cleanup previous handler if exists
+    if (window.__salientFallbackScrollHandler) {
+      window.removeEventListener('scroll', window.__salientFallbackScrollHandler);
+      window.__salientFallbackScrollHandler = null;
+    }
+
+    // Delay slightly to ensure DOM is ready
+    setTimeout(initHeaderScrollHandler, 50);
+
+    // Animation function - mimics anime.js behavior from original Salient theme
+    // Uses inline styles for smooth animation (not CSS transitions)
+    const animateElement = (el, delay = 0) => {
+      if (el.classList.contains('animated-in')) return;
+
+      const animation = el.getAttribute('data-animation') || 'fade-in-from-bottom';
+      const duration = 700; // ms - matches Salient theme
+      const easing = (t) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+
+      // Get initial transform based on animation type
+      let startTransform = { x: 0, y: 0, scale: 1, rotateY: 0 };
+      switch (animation) {
+        case 'fade-in-from-bottom':
+          startTransform.y = 75;
+          break;
+        case 'fade-in-from-left':
+          startTransform.x = -45;
+          break;
+        case 'fade-in-from-right':
+          startTransform.x = 45;
+          break;
+        case 'grow-in':
+          startTransform.scale = 0.75;
+          break;
+        case 'flip-in':
+          startTransform.rotateY = 25;
+          break;
+        case 'zoom-out':
+          startTransform.scale = 1.2;
+          break;
+        default:
+          startTransform.y = 75;
+      }
+
+      setTimeout(() => {
+        let startTime = null;
+
+        const animate = (currentTime) => {
+          if (!startTime) startTime = currentTime;
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easedProgress = easing(progress);
+
+          // Calculate current values
+          const currentX = startTransform.x * (1 - easedProgress);
+          const currentY = startTransform.y * (1 - easedProgress);
+          const currentScale = startTransform.scale + (1 - startTransform.scale) * easedProgress;
+          const currentRotateY = startTransform.rotateY * (1 - easedProgress);
+          const currentOpacity = easedProgress;
+
+          // Build transform string
+          let transform = '';
+          if (startTransform.x !== 0 || startTransform.y !== 0) {
+            transform = `translate(${currentX}px, ${currentY}px)`;
+          }
+          if (startTransform.scale !== 1) {
+            transform += ` scale(${currentScale})`;
+          }
+          if (startTransform.rotateY !== 0) {
+            transform += ` rotateY(${currentRotateY}deg)`;
+          }
+
+          // Apply inline styles (like original Salient with anime.js)
+          el.style.opacity = currentOpacity;
+          el.style.transform = transform || 'none';
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            // Animation complete - set final state
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+            el.classList.add('animated-in');
+          }
+        };
+
+        requestAnimationFrame(animate);
+      }, delay);
+    };
+
+    // Fallback animation handler using IntersectionObserver
+    const initFallbackAnimations = () => {
+      setupFallbackAnimationObserver();
+
+      // Animate elements already in viewport with staggered timing
+      requestAnimationFrame(() => {
+        const stillNotAnimated = document.querySelectorAll('.has-animation:not(.animated-in)');
+        const viewportHeight = window.innerHeight;
+
+        // Sort elements by vertical position for natural animation order
+        const inViewportNotAnimated = Array.from(stillNotAnimated)
+          .map((el) => ({ el, rect: el.getBoundingClientRect() }))
+          .filter(({ rect }) => rect.top < viewportHeight * 0.9 && rect.bottom > 0)
+          .sort((a, b) => a.rect.top - b.rect.top)
+          .map(({ el }) => el);
+
+        // Animate with staggered timing (100ms between each)
+        inViewportNotAnimated.forEach((el, index) => {
+          animateElement(el, index * 100);
+        });
+      });
+    };
+
+    const setupFallbackAnimationObserver = () => {
+      if (window.__animationObserver) {
+        window.__animationObserver.disconnect();
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !entry.target.classList.contains('animated-in')) {
+              // Use JavaScript animation instead of CSS transition
+              animateElement(entry.target, 0);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+          rootMargin: '0px 0px -10% 0px'
+        }
+      );
+
+      document.querySelectorAll('.has-animation:not(.animated-in)').forEach((el) => {
+        observer.observe(el);
+      });
+
+      window.__animationObserver = observer;
+    };
+
+    // Initialize fallback animations after DOM is ready and painted
+    // Double requestAnimationFrame ensures layout is complete
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        initFallbackAnimations();
+      });
+    });
   }, [pageData.bodyContent]);
 
   useEffect(() => {

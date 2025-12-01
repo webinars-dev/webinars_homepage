@@ -8,6 +8,7 @@ import ReferencePage from '../archive/components/reference.jsx';
 import ContactPage from '../archive/components/contact.jsx';
 import CategoryPage from '../archive/components/category__eb_af_b8-_eb_b6_84_eb_a5_98.jsx';
 import AuthorWebihomePage from '../archive/components/author_webihome.jsx';
+import ContactThankYou from './components/ContactThankYou.jsx';
 
 // 모달용 wp_ 페이지 imports
 import Wp2023Offline1201Page from '../archive/components/wp_2023_offline_1201.jsx';
@@ -206,6 +207,8 @@ function App() {
           <Route path="/contact/" element={<ContactPage />} />
           <Route path="/contacts" element={<ContactPage />} />
           <Route path="/contacts/" element={<ContactPage />} />
+          <Route path="/contact/thank-you" element={<ContactThankYou />} />
+          <Route path="/contact/thank-you/" element={<ContactThankYou />} />
 
           <Route path="/category/:category" element={<CategoryPage />} />
           <Route path="/author/webihome/" element={<AuthorWebihomePage />} />
