@@ -301,7 +301,17 @@ const ModalContent = ({ path }) => {
         .modal-content [class*="nectar-social"],
         .modal-content .meta-category,
         .modal-content .related-posts,
-        .modal-content .blog-recent {
+        .modal-content .blog-recent,
+        /* WordPress 카테고리 "미분류" 및 메타 정보 숨기기 */
+        .modal-content a[href*="category"],
+        .modal-content .section-title a,
+        .modal-content .entry-title,
+        .modal-content #single-below-header,
+        .modal-content .meta-author,
+        .modal-content .meta-date,
+        .modal-content .meta-comment-count,
+        .modal-content #page-header-wrap,
+        .modal-content #page-header-bg {
           display: none !important;
         }
 

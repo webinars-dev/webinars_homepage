@@ -166,7 +166,8 @@ const hydrateNectarMedia = (root) => {
   const hiddenElements = root.querySelectorAll('.column-image-bg, .wpb_column, .img-with-animation, .wpb_row, .menu-item');
   hiddenElements.forEach((node) => {
     // Skip elements that have has-animation class - let Waypoint handle their opacity
-    if (node.classList.contains('has-animation') && !node.classList.contains('animated-in')) {
+    if ((node.classList.contains('has-animation') && !node.classList.contains('animated-in')) ||
+        node.classList.contains('wpb_animate_when_almost_visible')) {
       return;
     }
     const computedStyle = window.getComputedStyle(node);
@@ -178,16 +179,10 @@ const hydrateNectarMedia = (root) => {
   // Fix nectar-split-heading letter-reveal animations that are stuck in initial state
   const splitHeadingInners = root.querySelectorAll('.nectar-split-heading span .inner');
   splitHeadingInners.forEach((node) => {
-    // Reset transform to show the text (animation moves text from translateY(1.3em) to translateY(0))
-    node.style.transform = 'translateY(0)';
-    node.classList.add('animated');
-  });
-
-  // Also fix any wpb_animate_when_almost_visible elements that haven't been animated
-  const animateElements = root.querySelectorAll('.wpb_animate_when_almost_visible');
-  animateElements.forEach((node) => {
-    node.style.opacity = '1';
-    node.style.transform = 'none';
+    // Let CSS handle the reveal transition; only ensure the animated class is applied once
+    if (!node.classList.contains('animated')) {
+      requestAnimationFrame(() => node.classList.add('animated'));
+    }
   });
 
   // Fix row-bg-wrap elements with zoom-out-reveal animation that are stuck at opacity 0 and scale(0.7)
@@ -426,39 +421,23 @@ const PageRenderer = ({ html }) => {
     // Now hydrate (but this will skip .has-animation elements due to our fix)
     hydrateNectarMedia(containerRef.current);
 
-    // Reset again after hydration to be safe
-    resetAnimationElements();
-
-    // Trigger load event for Salient theme's Waypoint initialization
-    // Use double requestAnimationFrame to ensure CSS has been fully applied
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.dispatchEvent(new Event('load'));
-        window.dispatchEvent(new Event('resize'));
-      });
-    });
-
-    // Fix #header-space height for fixed header
-    // Salient theme's script sometimes sets it to 0 incorrectly
+    // Fix #header-space height for fixed header (single pass to avoid multiple layout shifts)
     const fixHeaderSpace = () => {
       const headerSpace = document.querySelector('#header-space');
       const headerOuter = document.querySelector('#header-outer');
 
-      if (headerSpace && headerOuter) {
-        const headerHeight = headerOuter.offsetHeight || 96;
-        const currentHeight = headerSpace.offsetHeight;
+      if (!headerSpace || !headerOuter) return;
 
-        // If header-space height is 0 or significantly different from header height, fix it
-        if (currentHeight === 0 || Math.abs(currentHeight - headerHeight) > 10) {
-          headerSpace.style.height = `${headerHeight}px`;
-        }
+      const headerHeight = headerOuter.offsetHeight || 96;
+      const currentHeight = headerSpace.offsetHeight;
+
+      if (currentHeight === 0 || Math.abs(currentHeight - headerHeight) > 10) {
+        headerSpace.style.height = `${headerHeight}px`;
       }
     };
 
-    // Run after theme scripts have executed
-    setTimeout(fixHeaderSpace, 100);
-    setTimeout(fixHeaderSpace, 500);
-    setTimeout(fixHeaderSpace, 1000);
+    // Run once after theme scripts have executed
+    setTimeout(fixHeaderSpace, 150);
 
     // Fallback header scroll handler for SPA navigation
     // Salient theme's scroll handler doesn't reinitialize on SPA route changes
@@ -474,24 +453,8 @@ const PageRenderer = ({ html }) => {
 
       if (!headerOuter) return;
 
-      // Check if handler is already working by testing classList changes
-      let handlerWorking = false;
-      const testScroll = () => {
-        const initialClass = headerOuter.className;
-        window.scrollTo(0, 50);
-        setTimeout(() => {
-          handlerWorking = headerOuter.className !== initialClass || headerOuter.className.includes('scrolling');
-          window.scrollTo(0, 0);
-
-          if (!handlerWorking) {
-            // Theme handler not working, apply our own
-            setupFallbackScrollHandler(headerOuter);
-          }
-        }, 100);
-      };
-
-      // Wait a bit for theme scripts to potentially initialize
-      setTimeout(testScroll, 200);
+      // Apply fallback handler without forcing window scroll (avoid visible jump)
+      setupFallbackScrollHandler(headerOuter);
     };
 
     const setupFallbackScrollHandler = (headerOuter) => {
@@ -549,105 +512,98 @@ const PageRenderer = ({ html }) => {
     setTimeout(initHeaderScrollHandler, 50);
 
     // Animation function - mimics anime.js behavior from original Salient theme
-    // Uses inline styles for smooth animation (not CSS transitions)
-    const animateElement = (el, delay = 0) => {
+    // Original uses: duration: 700ms, easing: easeOutQuart, translateY: [75, 0]
+    // All elements in viewport animate SIMULTANEOUSLY (no stagger)
+    const ANIMATION_DURATION = 700; // ms
+
+    // easeOutQuart - exact match to Salient theme
+    // t^4 curve for smooth deceleration
+    const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+    // Animate a single element (called for each element simultaneously)
+    const animateElement = (el) => {
       if (el.classList.contains('animated-in')) return;
 
+      const startTime = performance.now();
       const animation = el.getAttribute('data-animation') || 'fade-in-from-bottom';
-      const duration = 700; // ms - matches Salient theme
-      const easing = (t) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+      const dataDelay = parseInt(el.getAttribute('data-delay') || '0', 10);
 
-      // Get initial transform based on animation type
-      let startTransform = { x: 0, y: 0, scale: 1, rotateY: 0 };
-      switch (animation) {
-        case 'fade-in-from-bottom':
-          startTransform.y = 75;
-          break;
-        case 'fade-in-from-left':
-          startTransform.x = -45;
-          break;
-        case 'fade-in-from-right':
-          startTransform.x = 45;
-          break;
-        case 'grow-in':
-          startTransform.scale = 0.75;
-          break;
-        case 'flip-in':
-          startTransform.rotateY = 25;
-          break;
-        case 'zoom-out':
-          startTransform.scale = 1.2;
-          break;
-        default:
-          startTransform.y = 75;
-      }
+      const animate = (currentTime) => {
+        const elapsed = currentTime - startTime - dataDelay;
 
-      setTimeout(() => {
-        let startTime = null;
+        if (elapsed < 0) {
+          requestAnimationFrame(animate);
+          return;
+        }
 
-        const animate = (currentTime) => {
-          if (!startTime) startTime = currentTime;
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const easedProgress = easing(progress);
+        const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
+        const easedProgress = easeOutQuart(progress);
 
-          // Calculate current values
-          const currentX = startTransform.x * (1 - easedProgress);
-          const currentY = startTransform.y * (1 - easedProgress);
-          const currentScale = startTransform.scale + (1 - startTransform.scale) * easedProgress;
-          const currentRotateY = startTransform.rotateY * (1 - easedProgress);
-          const currentOpacity = easedProgress;
+        let transform = '';
 
-          // Build transform string
-          let transform = '';
-          if (startTransform.x !== 0 || startTransform.y !== 0) {
-            transform = `translate(${currentX}px, ${currentY}px)`;
-          }
-          if (startTransform.scale !== 1) {
-            transform += ` scale(${currentScale})`;
-          }
-          if (startTransform.rotateY !== 0) {
-            transform += ` rotateY(${currentRotateY}deg)`;
-          }
+        switch (animation) {
+          case 'fade-in-from-bottom':
+            // Original Salient theme uses translateY: 75px
+            transform = `translateY(${75 * (1 - easedProgress)}px)`;
+            break;
+          case 'fade-in-from-left':
+            transform = `translateX(${-45 * (1 - easedProgress)}px)`;
+            break;
+          case 'fade-in-from-right':
+            transform = `translateX(${45 * (1 - easedProgress)}px)`;
+            break;
+          case 'grow-in':
+            transform = `scale(${0.75 + 0.25 * easedProgress})`;
+            break;
+          case 'flip-in':
+            transform = `rotateY(${25 * (1 - easedProgress)}deg)`;
+            break;
+          case 'zoom-out':
+            transform = `scale(${1.2 - 0.2 * easedProgress})`;
+            break;
+          default:
+            transform = `translateY(${75 * (1 - easedProgress)}px)`;
+        }
 
-          // Apply inline styles (like original Salient with anime.js)
-          el.style.opacity = currentOpacity;
-          el.style.transform = transform || 'none';
+        el.style.opacity = String(easedProgress);
+        el.style.transform = transform;
 
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          } else {
-            // Animation complete - set final state
-            el.style.opacity = '1';
-            el.style.transform = 'none';
-            el.classList.add('animated-in');
-          }
-        };
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          el.classList.add('animated-in');
+        }
+      };
 
-        requestAnimationFrame(animate);
-      }, delay);
+      requestAnimationFrame(animate);
+    };
+
+    // Animate multiple elements simultaneously (no stagger - matches original)
+    const animateElementsSimultaneously = (elements) => {
+      if (!elements || elements.length === 0) return;
+      // Each element starts its own animation immediately
+      elements.forEach((el) => animateElement(el));
     };
 
     // Fallback animation handler using IntersectionObserver
     const initFallbackAnimations = () => {
       setupFallbackAnimationObserver();
 
-      // Animate elements already in viewport with staggered timing
+      // Animate elements already in viewport simultaneously (no stagger - matches original)
       requestAnimationFrame(() => {
         const stillNotAnimated = document.querySelectorAll('.has-animation:not(.animated-in)');
         const viewportHeight = window.innerHeight;
 
-        // Sort elements by vertical position for natural animation order
-        const inViewportNotAnimated = Array.from(stillNotAnimated)
-          .map((el) => ({ el, rect: el.getBoundingClientRect() }))
-          .filter(({ rect }) => rect.top < viewportHeight * 0.9 && rect.bottom > 0)
-          .sort((a, b) => a.rect.top - b.rect.top)
-          .map(({ el }) => el);
-
-        // Animate with staggered timing (100ms between each)
-        inViewportNotAnimated.forEach((el, index) => {
-          animateElement(el, index * 100);
+        // Filter to elements in viewport
+        const inViewportNotAnimated = Array.from(stillNotAnimated).filter((el) => {
+          const rect = el.getBoundingClientRect();
+          return rect.top < viewportHeight * 0.9 && rect.bottom > 0;
         });
+
+        // Animate all viewport elements simultaneously (matches original Salient behavior)
+        animateElementsSimultaneously(inViewportNotAnimated);
       });
     };
 
@@ -661,7 +617,7 @@ const PageRenderer = ({ html }) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting && !entry.target.classList.contains('animated-in')) {
               // Use JavaScript animation instead of CSS transition
-              animateElement(entry.target, 0);
+              animateElement(entry.target);
               observer.unobserve(entry.target);
             }
           });
@@ -787,6 +743,27 @@ const PageRenderer = ({ html }) => {
     // Use document.body to ensure GNB menu items (which are outside containerRef) are also fixed
     setTimeout(() => {
       hydrateNectarMedia(document.body);
+
+      // Fix: Restore ALL animation elements after modal closes
+      // The IntersectionObserver has already unobserved elements that were animated,
+      // and won't re-animate elements that were below viewport when modal opened.
+      // To ensure all content is visible after modal closes, we restore all elements.
+
+      // 1. Restore .has-animation elements (Salient theme animations)
+      const hasAnimationElements = document.querySelectorAll('.has-animation');
+      hasAnimationElements.forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+        el.classList.add('animated-in');
+      });
+
+      // 2. Restore WPBakery animation elements (wpb_fadeInUp, etc.)
+      // These are text elements inside cards that have their own animation
+      const wpbAnimElements = document.querySelectorAll('.wpb_animate_when_almost_visible');
+      wpbAnimElements.forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
     }, 0);
   };
 

@@ -1057,6 +1057,15 @@ margin-right:30px;}
   position: relative !important;
 }
 
+/* Restore page-submenu full-width-section to original Salient theme behavior */
+/* Uses left: 50% + negative margin to achieve full-width while keeping content aligned */
+.page-submenu > .full-width-section {
+  width: calc(100vw - var(--scroll-bar-w, 0px)) !important;
+  margin-left: calc(-50vw + var(--scroll-bar-w, 0px) / 2) !important;
+  left: 50% !important;
+  position: relative !important;
+}
+
 /* Override Salient theme's left: 50% positioning with more specific selectors */
 body .full-width-section .row-bg-wrap,
 body .full-width-section.parallax_section .row-bg-wrap,
@@ -1107,5 +1116,27 @@ body:not(.home) #header-outer #logo {
 
 body:not(.home) #header-outer nav {
   margin-top: 0 !important;
+}
+
+/* 푸터 PARTNERSHIP 섹션 숨기기 */
+.footer_partner,
+h5.footer_partner,
+.vc_custom_heading.footer_partner {
+  display: none !important;
+}
+
+/* PARTNERSHIP 제목 다음에 오는 파트너 로고 영역도 숨기기 */
+.footer_partner + .wpb_text_column {
+  display: none !important;
+}
+
+/* PARTNERSHIP 섹션이 포함된 컬럼 전체 숨기기 (one-fourths 클래스로 식별) */
+.InnerRow_Footer.one-fourths:has(.footer_partner) {
+  display: none !important;
+}
+
+/* :has() 지원 안하는 브라우저를 위한 대안 - 세 번째 InnerRow_Footer 컬럼 숨기기 */
+.InnerRow_Footer.vc_col-sm-3.one-fourths.right-edge {
+  display: none !important;
 }
 
