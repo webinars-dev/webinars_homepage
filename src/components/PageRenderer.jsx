@@ -641,6 +641,73 @@ const PageRenderer = ({ html }) => {
       requestAnimationFrame(() => {
         initFallbackAnimations();
 
+        // Fix: Initialize counter animations for stats-number elements
+        // These use data-counter-value attribute and animate from 0 to target value
+        const initCounterAnimations = () => {
+          const counterElements = document.querySelectorAll('.stats-number[data-counter-value]');
+          if (counterElements.length === 0) return;
+
+          // CountUp animation function
+          const animateCounter = (element) => {
+            const targetValue = parseInt(element.getAttribute('data-counter-value'), 10);
+            const speed = parseFloat(element.getAttribute('data-speed')) || 2;
+            const separator = element.getAttribute('data-separator') || ',';
+            const duration = speed * 1000; // Convert to milliseconds
+
+            // Don't re-animate if already animated
+            if (element.dataset.counterAnimated === 'true') return;
+            element.dataset.counterAnimated = 'true';
+
+            const startTime = performance.now();
+            const startValue = 0;
+
+            const formatNumber = (num) => {
+              return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+            };
+
+            const updateCounter = (currentTime) => {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+
+              // Easing function (easeOutQuart for smooth deceleration)
+              const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+              const currentValue = Math.round(startValue + (targetValue - startValue) * easeOutQuart);
+
+              element.textContent = formatNumber(currentValue);
+
+              if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+              }
+            };
+
+            requestAnimationFrame(updateCounter);
+          };
+
+          // Use IntersectionObserver to trigger animation when visible
+          const counterObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  animateCounter(entry.target);
+                  counterObserver.unobserve(entry.target);
+                }
+              });
+            },
+            {
+              threshold: 0.3,
+              rootMargin: '0px 0px -50px 0px'
+            }
+          );
+
+          counterElements.forEach((el) => {
+            // Reset to 0 initially
+            el.textContent = '0';
+            counterObserver.observe(el);
+          });
+        };
+
+        initCounterAnimations();
+
         // Fix: Add radio button circles via JavaScript
         // CSS ::before doesn't work reliably on SPA navigation, so we always use JS
         const radioInputs = document.querySelectorAll('input[type="radio"]');
