@@ -1005,8 +1005,9 @@ margin-right:30px;}
   height: auto !important;
 }
 .page-id-1162 .page-submenu.stuck {
-  position: relative;
-  top: auto !important;
+  position: fixed;
+  top: 0px !important;
+  left: 0px !important;
   transform: translateY(0) !important;
   -webkit-transform: translateY(0) !important;
 }
