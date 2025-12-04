@@ -423,21 +423,13 @@ textarea{resize: vertical;}
 .quform-option .quform-option-label {padding-left:0px!important;}
 input[type="radio"] {display:none;}
 
-input[type="radio"] + label span:before{ content:'';
-  display:inline-block;
-  width: 20px;height: 20px;
-  margin: -4px 8px 0 0px;
-  font-size: 0;
-  vertical-align: middle;
-  cursor:pointer;
-  border: none;
-  border-radius: 50%;
-  background: #fff;
-  box-sizing: border-box;
+/* Radio button circles are now handled by JavaScript for SPA compatibility */
+input[type="radio"] + label span:before{
+  display: none !important;
 }
 
-input[type="radio"]:checked + label span:before {content:'';
-  background: radial-gradient(circle, #333 0%, #333 35%, #fff 35%, #fff 100%);
+input[type="radio"]:checked + label span:before {
+  display: none !important;
 }
 
 .ult_expheader {font-weight:900;    display: inline-block;}

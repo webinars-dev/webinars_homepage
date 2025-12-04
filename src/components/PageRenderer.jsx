@@ -640,6 +640,44 @@ const PageRenderer = ({ html }) => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         initFallbackAnimations();
+
+        // Fix: Add radio button circles via JavaScript
+        // CSS ::before doesn't work reliably on SPA navigation, so we always use JS
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+        radioInputs.forEach((input) => {
+          const label = input.nextElementSibling;
+          if (label && label.tagName === 'LABEL') {
+            const span = label.querySelector('span');
+            if (span && !span.querySelector('.radio-circle')) {
+              // Create a visual circle element
+              const circle = document.createElement('span');
+              circle.className = 'radio-circle';
+              circle.style.cssText = `
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                margin: -4px 8px 0 0;
+                vertical-align: middle;
+                border-radius: 50%;
+                background: #fff;
+                box-sizing: border-box;
+                cursor: pointer;
+              `;
+              span.insertBefore(circle, span.firstChild);
+
+              // Update circle on input change
+              const updateCircle = () => {
+                if (input.checked) {
+                  circle.style.background = 'radial-gradient(circle, #333 0%, #333 35%, #fff 35%, #fff 100%)';
+                } else {
+                  circle.style.background = '#fff';
+                }
+              };
+              input.addEventListener('change', updateCircle);
+              updateCircle(); // Initial state
+            }
+          }
+        });
       });
     });
   }, [pageData.bodyContent]);
