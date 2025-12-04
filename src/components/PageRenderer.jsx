@@ -214,6 +214,15 @@ const hydrateNectarMedia = (root) => {
     node.style.webkitClipPath = 'none';
   });
 
+  // Fix column-image-bg-wrap elements with mask-reveal animation
+  // These have clip-path: inset(100%) that hides the background images
+  const columnBgWraps = root.querySelectorAll('.column-image-bg-wrap[data-bg-animation="mask-reveal"]');
+  columnBgWraps.forEach((node) => {
+    // Remove clip-path completely to show the image
+    node.style.clipPath = 'none';
+    node.style.webkitClipPath = 'none';
+  });
+
   // Fix GNB navigation that gets hidden after modal close
   // The nav element inside header gets display:none after modal operations
   const headerNav = root.querySelector('header nav');
