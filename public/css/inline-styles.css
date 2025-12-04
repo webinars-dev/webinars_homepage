@@ -495,8 +495,23 @@ padding: 10px!important;
 .quform-option-text {text-transform: uppercase; font-size:17px!important; margin-right:15px; vertical-align:middle; line-height:1em;} 
 .quform-label-1_9 label,.quform-label-1_5 label,.quform-label-1_12 label,.quform-label-1_14 label,.quform-label-1_15 label  {width:80px;}
 .quform-label-inside {left:0px!important;}
-.span_12.light textarea {color:#fff!important;}
+.span_12.light textarea {color:#fff!important; font-size:18px!important; line-height:1.6em!important;}
 .span_12.light input[type=text]{color:#fff!important; font-size:18px!important;line-height:1em!important;}
+
+/* Placeholder 스타일 - 연락처와 동일하게 */
+input::placeholder, textarea::placeholder {
+  color: rgba(255,255,255,0.5) !important;
+  font-size: 18px !important;
+  opacity: 1 !important;
+}
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+  color: rgba(255,255,255,0.5) !important;
+  font-size: 18px !important;
+}
+input::-moz-placeholder, textarea::-moz-placeholder {
+  color: rgba(255,255,255,0.5) !important;
+  font-size: 18px !important;
+}
 .quform .quform-field-text {padding:4px!important;}
 body[data-form-submit="regular"] button[type=submit] {float:right; background:rgba(0,0,0,0); color:#fff; font-weight:bold; font-size:26px;}
 .quform-element-submit>div {float:right!important;}
