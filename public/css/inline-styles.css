@@ -53,9 +53,10 @@ img.img-with-animation {
 /* This matches the original Salient theme behavior where anime.js sets inline styles */
 
 /* Fix for transparent header - hide header-space when transparent header is used */
-/* This prevents white space showing behind transparent header on homepage */
+/* This prevents white space showing behind transparent header on all pages */
 body[data-transparent-header="true"] #header-space,
 body.home #header-space,
+body:not(.home) #header-space,
 #header-outer.transparent + #header-space {
   display: none !important;
 }
@@ -1108,6 +1109,11 @@ body:not(.home) #header-outer #logo {
 
 body:not(.home) #header-outer nav {
   margin-top: 0 !important;
+}
+
+/* 서브페이지 로고 이미지 강제 표시 - 애니메이션 스크립트 미실행 시에도 보이도록 */
+body:not(.home) #header-outer #logo img {
+  opacity: 1 !important;
 }
 
 /* 푸터 PARTNERSHIP 섹션 숨기기 */
