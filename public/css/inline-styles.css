@@ -478,7 +478,7 @@ body[data-form-submit=regular] .container-wrap button[type=submit], body[data-fo
     padding-top: 3px;
 }
 label span {color:#fff!important;}
-input[type=text], textarea {background-color: rgba(255,255,255,.1)!important;
+input[type=text], input[type=email], input[type=tel], textarea {background-color: rgba(255,255,255,.1)!important;
 padding: 10px!important;
     color: #fff!important;border-bottom: 0px solid #5C5C5C!important;
     border-top: 0px!important; border-right:0px!important;
@@ -496,7 +496,7 @@ padding: 10px!important;
 .quform-label-1_9 label,.quform-label-1_5 label,.quform-label-1_12 label,.quform-label-1_14 label,.quform-label-1_15 label  {width:80px;}
 .quform-label-inside {left:0px!important;}
 .span_12.light textarea {color:#fff!important; font-size:18px!important; line-height:1.6em!important;}
-.span_12.light input[type=text]{color:#fff!important; font-size:18px!important;line-height:1em!important;}
+.span_12.light input[type=text], .span_12.light input[type=email], .span_12.light input[type=tel] {color:#fff!important; font-size:18px!important;line-height:1em!important;}
 
 /* Placeholder 스타일 - 연락처와 동일하게 */
 input::placeholder, textarea::placeholder {
