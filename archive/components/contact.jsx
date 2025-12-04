@@ -10,6 +10,26 @@ const ContactPage = () => {
     if (!form) return undefined;
 
     const ensureRecaptchaScript = () => {
+      const recaptchaContainer = form.querySelector('.g-recaptcha');
+      if (!recaptchaContainer) return;
+
+      // If grecaptcha is already loaded, render the widget directly
+      if (window.grecaptcha && window.grecaptcha.render) {
+        // Check if reCAPTCHA is already rendered in this container
+        if (!recaptchaContainer.querySelector('iframe')) {
+          try {
+            window.grecaptcha.render(recaptchaContainer, {
+              sitekey: recaptchaContainer.getAttribute('data-sitekey'),
+            });
+          } catch (e) {
+            // reCAPTCHA may already be rendered, ignore error
+            console.debug('[Contact] reCAPTCHA render skipped:', e.message);
+          }
+        }
+        return;
+      }
+
+      // If script is not loaded yet, load it
       if (document.getElementById(RECAPTCHA_SCRIPT_ID)) return;
       const script = document.createElement('script');
       script.id = RECAPTCHA_SCRIPT_ID;
