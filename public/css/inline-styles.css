@@ -581,11 +581,15 @@ background:url('/images/ui/plus.svg');}
 }
 .ult-overlay .ult_modal-body {
   padding: 0;
+  height: auto !important;
+  min-height: 790px !important;
+  overflow: visible !important;
 }
 .ult-overlay .ult_modal-body iframe {
-  display: block;
-  width: 100%;
-  border: none;
+  display: block !important;
+  width: 100% !important;
+  height: 790px !important;
+  border: none !important;
 }
 .ult-overlay .ult-overlay-close {
   position: absolute;
