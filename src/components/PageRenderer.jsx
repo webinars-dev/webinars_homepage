@@ -176,6 +176,14 @@ const hydrateNectarMedia = (root) => {
     }
   });
 
+  // Fix img-with-aniamtion-wrap elements (note: "aniamtion" is a typo in the original WordPress theme)
+  // These contain icons/images that need their opacity forced to 1 during SPA navigation
+  const imgAnimationWraps = root.querySelectorAll('.img-with-aniamtion-wrap, .img-with-aniamtion-wrap .inner, .img-with-aniamtion-wrap .hover-wrap, .img-with-aniamtion-wrap .hover-wrap-inner');
+  imgAnimationWraps.forEach((node) => {
+    node.style.opacity = '1';
+    node.style.transform = 'none';
+  });
+
   // Fix nectar-split-heading letter-reveal animations that are stuck in initial state
   const splitHeadingInners = root.querySelectorAll('.nectar-split-heading span .inner');
   splitHeadingInners.forEach((node) => {
@@ -252,6 +260,55 @@ const hydrateNectarMedia = (root) => {
 
   // Note: full-width-section styling is now handled by CSS in inline-styles.css
   // using calc(-50vw + 50%) for proper centering
+
+  // Handle page-submenu sticky behavior (services2 page)
+  // Use data-custom-sticky to avoid conflict with WordPress theme's JavaScript
+  const pageSubmenu = root.querySelector('.page-submenu[data-custom-sticky="true"]');
+  if (pageSubmenu) {
+    const stickyWrapper = pageSubmenu.parentElement;
+
+    // Remove stuck and no-trans classes first (WordPress theme might add them)
+    pageSubmenu.classList.remove('stuck', 'no-trans');
+
+    // Wait for layout to stabilize, then calculate initial offset
+    setTimeout(() => {
+      // Remove again in case WordPress added them after our initial removal
+      pageSubmenu.classList.remove('stuck', 'no-trans');
+
+      const rect = stickyWrapper.getBoundingClientRect();
+      const initialOffsetTop = rect.top + window.scrollY;
+
+      console.log('[PageRenderer] page-submenu sticky setup:', {
+        initialOffsetTop,
+        scrollY: window.scrollY,
+        rectTop: rect.top
+      });
+
+      const handleScroll = () => {
+        // Check if we've scrolled past the initial position
+        if (window.scrollY >= initialOffsetTop) {
+          if (!pageSubmenu.classList.contains('stuck')) {
+            pageSubmenu.classList.add('stuck');
+          }
+        } else {
+          if (pageSubmenu.classList.contains('stuck')) {
+            pageSubmenu.classList.remove('stuck');
+          }
+        }
+      };
+
+      // Initial check
+      handleScroll();
+
+      // Add scroll listener
+      window.addEventListener('scroll', handleScroll, { passive: true });
+
+      // Store cleanup function on the element for later removal
+      pageSubmenu._scrollCleanup = () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, 300);
+  }
 };
 
 // Modal Component
