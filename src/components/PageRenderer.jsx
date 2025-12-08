@@ -896,11 +896,94 @@ const PageRenderer = ({ html }) => {
       }
     };
 
-    // Add event listener
+    // Handle Ultimate Addons modal (overlay-show class)
+    const handleUltimateAddonsModal = (event) => {
+      let target = event.target;
+      let overlayTrigger = null;
+
+      // Traverse up to find overlay-show element
+      while (target && target !== document.body) {
+        if (target.classList && target.classList.contains('overlay-show')) {
+          overlayTrigger = target;
+          break;
+        }
+        target = target.parentElement;
+      }
+
+      if (overlayTrigger) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Get the data-class-id which links to the overlay
+        const classId = overlayTrigger.getAttribute('data-class-id');
+        if (!classId) return;
+
+        // Find the corresponding overlay
+        const overlay = document.querySelector(`.ult-overlay.${classId}`);
+        if (!overlay) return;
+
+        // Show the overlay
+        overlay.style.display = 'block';
+        overlay.style.opacity = '1';
+        overlay.style.visibility = 'visible';
+        document.body.style.overflow = 'hidden';
+
+        // Find and show the modal content
+        const modalContent = overlay.querySelector('.ult_modal-content');
+        if (modalContent) {
+          modalContent.classList.remove('ult-hide');
+          modalContent.style.opacity = '1';
+          modalContent.style.transform = 'translateY(0)';
+        }
+
+        // Handle close button
+        const closeBtn = overlay.querySelector('.ult-overlay-close');
+        if (closeBtn) {
+          const closeHandler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            overlay.style.display = 'none';
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+            document.body.style.overflow = '';
+            closeBtn.removeEventListener('click', closeHandler);
+          };
+          closeBtn.addEventListener('click', closeHandler);
+        }
+
+        // Handle overlay background click to close
+        const overlayClickHandler = (e) => {
+          if (e.target === overlay) {
+            overlay.style.display = 'none';
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+            document.body.style.overflow = '';
+            overlay.removeEventListener('click', overlayClickHandler);
+          }
+        };
+        overlay.addEventListener('click', overlayClickHandler);
+
+        // Handle ESC key to close
+        const escHandler = (e) => {
+          if (e.key === 'Escape') {
+            overlay.style.display = 'none';
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', escHandler);
+          }
+        };
+        document.addEventListener('keydown', escHandler);
+      }
+    };
+
+    // Add event listeners
     document.addEventListener('click', handleClick, true);
+    document.addEventListener('click', handleUltimateAddonsModal, true);
 
     return () => {
       document.removeEventListener('click', handleClick, true);
+      document.removeEventListener('click', handleUltimateAddonsModal, true);
     };
   }, [isInsideModal]);
 

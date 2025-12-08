@@ -522,7 +522,7 @@ body[data-form-submit="regular"] button[type=submit] {float:right; background:rg
 .modal-wrapper.styled .wp-post-modal h2 {font-size: 36px;margin-top: -6px;}
 
 /*re*/
-.re_1:before {content:''; width:4px; height:17px; display:inline-block; background:#000;  vertical-align: middle;}
+.re_1:before {content:''; width:4px; height:17px; display:inline-block; background:#000; vertical-align: middle; margin-right: 8px;}
 .re_1{padding-left:0px; margin-top:35px!important;}
 .re_2 {padding-left:10px; line-height:1.6em!important;}
 .re_2 ul li {list-style:none!important;}
@@ -548,6 +548,83 @@ mask-image: url('/images/masks/mask_m.png'); -webkit-mask-image: url('/images/ma
 background:url('/images/ui/plus.svg');}
 .stats-block .stats-text {text-align:center!important;}
 .modal-link { }
+
+/* Ultimate Addons Modal Styles */
+.ult-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.ult-overlay .ult_modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%;
+  max-height: 90vh;
+}
+.ult-overlay .ult_modal-content {
+  background: #fff;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.ult-overlay .ult_modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+.ult-overlay .ult_modal-body {
+  padding: 0;
+}
+.ult-overlay .ult_modal-body iframe {
+  display: block;
+  width: 100%;
+  border: none;
+}
+.ult-overlay .ult-overlay-close {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  background: #333;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ult-overlay .ult-overlay-close-inside {
+  color: #fff;
+  font-size: 0;
+}
+.ult-overlay .ult-overlay-close-inside::before {
+  content: '×';
+  font-size: 20px;
+  line-height: 1;
+}
+.ult-overlay .ult-hide {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+/* Active state for modal content - when ult-hide is removed */
+.ult-overlay .ult_modal-content:not(.ult-hide) {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+/* When overlay is visible */
+.ult-overlay[style*="display: block"] .ult_modal,
+.ult-overlay[style*="display:block"] .ult_modal {
+  opacity: 1;
+}
 .quform-error>.quform-error-inner {
     padding: 0px;
     margin: 0;
@@ -1012,6 +1089,7 @@ margin-right:30px;}
   -webkit-transform: translateY(0) !important;
 }
 .page-id-1162 .page-submenu:not(.stuck) {
+  position: static;
   transform: translateY(0) !important;
   -webkit-transform: translateY(0) !important;
 }
