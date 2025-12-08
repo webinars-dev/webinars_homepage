@@ -562,11 +562,17 @@ background:url('/images/ui/plus.svg');}
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+/* When overlay has display:block inline style, make it visible */
+.ult-overlay[style*="display: block"],
+.ult-overlay[style*="display:block"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
 .ult-overlay .ult_modal {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   max-width: 90%;
   max-height: 90vh;
 }
@@ -628,6 +634,33 @@ background:url('/images/ui/plus.svg');}
 .ult-overlay[style*="display: block"] .ult_modal,
 .ult-overlay[style*="display:block"] .ult_modal {
   opacity: 1;
+}
+/* Force modal to center when overlay is visible */
+.ult-overlay[style*="display: block"] .ult_modal,
+.ult-overlay[style*="display:block"] .ult_modal {
+  opacity: 1 !important;
+  visibility: visible !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+/* Force modal content and body to show */
+.ult-overlay[style*="display: block"] .ult_modal-content,
+.ult-overlay[style*="display:block"] .ult_modal-content,
+.ult-overlay[style*="display: block"] .ult_modal-body,
+.ult-overlay[style*="display:block"] .ult_modal-body {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+/* Ensure iframe is visible and has proper height */
+.ult-overlay[style*="display: block"] .ult_modal-body iframe,
+.ult-overlay[style*="display:block"] .ult_modal-body iframe {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: 790px !important;
+  min-height: 790px !important;
 }
 .quform-error>.quform-error-inner {
     padding: 0px;
@@ -1235,4 +1268,109 @@ h5.footer_partner,
 .InnerRow_Footer.vc_col-sm-3.one-fourths.right-edge {
   display: none !important;
 }
+
+/* Ultimate Addons Expandable Section - SPA 환경에서 클릭 활성화 */
+.ult_exp_section-main {
+  cursor: pointer !important;
+}
+.ult_exp_section-main.default-cursor {
+  cursor: pointer !important;
+}
+
+/* =====================================================
+   모바일 햄버거 메뉴 - SPA 환경에서 JavaScript로 제어
+   display는 JavaScript에서 토글, CSS는 스타일만 담당
+   ===================================================== */
+
+/* 슬라이드 메뉴 기본 스타일 */
+div#slide-out-widget-area,
+div#slide-out-widget-area.fullscreen-alt {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100vh !important;
+  background-color: #ffffff !important;
+  z-index: 99999 !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* 메뉴 내부 스타일 */
+div#slide-out-widget-area .inner-wrap {
+  padding: 80px 0 40px 0 !important;
+  background-color: #ffffff !important;
+}
+
+div#slide-out-widget-area .inner {
+  max-width: 100% !important;
+  margin: 0 !important;
+  background-color: #ffffff !important;
+}
+
+/* 닫기 버튼 스타일 */
+#slide-out-widget-area .slide_out_area_close {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10000 !important;
+}
+
+#slide-out-widget-area .slide_out_area_close .close-wrap {
+  display: block !important;
+}
+
+#slide-out-widget-area .slide_out_area_close .close-line {
+  display: block !important;
+  width: 2px !important;
+  height: 24px !important;
+  background: #000 !important;
+  position: absolute !important;
+}
+
+#slide-out-widget-area .slide_out_area_close .close-line1 {
+  transform: rotate(45deg) !important;
+}
+
+#slide-out-widget-area .slide_out_area_close .close-line2 {
+  transform: rotate(-45deg) !important;
+}
+
+/* 메뉴 항목 스타일 */
+#slide-out-widget-area .off-canvas-menu-container .menu {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#slide-out-widget-area .off-canvas-menu-container .menu li {
+  border-bottom: 1px solid #eee !important;
+}
+
+#slide-out-widget-area .off-canvas-menu-container .menu li a {
+  display: block !important;
+  padding: 18px 20px !important;
+  font-size: 20px !important;
+  color: #000 !important;
+  text-decoration: none !important;
+  font-family: 'hyphen', sans-serif !important;
+  text-transform: capitalize !important;
+}
+
+#slide-out-widget-area .off-canvas-menu-container .menu li a:hover {
+  background: #f5f5f5 !important;
+}
+
+/* 위젯 영역 스타일 */
+#slide-out-widget-area .widget {
+  padding: 20px !important;
+  text-align: left !important;
+}
+
+/* 메뉴는 기본적으로 숨김 - JavaScript가 display를 토글 */
 

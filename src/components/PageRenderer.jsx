@@ -241,6 +241,28 @@ const hydrateNectarMedia = (root) => {
     }
   }
 
+  // Fix parallax layer heights for service section cards
+  // During SPA navigation, the Salient theme's parallax script doesn't initialize correctly
+  // and sets height to 54px instead of the correct value based on parent column height
+  const parallaxLayers = root.querySelectorAll('.column-image-bg.parallax-layer');
+  parallaxLayers.forEach((layer) => {
+    const computedStyle = window.getComputedStyle(layer);
+    const currentHeight = parseInt(computedStyle.height, 10);
+
+    // If height is incorrectly small (< 100px), recalculate based on parent
+    if (currentHeight < 100) {
+      // Find the parent column wrapper (wpb_column)
+      const parentColumn = layer.closest('.wpb_column');
+      if (parentColumn) {
+        // Get the parent's actual height
+        const parentHeight = parentColumn.offsetHeight;
+        if (parentHeight > 100) {
+          layer.style.height = `${parentHeight}px`;
+        }
+      }
+    }
+  });
+
   // Fix header-outer visibility - trigger entrance animation
   // The header starts with opacity: 0 and needs the entrance-animation class to become visible
   const headerOuter = document.querySelector('#header-outer');
@@ -896,6 +918,84 @@ const PageRenderer = ({ html }) => {
       }
     };
 
+    // Handle Ultimate Addons Expandable Section (더보기 button)
+    const handleExpandableSection = (event) => {
+      let target = event.target;
+      let expMain = null;
+
+      // Traverse up to find ult_exp_section-main element
+      while (target && target !== document.body) {
+        if (target.classList && target.classList.contains('ult_exp_section-main')) {
+          expMain = target;
+          break;
+        }
+        target = target.parentElement;
+      }
+
+      if (expMain) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Find the parent ult_exp_section wrapper
+        const expSection = expMain.closest('.ult_exp_section');
+        if (!expSection) return;
+
+        // Find the sibling ult_exp_content element
+        const expLayer = expSection.closest('.ult_exp_section_layer');
+        if (!expLayer) return;
+
+        const expContent = expLayer.querySelector('.ult_exp_content');
+        if (!expContent) return;
+
+        // Toggle the expanded state
+        const isExpanded = expSection.classList.contains('ult_active_section');
+        const effect = expSection.getAttribute('data-effect') || 'slideToggle';
+
+        if (isExpanded) {
+          // Collapse
+          expSection.classList.remove('ult_active_section');
+          if (effect === 'slideToggle') {
+            expContent.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+            expContent.style.height = expContent.scrollHeight + 'px';
+            requestAnimationFrame(() => {
+              expContent.style.height = '0';
+              expContent.style.opacity = '0';
+            });
+            setTimeout(() => {
+              expContent.style.display = 'none';
+              expContent.style.height = '';
+              expContent.style.transition = '';
+            }, 300);
+          } else {
+            expContent.style.display = 'none';
+          }
+        } else {
+          // Expand
+          expSection.classList.add('ult_active_section');
+          if (effect === 'slideToggle') {
+            expContent.style.display = 'block';
+            expContent.style.height = '0';
+            expContent.style.opacity = '0';
+            expContent.style.overflow = 'hidden';
+            const targetHeight = expContent.scrollHeight;
+            expContent.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+            requestAnimationFrame(() => {
+              expContent.style.height = targetHeight + 'px';
+              expContent.style.opacity = '1';
+            });
+            setTimeout(() => {
+              expContent.style.height = '';
+              expContent.style.overflow = '';
+              expContent.style.transition = '';
+            }, 300);
+          } else {
+            expContent.style.display = 'block';
+            expContent.style.opacity = '1';
+          }
+        }
+      }
+    };
+
     // Handle Ultimate Addons modal (overlay-show class)
     const handleUltimateAddonsModal = (event) => {
       let target = event.target;
@@ -977,13 +1077,91 @@ const PageRenderer = ({ html }) => {
       }
     };
 
+    // Handle mobile hamburger menu toggle
+    const handleMobileMenuToggle = (event) => {
+      let target = event.target;
+      let toggleBtn = null;
+      let closeBtn = null;
+
+      // Traverse up to find toggle button or close button
+      while (target && target !== document.body) {
+        // Check for hamburger toggle button
+        if (target.closest('.slide-out-widget-area-toggle')) {
+          toggleBtn = target.closest('.slide-out-widget-area-toggle').querySelector('a');
+          break;
+        }
+        // Check for close button inside slide-out menu
+        if (target.classList && target.classList.contains('slide_out_area_close')) {
+          closeBtn = target;
+          break;
+        }
+        target = target.parentElement;
+      }
+
+      if (toggleBtn || closeBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const slideOutArea = document.querySelector('#slide-out-widget-area');
+        const menuToggleLink = document.querySelector('.slide-out-widget-area-toggle a');
+
+        if (!slideOutArea || !menuToggleLink) return;
+
+        const isOpen = menuToggleLink.classList.contains('open');
+
+        if (isOpen || closeBtn) {
+          // Close menu
+          menuToggleLink.classList.remove('open', 'animating');
+          menuToggleLink.classList.add('closed');
+          menuToggleLink.setAttribute('aria-expanded', 'false');
+          slideOutArea.style.display = 'none';
+          document.body.style.overflow = '';
+        } else {
+          // Open menu
+          menuToggleLink.classList.remove('closed');
+          menuToggleLink.classList.add('open', 'animating');
+          menuToggleLink.setAttribute('aria-expanded', 'true');
+          slideOutArea.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+        }
+      }
+    };
+
+    // Handle clicks on menu items inside slide-out menu (close menu after navigation)
+    const handleSlideOutMenuClick = (event) => {
+      const slideOutArea = document.querySelector('#slide-out-widget-area');
+      if (!slideOutArea) return;
+
+      // Check if click is on a menu item link inside the slide-out area
+      const menuLink = event.target.closest('#slide-out-widget-area .menu-item a');
+      if (menuLink) {
+        // Close the menu after a short delay to allow navigation
+        setTimeout(() => {
+          const menuToggleLink = document.querySelector('.slide-out-widget-area-toggle a');
+          if (menuToggleLink) {
+            menuToggleLink.classList.remove('open', 'animating');
+            menuToggleLink.classList.add('closed');
+            menuToggleLink.setAttribute('aria-expanded', 'false');
+          }
+          slideOutArea.style.display = 'none';
+          document.body.style.overflow = '';
+        }, 100);
+      }
+    };
+
     // Add event listeners
     document.addEventListener('click', handleClick, true);
+    document.addEventListener('click', handleExpandableSection, true);
     document.addEventListener('click', handleUltimateAddonsModal, true);
+    document.addEventListener('click', handleMobileMenuToggle, true);
+    document.addEventListener('click', handleSlideOutMenuClick, false);
 
     return () => {
       document.removeEventListener('click', handleClick, true);
+      document.removeEventListener('click', handleExpandableSection, true);
       document.removeEventListener('click', handleUltimateAddonsModal, true);
+      document.removeEventListener('click', handleMobileMenuToggle, true);
+      document.removeEventListener('click', handleSlideOutMenuClick, false);
     };
   }, [isInsideModal]);
 
