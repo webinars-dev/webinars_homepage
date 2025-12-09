@@ -86,6 +86,80 @@
             position: relative;
             z-index: 1000;
         }
+
+        /* 모달 닫기 버튼 수정 - Ultimate Addons 모달용 */
+        .ult-overlay-close {
+            width: 32px !important;
+            height: 32px !important;
+            top: 15px !important;
+            right: 15px !important;
+            background: transparent !important;
+            cursor: pointer !important;
+            transition: opacity 0.2s ease !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+        }
+        .ult-overlay-close:hover {
+            opacity: 0.6 !important;
+        }
+        .ult-overlay-close .ult-overlay-close-inside,
+        div.ult-overlay-close-inside {
+            font-size: 0 !important;
+            color: transparent !important;
+            text-indent: -9999px !important;
+            width: 32px !important;
+            height: 32px !important;
+            display: block !important;
+            position: relative !important;
+            background: transparent !important;
+            background-image: none !important;
+            background-color: transparent !important;
+        }
+        .ult-overlay-close .ult-overlay-close-inside::before,
+        div.ult-overlay-close-inside::before {
+            content: '×' !important;
+            font-size: 32px !important;
+            color: #333 !important;
+            font-family: Arial, sans-serif !important;
+            font-weight: 300 !important;
+            line-height: 1 !important;
+            position: absolute !important;
+            text-indent: 0 !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            background: none !important;
+        }
+
+        /* Magnific Popup 모달용 (백업) */
+        .mfp-close {
+            font-size: 0 !important;
+            width: 44px !important;
+            height: 44px !important;
+            line-height: 44px !important;
+            right: 10px !important;
+            top: 10px !important;
+            opacity: 0.8 !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            border-radius: 50% !important;
+            transition: all 0.2s ease !important;
+        }
+        .mfp-close::before {
+            content: '×' !important;
+            font-size: 28px !important;
+            display: block !important;
+            line-height: 44px !important;
+            text-align: center !important;
+            color: #fff !important;
+            font-family: Arial, sans-serif !important;
+        }
+        .mfp-close:hover {
+            opacity: 1 !important;
+            background: rgba(0, 0, 0, 0.7) !important;
+            transform: rotate(90deg) !important;
+        }
     </style>
 </head>
 <body class="home page-template-default page page-id-7 wp-embed-responsive theme-betheme woocommerce-no-js color-custom content-brightness-light input-brightness-light style-simple button-flat layout-full-width nice-scroll-on hide-love no-content-padding header-transparent header-fw minimalist-header-no sticky-header sticky-tb-color ab-hide subheader-both-center menu-link-color menuo-right menuo-no-borders mobile-tb-center mobile-mini-mr-ll mobile-header-mini be-4263 wpb-js-composer js-comp-ver-8.0.1 vc_responsive">
