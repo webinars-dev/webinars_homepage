@@ -240,12 +240,12 @@ body[data-col-gap="50px"] .wpb_row:not(.full-width-section):not(.full-width-cont
 .top_menu_s .page-submenu .full-width-section{height:0px!important;}
 .page-submenu li:nth-child(1), .page-submenu li:nth-child(2), .page-submenu li:nth-child(3), .page-submenu li:nth-child(4), .page-submenu li:nth-child(5)
 {width:220px; height:60px; display:flex; align-items:center; justify-content:flex-start; position:relative;
-    padding-left: 20px; line-height: 60px; margin-bottom:0px; box-sizing: border-box;}
+    padding-left: 14px; line-height: 60px; margin-bottom:0px; box-sizing: border-box; border: 6px solid transparent;}
 .page-submenu li {display:grid; font-family:'hyphen'!important; padding:0px 0px; }
-.page-submenu li a { font-size:20px; transition: all .3s;}
+.page-submenu li a { font-size:20px;}
 
-.page-submenu .current-menu-item {border: 6px solid #000;}
-.page-submenu li:hover {border: 6px solid #000;}
+.page-submenu .current-menu-item {border-color: #000;}
+.page-submenu li:hover {border-color: #000;}
 
 /*main*/
 .service1_div .column-image-bg{background-attachment:fixed;  background-clip: padding-box;
