@@ -722,7 +722,7 @@ button[type=submit] span:after{ display:none;}
     line-height: 34px;
     margin-bottom: 10px;
 }
-.page-submenu li a::after {width: 218px;}    
+.page-submenu li a::after {display: none;}    
     
 /*certificate*/ 
 .nectar-flickity:not(.masonry) .flickity-slider .cell {width: 86%;}
