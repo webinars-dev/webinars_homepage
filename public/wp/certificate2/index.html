@@ -6,116 +6,102 @@
   <title>직접생산증명서 - 소프트웨어</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      background: #fff;
+      overflow: hidden;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
-      background: #fff;
-      min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      flex-direction: column;
     }
-    .certificate-container {
-      background: white;
-      border: 2px solid #333;
-      padding: 60px 40px;
-      max-width: 600px;
-      width: 100%;
-      text-align: center;
+    .header {
+      padding: 40px 40px 20px;
+      background: #fff;
     }
     .title {
-      font-size: 28px;
+      font-size: 36px;
       font-weight: bold;
       color: #333;
       margin-bottom: 20px;
-      letter-spacing: 2px;
     }
     .subtitle {
       font-size: 18px;
-      color: #666;
-      margin-bottom: 40px;
-    }
-    .company-name {
-      font-size: 24px;
-      font-weight: bold;
-      color: #000;
-      margin-bottom: 30px;
-    }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-    }
-    .info-label {
-      color: #666;
-    }
-    .info-value {
+      font-weight: 700;
       color: #333;
-      font-weight: 500;
+      line-height: 1.5;
     }
-    .registration-number {
-      font-size: 20px;
+    .subtitle-sub {
+      font-size: 18px;
+      font-weight: 400;
       color: #333;
-      margin: 30px 0;
-      padding: 15px;
-      background: #f9f9f9;
+      margin-top: 5px;
+    }
+    .scroll-container {
+      flex: 1;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      padding: 20px 40px 30px;
+      white-space: nowrap;
+      background: #f5f5f5;
+      scrollbar-width: auto;
+      scrollbar-color: #666 #ddd;
+      height: 600px;
+    }
+    .scroll-container::-webkit-scrollbar {
+      height: 14px;
+    }
+    .scroll-container::-webkit-scrollbar-track {
+      background: #ddd;
       border-radius: 4px;
     }
-    .product-list {
-      text-align: left;
-      margin: 20px 0;
-      padding: 20px;
-      background: #f9f9f9;
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: #999;
       border-radius: 4px;
     }
-    .product-list h4 {
-      margin-bottom: 10px;
-      color: #333;
+    .scroll-container::-webkit-scrollbar-thumb:hover {
+      background: #777;
     }
-    .product-list ul {
-      list-style: none;
-      color: #666;
+    .certificates-wrapper {
+      display: inline-flex;
+      gap: 30px;
+      height: 520px;
+      padding-bottom: 10px;
     }
-    .product-list li {
-      padding: 5px 0;
-      border-bottom: 1px solid #eee;
+    .certificate-item {
+      display: inline-block;
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      height: 520px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
     }
-    .footer {
-      margin-top: 40px;
-      color: #999;
-      font-size: 12px;
+    .certificate-item img {
+      height: 520px;
+      width: auto;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="certificate-container">
-    <div class="title">직접생산증명서</div>
-    <div class="subtitle">소프트웨어</div>
-    <div class="company-name">주식회사 웨비나스</div>
-    <div class="info-row">
-      <span class="info-label">대표자</span>
-      <span class="info-value">박재오</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">소재지</span>
-      <span class="info-value">서울특별시 영등포구 선유로49길 23, 209호</span>
-    </div>
-    <div class="product-list">
-      <h4>생산품목</h4>
-      <ul>
-        <li>웨비나 스트리밍 솔루션</li>
-        <li>이벤트 관리 시스템 (EMS)</li>
-        <li>참가자 등록 플랫폼</li>
-        <li>온라인 이벤트 플랫폼 (WX)</li>
-      </ul>
-    </div>
-    <div class="registration-number">
-      증명번호: 제2020-000000호
-    </div>
-    <div class="footer">
-      본 증명서는 중소기업제품 구매촉진 및 판로지원에 관한 법률에 의거하여 발급되었습니다.
+  <div class="header">
+    <div class="title">CERTIFICATE</div>
+    <div class="subtitle">직접생산증명서</div>
+    <div class="subtitle-sub">―<br>소프트웨어</div>
+  </div>
+  <div class="scroll-container">
+    <div class="certificates-wrapper">
+      <div class="certificate-item">
+        <img src="/images/certificates/cert_software_1.png" alt="직접생산증명서-소프트웨어 1" />
+      </div>
+      <div class="certificate-item">
+        <img src="/images/certificates/cert_software_2.png" alt="직접생산증명서-소프트웨어 2" />
+      </div>
+      <div class="certificate-item">
+        <img src="/images/certificates/cert_software_3.png" alt="직접생산증명서-소프트웨어 3" />
+      </div>
     </div>
   </div>
 </body>
