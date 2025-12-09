@@ -306,6 +306,25 @@ const hydrateNectarMedia = (root) => {
         rectTop: rect.top
       });
 
+      // Get all menu items and their corresponding section IDs
+      const menuItems = pageSubmenu.querySelectorAll('ul li');
+      const sectionIds = [];
+      menuItems.forEach((item) => {
+        const link = item.querySelector('a');
+        if (link) {
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            sectionIds.push({
+              id: href.substring(1),
+              menuItem: item
+            });
+          }
+        }
+      });
+
+      // Don't set any menu item as active by default
+      // Selection box only appears when scrolled to a specific section
+
       const handleScroll = () => {
         // Check if we've scrolled past the initial position
         if (window.scrollY >= initialOffsetTop) {
@@ -317,6 +336,33 @@ const hydrateNectarMedia = (root) => {
             pageSubmenu.classList.remove('stuck');
           }
         }
+
+        // Update current-menu-item based on scroll position
+        // Find which section is currently in view
+        let currentSection = null;
+        const scrollPosition = window.scrollY + 200; // Offset for header
+
+        sectionIds.forEach(({ id, menuItem }) => {
+          const section = document.getElementById(id);
+          if (section) {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+
+            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+              currentSection = menuItem;
+            }
+          }
+        });
+
+        // Update active class
+        menuItems.forEach((item) => {
+          item.classList.remove('current-menu-item');
+        });
+
+        if (currentSection) {
+          currentSection.classList.add('current-menu-item');
+        }
+        // No default selection - box only appears when scrolled to a section
       };
 
       // Initial check

@@ -238,9 +238,9 @@ body[data-col-gap="50px"] .wpb_row:not(.full-width-section):not(.full-width-cont
 } */
 .page-submenu .page-submenu .full-width-section {height:0px!important;}
 .top_menu_s .page-submenu .full-width-section{height:0px!important;}
-.page-submenu li:nth-child(1), .page-submenu li:nth-child(2) , .page-submenu li:nth-child(3) , .page-submenu li:nth-child(4), .page-submenu li:nth-child(5)     
-{width:220px; height:55px; display:block; position:relative;     padding-left: 20px;
-    line-height: 20px; margin-bottom:10px;}
+.page-submenu li:nth-child(1), .page-submenu li:nth-child(2) , .page-submenu li:nth-child(3) , .page-submenu li:nth-child(4), .page-submenu li:nth-child(5)
+{width:220px; height:55px; display:flex; align-items:center; justify-content:flex-start; position:relative;
+    padding-left: 20px; line-height: 20px; margin-bottom:10px;}
 .page-submenu li {display:grid; font-family:'hyphen'!important; padding:0px 0px; }
 .page-submenu li a { }
 .page-submenu li a::before, .page-submenu li a::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:all .3s;-webkit-transition:all .3s;}
