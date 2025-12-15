@@ -270,23 +270,25 @@ const ModalContent = ({ path }) => {
       return url;
     };
 
-    const encodeKoreanUrl = (url) => {
-      if (!url) return url;
-      if (/^(data|blob):/i.test(url)) return url;
+	    const encodeKoreanUrl = (url) => {
+	      if (!url) return url;
+	      if (/^(data|blob):/i.test(url)) return url;
 
-      const shouldReturnRelative = !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) && !url.startsWith('//');
+	      const shouldReturnRelative = !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) && !url.startsWith('//');
 
-      try {
-        const urlObj = new URL(url, window.location.origin);
-        urlObj.pathname = urlObj.pathname
-          .split('/')
-          .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
-          .join('/');
-        return shouldReturnRelative ? `${urlObj.pathname}${urlObj.search}${urlObj.hash}` : urlObj.toString();
-      } catch {
-        return url.replace(/[\\u3131-\\uD79D]/g, (char) => encodeURIComponent(char));
-      }
-    };
+	      try {
+	        const urlObj = new URL(url, window.location.origin);
+	        urlObj.pathname = urlObj.pathname
+	          .split('/')
+	          .map((segment) => encodeURIComponent(decodeURIComponent(segment).normalize('NFC')))
+	          .join('/');
+	        return shouldReturnRelative ? `${urlObj.pathname}${urlObj.search}${urlObj.hash}` : urlObj.toString();
+	      } catch {
+	        return url
+	          .normalize('NFC')
+	          .replace(/[\\u3131-\\uD79D]/g, (char) => encodeURIComponent(char));
+	      }
+	    };
 
     const rewriteSrcset = (srcset = '') =>
       srcset

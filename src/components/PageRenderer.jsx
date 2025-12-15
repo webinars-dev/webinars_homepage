@@ -172,14 +172,16 @@ const encodeKoreanUrl = (url) => {
     // Encode each path segment separately to handle Korean filenames
     const encodedPath = urlObj.pathname
       .split('/')
-      .map(segment => encodeURIComponent(decodeURIComponent(segment)))
+      .map((segment) => encodeURIComponent(decodeURIComponent(segment).normalize('NFC')))
       .join('/');
     urlObj.pathname = encodedPath;
 
     return shouldReturnRelative ? `${urlObj.pathname}${urlObj.search}${urlObj.hash}` : urlObj.toString();
   } catch {
     // If URL parsing fails, try simple encoding
-    return url.replace(/[\u3131-\uD79D]/g, (char) => encodeURIComponent(char));
+    return url
+      .normalize('NFC')
+      .replace(/[\u3131-\uD79D]/g, (char) => encodeURIComponent(char));
   }
 };
 
