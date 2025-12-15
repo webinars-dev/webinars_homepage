@@ -135,6 +135,25 @@ const ensureScriptsSequential = async (scripts = []) => {
   }
 };
 
+// Helper function to encode Korean characters in URL
+const encodeKoreanUrl = (url) => {
+  if (!url) return url;
+  // Split URL into parts to preserve the protocol and domain
+  try {
+    const urlObj = new URL(url);
+    // Encode each path segment separately to handle Korean filenames
+    const encodedPath = urlObj.pathname
+      .split('/')
+      .map(segment => encodeURIComponent(decodeURIComponent(segment)))
+      .join('/');
+    urlObj.pathname = encodedPath;
+    return urlObj.toString();
+  } catch {
+    // If URL parsing fails, try simple encoding
+    return url.replace(/[\u3131-\uD79D]/g, (char) => encodeURIComponent(char));
+  }
+};
+
 const hydrateNectarMedia = (root) => {
   if (!root) return;
 
@@ -143,12 +162,14 @@ const hydrateNectarMedia = (root) => {
     const src = node.getAttribute('data-nectar-img-src');
     if (!src) return;
 
+    const encodedSrc = encodeKoreanUrl(src);
+
     if (node.tagName === 'IMG') {
       const hasPlaceholder =
         node.getAttribute('src')?.startsWith('data:image/svg+xml') ||
         !node.getAttribute('src');
       if (hasPlaceholder) {
-        node.setAttribute('src', src);
+        node.setAttribute('src', encodedSrc);
       }
 
       const srcset = node.getAttribute('data-nectar-img-srcset');
@@ -156,7 +177,25 @@ const hydrateNectarMedia = (root) => {
         node.setAttribute('srcset', srcset);
       }
     } else if (!node.style.backgroundImage) {
-      node.style.backgroundImage = `url(${src})`;
+      node.style.backgroundImage = `url(${encodedSrc})`;
+    }
+  });
+
+  // Fix background-image URLs with Korean characters in inline styles
+  const bgElements = root.querySelectorAll('.column-image-bg[style*="background-image"]');
+  bgElements.forEach((node) => {
+    const style = node.getAttribute('style');
+    if (!style) return;
+
+    // Extract URL from background-image
+    const urlMatch = style.match(/background-image:\s*url\(["']?([^"')]+)["']?\)/);
+    if (urlMatch && urlMatch[1]) {
+      const originalUrl = urlMatch[1];
+      // Check if URL contains Korean characters
+      if (/[\u3131-\uD79D]/.test(originalUrl)) {
+        const encodedUrl = encodeKoreanUrl(originalUrl);
+        node.style.backgroundImage = `url("${encodedUrl}")`;
+      }
     }
   });
 

@@ -47,6 +47,14 @@ import Webinar2024DesignPublication1Page from '../archive/components/webinar_202
 import Webinar2024Offline7Page from '../archive/components/webinar_2024_offline_7.jsx';
 import WebinarLiveStreaming10Page from '../archive/components/webinar_live_streaming_10.jsx';
 
+// 블로그 페이지
+import { BlogIndexPage, BlogPostPage, BlogCategoryPage, BlogTagPage } from './pages/blog';
+
+// 관리자 페이지
+import { AdminLayout, AdminLoginPage, AdminPostListPage, AdminPostEditPage } from './pages/admin';
+import ResetPasswordPage from './pages/admin/ResetPasswordPage.jsx';
+import { AuthProvider } from './hooks/useAuth.jsx';
+
 // 에러 바운더리 컴포넌트
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -187,10 +195,11 @@ function LocalLinkAdapter() {
 // 메인 App 컴포넌트
 function App() {
   return (
-    <Router>
-      <LocalLinkAdapter />
-      <ErrorBoundary>
-        <Routes>
+    <AuthProvider>
+      <Router>
+        <LocalLinkAdapter />
+        <ErrorBoundary>
+          <Routes>
           <Route path="/" element={<IndexPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/about/" element={<AboutPage />} />
@@ -249,6 +258,22 @@ function App() {
           <Route path="/WEBINAR/2024_offline_7/" element={<Webinar2024Offline7Page />} />
           <Route path="/WEBINAR/webinar_live-streaming_10/" element={<WebinarLiveStreaming10Page />} />
 
+          {/* 블로그 라우트 */}
+          <Route path="/blog" element={<BlogIndexPage />} />
+          <Route path="/blog/" element={<BlogIndexPage />} />
+          <Route path="/blog/category/:categorySlug" element={<BlogCategoryPage />} />
+          <Route path="/blog/tag/:tagSlug" element={<BlogTagPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
+
+          {/* 관리자 라우트 */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="blog" element={<AdminPostListPage />} />
+            <Route path="blog/new" element={<AdminPostEditPage />} />
+            <Route path="blog/edit/:id" element={<AdminPostEditPage />} />
+          </Route>
+
           <Route
             path="*"
             element={
@@ -263,9 +288,10 @@ function App() {
               </div>
             }
           />
-        </Routes>
-      </ErrorBoundary>
-    </Router>
+          </Routes>
+        </ErrorBoundary>
+      </Router>
+    </AuthProvider>
   );
 }
 
