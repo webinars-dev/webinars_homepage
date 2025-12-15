@@ -533,13 +533,47 @@ background:url(/wp-content/uploads/2022/11/plus.svg);}
 
 
 /*refference*/
- 
+	 
  .reference .mtxt15 {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-    padding-right: 10px;
-    overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    width: 100%;
+	    padding-right: 10px;
+	    overflow: hidden;
+	}
+
+/* Reference: 카드(박스) 높이 정렬 보정
+   - 일부 카드에 inline `margin-bottom: 20px`가 있어 실제 박스 높이가 줄어들며
+     옆 박스와 하단 라인이 미세하게 어긋나는 현상이 발생함.
+   - 데스크톱 구간(2~3열 배치)에서만, 부모 컬럼을 flex column으로 만들어
+     카드들이 동일 높이로 stretch 되도록 처리하고, 카드 inline margin은 제거함. */
+@media (min-width: 1025px) {
+  .reference.vc_row-flex > .row_col_wrap_12 > .wpb_column.no-extra-padding > .vc_column-inner {
+    height: 100%;
+    display: flex;
+  }
+
+  .reference.vc_row-flex > .row_col_wrap_12 > .wpb_column.no-extra-padding > .vc_column-inner > .wpb_wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .reference.vc_row-flex > .row_col_wrap_12 > .wpb_column.no-extra-padding > .vc_column-inner > .wpb_wrapper > .wpb_row.inner_row {
+    flex: 1 1 0;
+    margin: 0 !important;
+  }
+
+  .reference.vc_row-flex > .row_col_wrap_12 > .wpb_column.no-extra-padding > .vc_column-inner > .wpb_wrapper > .wpb_row.inner_row .row_col_wrap_12_inner,
+  .reference.vc_row-flex > .row_col_wrap_12 > .wpb_column.no-extra-padding > .vc_column-inner > .wpb_wrapper > .wpb_row.inner_row .row_col_wrap_12_inner > .modal-link,
+  .reference.vc_row-flex > .row_col_wrap_12 > .wpb_column.no-extra-padding > .vc_column-inner > .wpb_wrapper > .wpb_row.inner_row .row_col_wrap_12_inner > .modal-link > .vc_column-inner {
+    height: 100%;
+  }
+
+  .reference.vc_row-flex > .row_col_wrap_12 > .wpb_column.no-extra-padding > .vc_column-inner > .wpb_wrapper > .wpb_row.inner_row .modal-link[style*="margin-bottom"] {
+    margin-bottom: 0 !important;
+  }
 }
 
 

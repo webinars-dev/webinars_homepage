@@ -135,23 +135,121 @@ const ensureScriptsSequential = async (scripts = []) => {
   }
 };
 
+const WEBINARS_HOST_REGEX = /(^|\.)webinars\.co\.kr$/i;
+
+const normalizeWebinarsAssetUrl = (url) => {
+  if (!url) return url;
+  if (typeof window === 'undefined') return url;
+
+  // Keep data/blob URLs intact.
+  if (/^(data|blob):/i.test(url)) return url;
+
+  try {
+    const isAbsolute = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) || url.startsWith('//');
+    const base = window.location.origin;
+    const urlObj = isAbsolute ? new URL(url) : new URL(url, base);
+
+    if (WEBINARS_HOST_REGEX.test(urlObj.hostname)) {
+      return `${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+    }
+
+    return url;
+  } catch {
+    return url;
+  }
+};
+
 // Helper function to encode Korean characters in URL
 const encodeKoreanUrl = (url) => {
   if (!url) return url;
+
+  const shouldReturnRelative = !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) && !url.startsWith('//');
+
   // Split URL into parts to preserve the protocol and domain
   try {
-    const urlObj = new URL(url);
+    const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+    const urlObj = new URL(url, base);
     // Encode each path segment separately to handle Korean filenames
     const encodedPath = urlObj.pathname
       .split('/')
       .map(segment => encodeURIComponent(decodeURIComponent(segment)))
       .join('/');
     urlObj.pathname = encodedPath;
-    return urlObj.toString();
+
+    return shouldReturnRelative ? `${urlObj.pathname}${urlObj.search}${urlObj.hash}` : urlObj.toString();
   } catch {
     // If URL parsing fails, try simple encoding
     return url.replace(/[\u3131-\uD79D]/g, (char) => encodeURIComponent(char));
   }
+};
+
+const rewriteCssAssetUrls = (cssText = '') =>
+  cssText.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g, (match, quote, rawUrl) => {
+    // Ignore data/blob URLs and fragments.
+    if (/^(data|blob):/i.test(rawUrl) || rawUrl.startsWith('#')) return match;
+
+    const normalized = normalizeWebinarsAssetUrl(rawUrl);
+    const encoded = encodeKoreanUrl(normalized);
+    return `url(${quote}${encoded}${quote})`;
+  });
+
+const rewriteSrcset = (srcset = '') =>
+  srcset
+    .split(',')
+    .map((part) => {
+      const trimmed = part.trim();
+      if (!trimmed) return trimmed;
+      const [candidateUrl, ...rest] = trimmed.split(/\s+/);
+      const normalizedCandidate = normalizeWebinarsAssetUrl(candidateUrl);
+      const encodedCandidate = encodeKoreanUrl(normalizedCandidate);
+      return [encodedCandidate, ...rest].join(' ');
+    })
+    .join(', ');
+
+const normalizeDomAssetUrls = (root) => {
+  if (!root) return;
+
+  root.querySelectorAll('[data-nectar-img-src]').forEach((node) => {
+    const raw = node.getAttribute('data-nectar-img-src');
+    if (!raw) return;
+    const normalized = normalizeWebinarsAssetUrl(raw);
+    const encoded = encodeKoreanUrl(normalized);
+    node.setAttribute('data-nectar-img-src', encoded);
+
+    const rawSrcset = node.getAttribute('data-nectar-img-srcset');
+    if (!rawSrcset) return;
+    node.setAttribute('data-nectar-img-srcset', rewriteSrcset(rawSrcset));
+  });
+
+  root.querySelectorAll('img[src]').forEach((img) => {
+    const raw = img.getAttribute('src');
+    if (!raw) return;
+    const normalized = normalizeWebinarsAssetUrl(raw);
+    const encoded = encodeKoreanUrl(normalized);
+    if (encoded !== raw) img.setAttribute('src', encoded);
+  });
+
+  root.querySelectorAll('img[srcset], source[srcset]').forEach((node) => {
+    const raw = node.getAttribute('srcset');
+    if (!raw) return;
+    const rewritten = rewriteSrcset(raw);
+    if (rewritten !== raw) node.setAttribute('srcset', rewritten);
+  });
+
+  root.querySelectorAll('link[rel="preload"][as="image"][href]').forEach((link) => {
+    const raw = link.getAttribute('href');
+    if (!raw) return;
+    const normalized = normalizeWebinarsAssetUrl(raw);
+    const encoded = encodeKoreanUrl(normalized);
+    if (encoded !== raw) link.setAttribute('href', encoded);
+  });
+
+  root.querySelectorAll('[style*="url("]').forEach((node) => {
+    const style = node.getAttribute('style');
+    if (!style) return;
+    const rewritten = rewriteCssAssetUrls(style);
+    if (rewritten !== style) node.setAttribute('style', rewritten);
+  });
 };
 
 const hydrateNectarMedia = (root) => {
@@ -162,9 +260,17 @@ const hydrateNectarMedia = (root) => {
     const src = node.getAttribute('data-nectar-img-src');
     if (!src) return;
 
-    const encodedSrc = encodeKoreanUrl(src);
+    const normalizedSrc = normalizeWebinarsAssetUrl(src);
+    const encodedSrc = encodeKoreanUrl(normalizedSrc);
 
     if (node.tagName === 'IMG') {
+      const currentSrc = node.getAttribute('src');
+      if (currentSrc) {
+        const normalizedCurrent = normalizeWebinarsAssetUrl(currentSrc);
+        const encodedCurrent = encodeKoreanUrl(normalizedCurrent);
+        if (encodedCurrent !== currentSrc) node.setAttribute('src', encodedCurrent);
+      }
+
       const hasPlaceholder =
         node.getAttribute('src')?.startsWith('data:image/svg+xml') ||
         !node.getAttribute('src');
@@ -174,7 +280,7 @@ const hydrateNectarMedia = (root) => {
 
       const srcset = node.getAttribute('data-nectar-img-srcset');
       if (srcset) {
-        node.setAttribute('srcset', srcset);
+        node.setAttribute('srcset', rewriteSrcset(srcset));
       }
     } else if (!node.style.backgroundImage) {
       node.style.backgroundImage = `url(${encodedSrc})`;
@@ -182,7 +288,7 @@ const hydrateNectarMedia = (root) => {
   });
 
   // Fix background-image URLs with Korean characters in inline styles
-  const bgElements = root.querySelectorAll('.column-image-bg[style*="background-image"]');
+  const bgElements = root.querySelectorAll('[style*="background-image"]');
   bgElements.forEach((node) => {
     const style = node.getAttribute('style');
     if (!style) return;
@@ -191,11 +297,9 @@ const hydrateNectarMedia = (root) => {
     const urlMatch = style.match(/background-image:\s*url\(["']?([^"')]+)["']?\)/);
     if (urlMatch && urlMatch[1]) {
       const originalUrl = urlMatch[1];
-      // Check if URL contains Korean characters
-      if (/[\u3131-\uD79D]/.test(originalUrl)) {
-        const encodedUrl = encodeKoreanUrl(originalUrl);
-        node.style.backgroundImage = `url("${encodedUrl}")`;
-      }
+      const normalized = normalizeWebinarsAssetUrl(originalUrl);
+      const encodedUrl = encodeKoreanUrl(normalized);
+      node.style.backgroundImage = `url("${encodedUrl}")`;
     }
   });
 
@@ -559,8 +663,15 @@ const PageRenderer = ({ html }) => {
     if (isInsideModal) return undefined;
     if (!pageData.headNodes?.length || typeof document === 'undefined') return undefined;
 
+    // 페이지 내 lazy-load 데이터 속성을 먼저 정규화한 뒤 테마 스크립트를 주입해야
+    // 테마 스크립트가 잘못된(원격/혼합콘텐츠) URL로 배경 이미지를 세팅하지 않습니다.
+    normalizeDomAssetUrls(containerRef.current);
+
     const appended = pageData.headNodes.map((node) => {
       const clone = node.cloneNode(true);
+      if (clone.tagName === 'STYLE' && clone.textContent) {
+        clone.textContent = rewriteCssAssetUrls(clone.textContent);
+      }
       document.head.appendChild(clone);
       return clone;
     });
@@ -590,6 +701,10 @@ const PageRenderer = ({ html }) => {
 
     // Reset before hydration
     resetAnimationElements();
+
+    // 모달/일반 페이지 공통: DOM에 남아있는 원격/혼합콘텐츠 URL을 로컬로 정규화
+    // (모달은 headNodes 주입을 하지 않기 때문에 여기서도 꼭 처리해야 함)
+    normalizeDomAssetUrls(containerRef.current);
 
     // Now hydrate (but this will skip .has-animation elements due to our fix)
     hydrateNectarMedia(containerRef.current);
@@ -1235,14 +1350,16 @@ const PageRenderer = ({ html }) => {
     };
 
     // Add event listeners
-    document.addEventListener('click', handleClick, true);
+    // NOTE: 일부 테마/플러그인 스크립트가 document 캡처 단계에서 stopImmediatePropagation을 호출해
+    // document 리스너가 실행되지 않는 케이스가 있어, window 캡처 단계에서 먼저 처리합니다.
+    window.addEventListener('click', handleClick, true);
     document.addEventListener('click', handleExpandableSection, true);
     document.addEventListener('click', handleUltimateAddonsModal, true);
     document.addEventListener('click', handleMobileMenuToggle, true);
     document.addEventListener('click', handleSlideOutMenuClick, false);
 
     return () => {
-      document.removeEventListener('click', handleClick, true);
+      window.removeEventListener('click', handleClick, true);
       document.removeEventListener('click', handleExpandableSection, true);
       document.removeEventListener('click', handleUltimateAddonsModal, true);
       document.removeEventListener('click', handleMobileMenuToggle, true);
@@ -1259,6 +1376,7 @@ const PageRenderer = ({ html }) => {
     // This fixes the issue where images and GNB disappear after closing the modal
     // Use document.body to ensure GNB menu items (which are outside containerRef) are also fixed
     setTimeout(() => {
+      normalizeDomAssetUrls(document.body);
       hydrateNectarMedia(document.body);
 
       // Fix: Restore ALL animation elements after modal closes

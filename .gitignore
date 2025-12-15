@@ -5,6 +5,7 @@ temp
 playwright-report
 test-results
 coverage
+.playwright-mcp
 .DS_Store
 *.log
 npm-debug.log*

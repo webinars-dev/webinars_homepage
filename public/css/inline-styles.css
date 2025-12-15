@@ -1386,3 +1386,31 @@ div#slide-out-widget-area .inner {
 
 /* 메뉴는 기본적으로 숨김 - JavaScript가 display를 토글 */
 
+
+/* =====================================================
+   Reference 페이지 - 박스 높이 일치 수정
+   ===================================================== */
+
+/* column-bg-layer (배경 이미지 래퍼)가 컬럼 전체를 채우도록 설정 */
+.reference.vc_row-o-equal-height .wpb_column .vc_column-inner .column-bg-layer,
+.reference.vc_row-o-equal-height .wpb_column .vc_column-inner .column-image-bg-wrap,
+.reference.vc_row-o-equal-height .wpb_column .vc_column-inner .column-bg-overlay-wrap {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.reference.vc_row-o-equal-height .wpb_column .column-image-bg-wrap .inner-wrap,
+.reference.vc_row-o-equal-height .wpb_column .column-image-bg {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}

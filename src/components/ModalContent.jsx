@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 // Import images
 import image1_3 from '../assets/images/image-1-3.jpg';
@@ -239,6 +239,154 @@ const ModalContent = ({ path }) => {
   const ContentComponent = modalContents[path] || defaultContent;
   console.log('[ModalContent] Selected component:', ContentComponent.name || ContentComponent);
 
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root) return undefined;
+
+    const WEBINARS_HOST_REGEX = /(^|\.)webinars\.co\.kr$/i;
+
+    const normalizeWebinarsAssetUrl = (url) => {
+      if (!url) return url;
+
+      // Keep data/blob URLs intact.
+      if (/^(data|blob):/i.test(url)) return url;
+
+      // Fix legacy local prefix.
+      if (url.startsWith('/wp/wp-content/')) return url.replace('/wp/wp-content/', '/wp-content/');
+
+      try {
+        const isAbsolute = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) || url.startsWith('//');
+        const urlObj = isAbsolute ? new URL(url) : new URL(url, window.location.origin);
+
+        if (WEBINARS_HOST_REGEX.test(urlObj.hostname)) {
+          return `${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+        }
+      } catch {
+        // ignore
+      }
+
+      return url;
+    };
+
+    const encodeKoreanUrl = (url) => {
+      if (!url) return url;
+      if (/^(data|blob):/i.test(url)) return url;
+
+      const shouldReturnRelative = !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) && !url.startsWith('//');
+
+      try {
+        const urlObj = new URL(url, window.location.origin);
+        urlObj.pathname = urlObj.pathname
+          .split('/')
+          .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
+          .join('/');
+        return shouldReturnRelative ? `${urlObj.pathname}${urlObj.search}${urlObj.hash}` : urlObj.toString();
+      } catch {
+        return url.replace(/[\\u3131-\\uD79D]/g, (char) => encodeURIComponent(char));
+      }
+    };
+
+    const rewriteSrcset = (srcset = '') =>
+      srcset
+        .split(',')
+        .map((part) => {
+          const trimmed = part.trim();
+          if (!trimmed) return trimmed;
+          const [candidateUrl, ...rest] = trimmed.split(/\s+/);
+          const normalized = normalizeWebinarsAssetUrl(candidateUrl);
+          const encoded = encodeKoreanUrl(normalized);
+          return [encoded, ...rest].join(' ');
+        })
+        .join(', ');
+
+    const rewriteCssUrls = (text = '') =>
+      text.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g, (match, quote, rawUrl) => {
+        if (/^(data|blob):/i.test(rawUrl) || rawUrl.startsWith('#')) return match;
+        const normalized = normalizeWebinarsAssetUrl(rawUrl);
+        const encoded = encodeKoreanUrl(normalized);
+        return `url(${quote}${encoded}${quote})`;
+      });
+
+    const normalizeAssets = () => {
+      // 1) Lazy-load data attributes (Salient/nectar)
+      root.querySelectorAll('[data-nectar-img-src]').forEach((node) => {
+        const raw = node.getAttribute('data-nectar-img-src');
+        if (!raw) return;
+        const normalized = normalizeWebinarsAssetUrl(raw);
+        const encoded = encodeKoreanUrl(normalized);
+        node.setAttribute('data-nectar-img-src', encoded);
+
+        const rawSrcset = node.getAttribute('data-nectar-img-srcset');
+        if (rawSrcset) node.setAttribute('data-nectar-img-srcset', rewriteSrcset(rawSrcset));
+
+        if (node.tagName === 'IMG') {
+          const currentSrc = node.getAttribute('src');
+          if (currentSrc) {
+            const normalizedCurrent = normalizeWebinarsAssetUrl(currentSrc);
+            const encodedCurrent = encodeKoreanUrl(normalizedCurrent);
+            if (encodedCurrent !== currentSrc) node.setAttribute('src', encodedCurrent);
+          }
+
+          const hasPlaceholder =
+            node.getAttribute('src')?.startsWith('data:image/svg+xml') ||
+            !node.getAttribute('src');
+          if (hasPlaceholder) node.setAttribute('src', encoded);
+
+          const srcset = node.getAttribute('srcset');
+          if (srcset) node.setAttribute('srcset', rewriteSrcset(srcset));
+        } else if (!node.style.backgroundImage) {
+          node.style.backgroundImage = `url(${encoded})`;
+        }
+      });
+
+      // 2) Regular images
+      root.querySelectorAll('img[src]').forEach((img) => {
+        const raw = img.getAttribute('src');
+        if (!raw) return;
+        const normalized = normalizeWebinarsAssetUrl(raw);
+        const encoded = encodeKoreanUrl(normalized);
+        if (encoded !== raw) img.setAttribute('src', encoded);
+      });
+
+      root.querySelectorAll('img[srcset], source[srcset]').forEach((node) => {
+        const raw = node.getAttribute('srcset');
+        if (!raw) return;
+        const rewritten = rewriteSrcset(raw);
+        if (rewritten !== raw) node.setAttribute('srcset', rewritten);
+      });
+
+      // 3) Inline background/mask images in style attributes
+      root.querySelectorAll('[style*="url("]').forEach((node) => {
+        const style = node.getAttribute('style');
+        if (!style) return;
+        const rewritten = rewriteCssUrls(style);
+        if (rewritten !== style) node.setAttribute('style', rewritten);
+      });
+    };
+
+    // Run immediately + after a short delay (theme scripts sometimes mutate DOM after mount)
+    normalizeAssets();
+    const t1 = setTimeout(normalizeAssets, 250);
+    const t2 = setTimeout(normalizeAssets, 1000);
+
+    // Observe dynamic changes inside modal
+    let raf = 0;
+    const observer = new MutationObserver(() => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => normalizeAssets());
+    });
+    observer.observe(root, { childList: true, subtree: true });
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      if (raf) cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [path]);
+
   return (
     <>
       {/* 원본 CSS 스타일 추가 + 모달 내 헤더/푸터 숨기기 */}
@@ -348,6 +496,7 @@ const ModalContent = ({ path }) => {
       `}</style>
 
       <div
+        ref={containerRef}
         className="modal-content"
         style={{
           position: 'relative',

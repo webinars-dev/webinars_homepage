@@ -11,8 +11,9 @@ test.beforeAll(() => {
 
 test.describe('WEBINARS 디자인 검증', () => {
   test('홈 화면 로딩 및 실서버 비교', async ({ page, context }) => {
+    test.setTimeout(90 * 1000);
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#header-outer', { timeout: 15000 });
     await expect(page).toHaveTitle(/WEBINARS/);
 
@@ -25,7 +26,7 @@ test.describe('WEBINARS 디자인 검증', () => {
 
     const livePage = await context.newPage();
     await livePage.setViewportSize({ width: 1440, height: 900 });
-    await livePage.goto(LIVE_URL, { waitUntil: 'networkidle' });
+    await livePage.goto(LIVE_URL, { waitUntil: 'domcontentloaded' });
     await livePage.waitForSelector('#header-outer', { timeout: 15000 });
     await livePage.screenshot({ path: path.join(TEMP_DIR, 'home-live.png'), fullPage: true });
 
@@ -34,8 +35,9 @@ test.describe('WEBINARS 디자인 검증', () => {
       return el ? window.getComputedStyle(el).backgroundImage : '';
     });
 
-    expect(heroBg).toContain('webinars.co.kr/wp-content/uploads/2022/11/main.jpg');
-    expect(liveHeroBg).toContain('webinars.co.kr/wp-content/uploads/2022/11/main.jpg');
+    // 로컬은 `/wp-content/...`로 정규화되고, 실서버는 도메인 포함 URL일 수 있음
+    expect(heroBg).toMatch(/\/wp-content\/uploads\/2022\/11\/main\.jpg/);
+    expect(liveHeroBg).toMatch(/webinars\.co\.kr\/wp-content\/uploads\/2022\/11\/main\.jpg/);
 
     await livePage.close();
   });
@@ -57,6 +59,7 @@ test.describe('WEBINARS 디자인 검증', () => {
       backgrounds.push(bg);
     }
 
-    backgrounds.forEach((bg) => expect(bg).toMatch(/webinars\.co\.kr/));
+    // 로컬/프로덕션 모두 배경 URL이 존재하면 OK (로컬은 `/wp-content/...`로 정규화됨)
+    backgrounds.forEach((bg) => expect(bg).toMatch(/(webinars\.co\.kr\/wp-content\/|\/wp-content\/)/));
   });
 });

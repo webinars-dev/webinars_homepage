@@ -20,13 +20,16 @@ module.exports = defineConfig({
   // 병렬 워커 수
   workers: process.env.CI ? 1 : undefined,
 
-  // 리포터 설정
-  reporter: 'html',
+  // 리포터 설정 (실행이 종료되지 않는 open 모드 방지)
+  reporter: [['html', { open: 'never' }], ['list']],
 
   // 공통 설정
   use: {
     // 기본 URL
     baseURL: 'http://localhost:3000',
+
+    // 실서버 비교 시 인증서 이슈 무시
+    ignoreHTTPSErrors: true,
 
     // 스크린샷
     screenshot: 'only-on-failure',
