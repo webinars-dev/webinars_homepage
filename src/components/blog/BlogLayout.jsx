@@ -138,19 +138,20 @@ export default function BlogLayout({ children, title = '블로그' }) {
           borderTop: '1px solid #eee'
         }}
       >
-        <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 90px' }}>
+        <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', paddingLeft: '60px', paddingRight: '20px' }}>
           {/* 회사 정보 - 좌측 정렬 (기존 사이트와 동일) */}
           <div style={{ textAlign: 'left' }}>
-            <p style={{ color: '#000000', fontSize: '12px', lineHeight: '1.8', margin: 0, fontWeight: 'bold' }}>
+            <h5 style={{ fontSize: '16px', color: '#111111', textAlign: 'left', fontWeight: 'bold', margin: 0 }}>
               &copy; 2022년 주식회사 웨비나스. 모든 저작권 소유.
-            </p>
-            <p style={{ color: '#000000', fontSize: '12px', lineHeight: '1.8', margin: '16px 0 0 0', fontWeight: 'bold' }}>
+            </h5>
+            <div style={{ height: '20px' }}></div>
+            <h5 style={{ fontSize: '14px', color: '#111111', lineHeight: '24px', textAlign: 'left', fontWeight: '700', margin: 0 }}>
               대표 박재오<br />
               07208 서울특별시 영등포구 선유로49길 23, 209호
-            </p>
-            <p style={{ color: '#000000', fontSize: '12px', lineHeight: '1.8', margin: '16px 0 0 0', fontWeight: 'bold' }}>
+            </h5>
+            <h5 style={{ fontSize: '14px', color: '#111111', lineHeight: '24px', textAlign: 'left', fontWeight: '700', margin: 0 }}>
               전화 02 6342 6834, 팩스 02 6342 6849, 이메일 sales@webinars.co.kr
-            </p>
+            </h5>
           </div>
         </div>
       </div>
