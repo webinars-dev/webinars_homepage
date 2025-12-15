@@ -62,4 +62,12 @@ test.describe('WEBINARS 디자인 검증', () => {
     // 로컬/프로덕션 모두 배경 URL이 존재하면 OK (로컬은 `/wp-content/...`로 정규화됨)
     backgrounds.forEach((bg) => expect(bg).toMatch(/(webinars\.co\.kr\/wp-content\/|\/wp-content\/)/));
   });
+
+  test('레퍼런스2 페이지 로딩', async ({ page }) => {
+    await page.goto('/reference2/', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('[data-testid="reference2-grid"]', { timeout: 15000 });
+
+    const legacyRowsCount = await page.locator('.wpb_row.reference').count();
+    expect(legacyRowsCount).toBe(0);
+  });
 });

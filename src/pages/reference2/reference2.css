@@ -1,0 +1,150 @@
+.reference2-root {
+  padding: 0 40px;
+  margin-top: 20px;
+}
+
+.reference2-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.reference2-state {
+  padding: 40px 0;
+  color: #111827;
+  font-size: 16px;
+}
+
+.reference2-state--error {
+  color: #b91c1c;
+}
+
+.reference2-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.reference2-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 380px;
+  background: #6b7280;
+  color: #ffffff;
+}
+
+.reference2-card--span-4 {
+  grid-column: span 4;
+}
+
+.reference2-card--span-8 {
+  grid-column: span 8;
+}
+
+.reference2-card--span-12 {
+  grid-column: span 12;
+}
+
+.reference2-card a.column-link {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  text-indent: -9999px;
+}
+
+.reference2-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+  transition: transform 300ms ease;
+}
+
+.reference2-card:hover .reference2-card-bg {
+  transform: scale(1.06);
+}
+
+.reference2-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.reference2-card-content {
+  position: relative;
+  z-index: 1;
+  padding: 50px 40px;
+}
+
+.reference2-card-category {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.reference2-divider {
+  width: 20px;
+  height: 1px;
+  margin: 18px 0;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.reference2-divider--small {
+  margin: 14px 0;
+}
+
+.reference2-card-title,
+.reference2-card-client {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 700;
+  white-space: pre-line;
+}
+
+@media (max-width: 1000px) {
+  .reference2-root {
+    padding: 0 20px;
+  }
+
+  .reference2-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .reference2-card--span-4,
+  .reference2-card--span-8,
+  .reference2-card--span-12 {
+    grid-column: span 6;
+  }
+
+  .reference2-card {
+    min-height: 320px;
+  }
+
+  .reference2-card-content {
+    padding: 36px 24px;
+  }
+
+  .reference2-card-category {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 690px) {
+  .reference2-root {
+    padding: 0 10px;
+  }
+
+  .reference2-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .reference2-card {
+    min-height: 280px;
+  }
+}
+

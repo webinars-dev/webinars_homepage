@@ -49,9 +49,10 @@ import WebinarLiveStreaming10Page from '../archive/components/webinar_live_strea
 
 // 블로그 페이지
 import { BlogIndexPage, BlogPostPage, BlogCategoryPage, BlogTagPage } from './pages/blog';
+import Reference2Page from './pages/reference2/Reference2Page.jsx';
 
 // 관리자 페이지
-import { AdminLayout, AdminLoginPage, AdminPostListPage, AdminPostEditPage } from './pages/admin';
+import { AdminLayout, AdminLoginPage, AdminPostListPage, AdminPostEditPage, AdminReferenceListPage, AdminReferenceEditPage } from './pages/admin';
 import ResetPasswordPage from './pages/admin/ResetPasswordPage.jsx';
 import { AuthProvider } from './hooks/useAuth.jsx';
 
@@ -211,6 +212,8 @@ function App() {
 
           <Route path="/reference" element={<ReferencePage />} />
           <Route path="/reference/" element={<ReferencePage />} />
+          <Route path="/reference2" element={<Reference2Page />} />
+          <Route path="/reference2/" element={<Reference2Page />} />
 
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/contact/" element={<ContactPage />} />
@@ -272,6 +275,9 @@ function App() {
             <Route path="blog" element={<AdminPostListPage />} />
             <Route path="blog/new" element={<AdminPostEditPage />} />
             <Route path="blog/edit/:id" element={<AdminPostEditPage />} />
+            <Route path="reference" element={<AdminReferenceListPage />} />
+            <Route path="reference/new" element={<AdminReferenceEditPage />} />
+            <Route path="reference/edit/:id" element={<AdminReferenceEditPage />} />
           </Route>
 
           <Route

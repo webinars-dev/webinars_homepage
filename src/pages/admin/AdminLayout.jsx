@@ -19,7 +19,7 @@ function AdminLayoutContent() {
         <div className="admin-logo">
           <Link to="/admin/blog">
             <h2>WEBINARS</h2>
-            <span>Blog Admin</span>
+            <span>Admin</span>
           </Link>
         </div>
 
@@ -35,6 +35,18 @@ function AdminLayoutContent() {
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
             </svg>
             새 글 작성
+          </NavLink>
+          <NavLink to="/admin/reference" end className={({ isActive }) => isActive ? 'active' : ''}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h16v2H4v-2z"/>
+            </svg>
+            레퍼런스 관리
+          </NavLink>
+          <NavLink to="/admin/reference/new" className={({ isActive }) => isActive ? 'active' : ''}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            새 레퍼런스
           </NavLink>
         </nav>
 
