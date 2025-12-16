@@ -20,7 +20,7 @@ function AdminLayoutContent() {
     link.id = id;
     link.rel = 'stylesheet';
     link.href =
-      'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap';
+      'https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap';
     document.head.appendChild(link);
   }, []);
 
@@ -32,8 +32,8 @@ function AdminLayoutContent() {
   return (
     <div className="admin-ui min-h-screen bg-background text-foreground">
       <div className="flex min-h-screen">
-        <aside className="flex h-screen w-72 shrink-0 flex-col border-r bg-card/70 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-          <div className="flex h-16 items-center gap-3 border-b px-6">
+        <aside className="flex h-screen w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+          <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-6">
             <Link to="/admin/blog" className="flex items-baseline gap-2">
               <span className="text-base font-semibold tracking-tight">WEBINARS</span>
               <span className="text-xs font-medium text-muted-foreground">Admin</span>
@@ -46,8 +46,8 @@ function AdminLayoutContent() {
               end
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                  isActive && 'bg-accent text-accent-foreground'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                  isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
                 )
               }
             >
@@ -60,8 +60,8 @@ function AdminLayoutContent() {
               to="/admin/blog/new"
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                  isActive && 'bg-accent text-accent-foreground'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                  isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
                 )
               }
             >
@@ -71,15 +71,15 @@ function AdminLayoutContent() {
               새 글 작성
             </NavLink>
 
-            <div className="my-3 h-px bg-border" />
+            <div className="my-3 h-px bg-sidebar-border" />
 
             <NavLink
               to="/admin/reference"
               end
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                  isActive && 'bg-accent text-accent-foreground'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                  isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
                 )
               }
             >
@@ -92,8 +92,8 @@ function AdminLayoutContent() {
               to="/admin/reference/new"
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                  isActive && 'bg-accent text-accent-foreground'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                  isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
                 )
               }
             >
@@ -104,7 +104,7 @@ function AdminLayoutContent() {
             </NavLink>
           </nav>
 
-          <div className="border-t p-4">
+          <div className="border-t border-sidebar-border p-4">
             <div className="truncate text-xs text-muted-foreground">{user?.email}</div>
             <Button
               type="button"

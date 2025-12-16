@@ -4,30 +4,45 @@
 
 @layer base {
   .admin-ui {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 238 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 238 83% 53%;
-    --radius: 0.75rem;
+    /* shadcn preset: radix + lyra + neutral + indigo */
+    --background: 1 0 0;
+    --foreground: 0.145 0 0;
+    --card: 1 0 0;
+    --card-foreground: 0.145 0 0;
+    --popover: 1 0 0;
+    --popover-foreground: 0.145 0 0;
+    --primary: 0.51 0.23 277;
+    --primary-foreground: 0.96 0.02 272;
+    --secondary: 0.967 0.001 286.375;
+    --secondary-foreground: 0.21 0.006 285.885;
+    --muted: 0.97 0 0;
+    --muted-foreground: 0.556 0 0;
+    --accent: 0.97 0 0;
+    --accent-foreground: 0.205 0 0;
+    --destructive: 0.58 0.22 27;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.922 0 0;
+    --input: 0.922 0 0;
+    --ring: 0.708 0 0;
+    --chart-1: 0.79 0.1 275;
+    --chart-2: 0.68 0.16 277;
+    --chart-3: 0.59 0.2 277;
+    --chart-4: 0.51 0.23 277;
+    --chart-5: 0.46 0.21 277;
+    --radius: 0.625rem;
+
+    --sidebar: 0.985 0 0;
+    --sidebar-foreground: 0.145 0 0;
+    --sidebar-primary: 0.51 0.23 277;
+    --sidebar-primary-foreground: 0.96 0.02 272;
+    --sidebar-accent: 0.97 0 0;
+    --sidebar-accent-foreground: 0.205 0 0;
+    --sidebar-border: 0.922 0 0;
+    --sidebar-ring: 0.708 0 0;
 
     font-family:
-      'Noto Sans KR',
       'Noto Sans',
+      'Noto Sans KR',
       ui-sans-serif,
       system-ui,
       -apple-system,
@@ -41,14 +56,52 @@
       'Malgun Gothic',
       sans-serif;
 
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background: oklch(var(--background));
+    color: oklch(var(--foreground));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  .admin-ui.dark {
+    --background: 0.145 0 0;
+    --foreground: 0.985 0 0;
+    --card: 0.205 0 0;
+    --card-foreground: 0.985 0 0;
+    --popover: 0.205 0 0;
+    --popover-foreground: 0.985 0 0;
+    --primary: 0.59 0.2 277;
+    --primary-foreground: 0.96 0.02 272;
+    --secondary: 0.274 0.006 286.033;
+    --secondary-foreground: 0.985 0 0;
+    --muted: 0.269 0 0;
+    --muted-foreground: 0.708 0 0;
+    --accent: 0.371 0 0;
+    --accent-foreground: 0.985 0 0;
+    --destructive: 0.704 0.191 22.216;
+    --destructive-foreground: 0.985 0 0;
+    --border: 1 0 0 / 10%;
+    --input: 1 0 0 / 15%;
+    --ring: 0.556 0 0;
+    --chart-1: 0.79 0.1 275;
+    --chart-2: 0.68 0.16 277;
+    --chart-3: 0.59 0.2 277;
+    --chart-4: 0.51 0.23 277;
+    --chart-5: 0.46 0.21 277;
+
+    --sidebar: 0.205 0 0;
+    --sidebar-foreground: 0.985 0 0;
+    --sidebar-primary: 0.68 0.16 277;
+    --sidebar-primary-foreground: 0.96 0.02 272;
+    --sidebar-accent: 0.269 0 0;
+    --sidebar-accent-foreground: 0.985 0 0;
+    --sidebar-border: 1 0 0 / 10%;
+    --sidebar-ring: 0.556 0 0;
+  }
+
   .admin-ui :where(*, ::before, ::after) {
     box-sizing: border-box;
+    border-color: oklch(var(--border));
+    outline-color: oklch(var(--ring) / 0.5);
   }
 
   .admin-ui :where(a) {
@@ -64,4 +117,3 @@
     color: inherit;
   }
 }
-
