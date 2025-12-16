@@ -19,7 +19,7 @@ export async function getAdminReferenceItems() {
 
   const { data, error } = await supabase
     .from('reference_items')
-    .select('id, category, title, client, image_url, modal_path, col_span, order, is_published, created_at, updated_at')
+    .select('id, category, title, client, image_url, modal_path, modal_html, col_span, order, is_published, created_at, updated_at')
     .is('deleted_at', null)
     .order('order', { ascending: true })
     .order('updated_at', { ascending: false });
@@ -53,16 +53,11 @@ export async function getReferenceItemById(id) {
 }
 
 export async function createReferenceItem(fields) {
-  const user = await requireUser();
-
-  const payload = {
-    ...fields,
-    updated_by: user.id,
-  };
+  await requireUser();
 
   const { data, error } = await supabase
     .from('reference_items')
-    .insert(payload)
+    .insert(fields)
     .select()
     .single();
 
@@ -71,16 +66,11 @@ export async function createReferenceItem(fields) {
 }
 
 export async function updateReferenceItem(id, fields) {
-  const user = await requireUser();
-
-  const payload = {
-    ...fields,
-    updated_by: user.id,
-  };
+  await requireUser();
 
   const { data, error } = await supabase
     .from('reference_items')
-    .update(payload)
+    .update(fields)
     .eq('id', id)
     .select()
     .single();
@@ -90,14 +80,12 @@ export async function updateReferenceItem(id, fields) {
 }
 
 export async function softDeleteReferenceItem(id) {
-  const user = await requireUser();
+  await requireUser();
 
   const { error } = await supabase
     .from('reference_items')
     .update({
       deleted_at: new Date().toISOString(),
-      deleted_by: user.id,
-      updated_by: user.id,
     })
     .eq('id', id);
 
@@ -111,4 +99,3 @@ export async function publishReferenceItem(id) {
 export async function unpublishReferenceItem(id) {
   return updateReferenceItem(id, { is_published: false });
 }
-

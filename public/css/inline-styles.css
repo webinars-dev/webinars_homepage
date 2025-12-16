@@ -1414,3 +1414,20 @@ div#slide-out-widget-area .inner {
   width: 100% !important;
   height: 100% !important;
 }
+
+/* =====================================================
+   Reference 카드 텍스트 색상(블랙 -> 화이트) 고정
+   ===================================================== */
+
+.wpb_row.reference .modal-link h1,
+.wpb_row.reference .modal-link h2,
+.wpb_row.reference .modal-link h3,
+.wpb_row.reference .modal-link h4,
+.wpb_row.reference .modal-link h5,
+.wpb_row.reference .modal-link h6 {
+  color: #ffffff !important;
+}
+
+.wpb_row.reference .modal-link .divider-small-border {
+  background-color: rgba(255, 255, 255, 0.55) !important;
+}

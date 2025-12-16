@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 // Import images
 import image1_3 from '../assets/images/image-1-3.jpg';
@@ -124,6 +125,42 @@ const defaultContent = () => (
   </div>
 );
 
+const normalizeModalLookupPath = (rawPath) => {
+  if (!rawPath) return '';
+
+  try {
+    const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+    const urlObj = new URL(rawPath, base);
+    let pathname = urlObj.pathname || '';
+
+    if (pathname.startsWith('/wp/')) pathname = pathname.replace('/wp/', '/');
+    if (!pathname.startsWith('/')) pathname = `/${pathname}`;
+
+    const trimmed = pathname.replace(/\/+$/, '');
+    if (!trimmed) return '/';
+
+    const hasExt = /\.[a-zA-Z\d]{1,6}$/.test(trimmed);
+    return hasExt ? trimmed : `${trimmed}/`;
+  } catch {
+    const withoutQuery = String(rawPath).split(/[?#]/)[0] || '';
+    let pathname = withoutQuery.startsWith('/') ? withoutQuery : `/${withoutQuery}`;
+    if (pathname.startsWith('/wp/')) pathname = pathname.replace('/wp/', '/');
+    const trimmed = pathname.replace(/\/+$/, '');
+    if (!trimmed) return '/';
+    const hasExt = /\.[a-zA-Z\d]{1,6}$/.test(trimmed);
+    return hasExt ? trimmed : `${trimmed}/`;
+  }
+};
+
+const buildReferenceModalCandidates = (path) => {
+  const canonical = normalizeModalLookupPath(path);
+  if (!canonical || canonical === '/') return [];
+
+  const base = canonical.endsWith('/') ? canonical.slice(0, -1) : canonical;
+  const candidates = new Set([base, `${base}/`, `/wp${base}`, `/wp${base}/`]);
+  return Array.from(candidates);
+};
+
 // RMAF 0715 모달 콘텐츠 (React import 이미지 사용)
 const rmaf0715Content = () => (
   <div id="modal-ready">
@@ -240,6 +277,45 @@ const ModalContent = ({ path }) => {
   console.log('[ModalContent] Selected component:', ContentComponent.name || ContentComponent);
 
   const containerRef = useRef(null);
+  const [dbModalHtml, setDbModalHtml] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDbModalHtml(null);
+
+    const loadDbModal = async () => {
+      if (!supabase) return;
+      if (!path) return;
+
+      const candidates = buildReferenceModalCandidates(path);
+      if (candidates.length === 0) return;
+
+      const { data, error } = await supabase
+        .from('reference_items')
+        .select('modal_html')
+        .in('modal_path', candidates)
+        .is('deleted_at', null)
+        .order('updated_at', { ascending: false })
+        .limit(1);
+
+      if (cancelled) return;
+      if (error) {
+        console.warn('[ModalContent] Failed to load modal_html from DB:', error);
+        return;
+      }
+
+      const html = data?.[0]?.modal_html;
+      if (typeof html === 'string' && html.trim()) {
+        setDbModalHtml(html);
+      }
+    };
+
+    loadDbModal();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [path]);
 
   useEffect(() => {
     const root = containerRef.current;
@@ -401,7 +477,7 @@ const ModalContent = ({ path }) => {
     };
   }, [path]);
 
-  return (
+	  return (
     <>
       {/* 원본 CSS 스타일 추가 + 모달 내 헤더/푸터 숨기기 */}
       <style>{`
@@ -521,7 +597,15 @@ const ModalContent = ({ path }) => {
         }}>
         {/* Prevent nested modals by intercepting modal events */}
         <div onClick={(e) => e.stopPropagation()}>
-          <ContentComponent />
+          {dbModalHtml ? (
+            /id=(?:"|')modal-ready(?:"|')/i.test(dbModalHtml) ? (
+              <div dangerouslySetInnerHTML={{ __html: dbModalHtml }} />
+            ) : (
+              <div id="modal-ready" dangerouslySetInnerHTML={{ __html: dbModalHtml }} />
+            )
+          ) : (
+            <ContentComponent />
+          )}
         </div>
       </div>
     </>

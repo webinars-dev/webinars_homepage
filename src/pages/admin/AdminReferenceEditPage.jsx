@@ -9,6 +9,7 @@ const DEFAULT_FORM = {
   client: '',
   image_url: '',
   modal_path: '',
+  modal_html: '',
   col_span: 4,
   order: 0,
   is_published: false,
@@ -43,6 +44,7 @@ export default function AdminReferenceEditPage() {
         client: item.client || '',
         image_url: item.image_url || '',
         modal_path: item.modal_path || '',
+        modal_html: item.modal_html || '',
         col_span: item.col_span || 4,
         order: item.order ?? 0,
         is_published: !!item.is_published,
@@ -197,6 +199,22 @@ export default function AdminReferenceEditPage() {
             />
           </div>
 
+          <div className="admin-form-group">
+            <label htmlFor="modal_html">
+              모달 내용 (HTML)
+              <span className="admin-label-hint">비워두면 기존 코드/아카이브 모달이 표시됩니다.</span>
+            </label>
+            <textarea
+              id="modal_html"
+              name="modal_html"
+              value={formData.modal_html}
+              onChange={handleChange}
+              className="admin-textarea"
+              style={{ minHeight: 220 }}
+              placeholder={'예) <h2 class="txt36">OFFLINE</h2>\\n<h5 class="txt18 w700">...</h5>'}
+            />
+          </div>
+
           <div className="admin-form-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div>
               <label htmlFor="col_span">가로 폭</label>
@@ -277,4 +295,3 @@ export default function AdminReferenceEditPage() {
     </div>
   );
 }
-
