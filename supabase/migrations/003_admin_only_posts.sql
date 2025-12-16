@@ -18,6 +18,7 @@ DROP POLICY IF EXISTS "Restore posts" ON posts;
 -- 발행된 글은 누구나, 미발행은 admin만
 
 -- 생성: Admin만
+DROP POLICY IF EXISTS "Admin create posts" ON posts;
 CREATE POLICY "Admin create posts" ON posts
   FOR INSERT WITH CHECK (
     -- 방법 1: JWT의 app_metadata.role 확인
@@ -31,6 +32,7 @@ CREATE POLICY "Admin create posts" ON posts
   );
 
 -- 수정: Admin만 (deleted_at이 NULL인 글만)
+DROP POLICY IF EXISTS "Admin update posts" ON posts;
 CREATE POLICY "Admin update posts" ON posts
   FOR UPDATE USING (
     deleted_at IS NULL
@@ -45,6 +47,7 @@ CREATE POLICY "Admin update posts" ON posts
   );
 
 -- Soft Delete: Admin만
+DROP POLICY IF EXISTS "Admin delete posts" ON posts;
 CREATE POLICY "Admin delete posts" ON posts
   FOR DELETE USING (
     (auth.jwt()->'app_metadata'->>'role') = 'admin'
@@ -63,6 +66,7 @@ DROP POLICY IF EXISTS "Editor manage categories" ON categories;
 DROP POLICY IF EXISTS "Editor manage tags" ON tags;
 
 -- Categories: Admin만 관리
+DROP POLICY IF EXISTS "Admin manage categories" ON categories;
 CREATE POLICY "Admin manage categories" ON categories
   FOR ALL USING (
     (auth.jwt()->'app_metadata'->>'role') = 'admin'
@@ -74,6 +78,7 @@ CREATE POLICY "Admin manage categories" ON categories
   );
 
 -- Tags: Admin만 관리
+DROP POLICY IF EXISTS "Admin manage tags" ON tags;
 CREATE POLICY "Admin manage tags" ON tags
   FOR ALL USING (
     (auth.jwt()->'app_metadata'->>'role') = 'admin'
@@ -89,6 +94,7 @@ CREATE POLICY "Admin manage tags" ON tags
 -- =====================================================
 
 DROP POLICY IF EXISTS "Manage post_tags" ON post_tags;
+DROP POLICY IF EXISTS "Admin manage post_tags" ON post_tags;
 
 CREATE POLICY "Admin manage post_tags" ON post_tags
   FOR ALL USING (
@@ -106,6 +112,8 @@ CREATE POLICY "Admin manage post_tags" ON post_tags
 
 DROP POLICY IF EXISTS "Auth upload blog images" ON storage.objects;
 DROP POLICY IF EXISTS "Delete own or admin blog images" ON storage.objects;
+DROP POLICY IF EXISTS "Admin upload blog images" ON storage.objects;
+DROP POLICY IF EXISTS "Admin delete blog images" ON storage.objects;
 
 -- 업로드: Admin만
 CREATE POLICY "Admin upload blog images" ON storage.objects

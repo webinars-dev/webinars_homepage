@@ -16,6 +16,7 @@ ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
 -- =====================================================
 
 -- 읽기: 누구나
+DROP POLICY IF EXISTS "Public read authors" ON authors;
 CREATE POLICY "Public read authors" ON authors
   FOR SELECT USING (true);
 
@@ -24,10 +25,12 @@ CREATE POLICY "Public read authors" ON authors
 -- =====================================================
 
 -- 읽기: 누구나
+DROP POLICY IF EXISTS "Public read categories" ON categories;
 CREATE POLICY "Public read categories" ON categories
   FOR SELECT USING (true);
 
 -- 생성/수정/삭제: Editor/Admin만
+DROP POLICY IF EXISTS "Editor manage categories" ON categories;
 CREATE POLICY "Editor manage categories" ON categories
   FOR ALL USING (
     auth.jwt()->>'role' IN ('editor', 'admin')
@@ -38,10 +41,12 @@ CREATE POLICY "Editor manage categories" ON categories
 -- =====================================================
 
 -- 읽기: 누구나
+DROP POLICY IF EXISTS "Public read tags" ON tags;
 CREATE POLICY "Public read tags" ON tags
   FOR SELECT USING (true);
 
 -- 생성/수정/삭제: Editor/Admin만
+DROP POLICY IF EXISTS "Editor manage tags" ON tags;
 CREATE POLICY "Editor manage tags" ON tags
   FOR ALL USING (
     auth.jwt()->>'role' IN ('editor', 'admin')
@@ -52,6 +57,7 @@ CREATE POLICY "Editor manage tags" ON tags
 -- =====================================================
 
 -- 읽기: 발행된 글은 누구나, 미발행은 작성자/Editor/Admin만
+DROP POLICY IF EXISTS "Read posts" ON posts;
 CREATE POLICY "Read posts" ON posts
   FOR SELECT USING (
     (status = 'published' AND deleted_at IS NULL)
@@ -60,6 +66,7 @@ CREATE POLICY "Read posts" ON posts
   );
 
 -- 생성: Author 이상
+DROP POLICY IF EXISTS "Create posts" ON posts;
 CREATE POLICY "Create posts" ON posts
   FOR INSERT WITH CHECK (
     auth.jwt()->>'role' IN ('author', 'editor', 'admin')
@@ -67,6 +74,7 @@ CREATE POLICY "Create posts" ON posts
   );
 
 -- 수정 (일반): 본인 글 또는 Editor/Admin, soft delete는 불가
+DROP POLICY IF EXISTS "Update posts" ON posts;
 CREATE POLICY "Update posts" ON posts
   FOR UPDATE USING (
     deleted_at IS NULL
@@ -88,6 +96,7 @@ CREATE POLICY "Update posts" ON posts
   );
 
 -- Soft Delete: Admin만 가능
+DROP POLICY IF EXISTS "Soft delete posts" ON posts;
 CREATE POLICY "Soft delete posts" ON posts
   FOR UPDATE USING (
     auth.jwt()->>'role' = 'admin'
@@ -98,6 +107,7 @@ CREATE POLICY "Soft delete posts" ON posts
   );
 
 -- Restore (복구): Admin만 삭제된 글 복구 가능
+DROP POLICY IF EXISTS "Restore posts" ON posts;
 CREATE POLICY "Restore posts" ON posts
   FOR UPDATE USING (
     auth.jwt()->>'role' = 'admin'
@@ -113,10 +123,12 @@ CREATE POLICY "Restore posts" ON posts
 -- =====================================================
 
 -- 읽기: 누구나
+DROP POLICY IF EXISTS "Public read post_tags" ON post_tags;
 CREATE POLICY "Public read post_tags" ON post_tags
   FOR SELECT USING (true);
 
 -- 생성/삭제: 해당 포스트 작성자 또는 Editor/Admin
+DROP POLICY IF EXISTS "Manage post_tags" ON post_tags;
 CREATE POLICY "Manage post_tags" ON post_tags
   FOR ALL USING (
     EXISTS (
@@ -134,6 +146,7 @@ CREATE POLICY "Manage post_tags" ON post_tags
 -- =====================================================
 
 -- 읽기: Admin만
+DROP POLICY IF EXISTS "Admin read audit_logs" ON audit_logs;
 CREATE POLICY "Admin read audit_logs" ON audit_logs
   FOR SELECT USING (
     auth.jwt()->>'role' = 'admin'
@@ -152,10 +165,12 @@ VALUES ('blog-images', 'blog-images', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- 읽기: 누구나
+DROP POLICY IF EXISTS "Public read blog images" ON storage.objects;
 CREATE POLICY "Public read blog images" ON storage.objects
   FOR SELECT USING (bucket_id = 'blog-images');
 
 -- 업로드: Author 이상만, 본인 폴더에만
+DROP POLICY IF EXISTS "Auth upload blog images" ON storage.objects;
 CREATE POLICY "Auth upload blog images" ON storage.objects
   FOR INSERT WITH CHECK (
     bucket_id = 'blog-images'
@@ -164,6 +179,7 @@ CREATE POLICY "Auth upload blog images" ON storage.objects
   );
 
 -- 삭제: 본인 업로드 파일만 또는 Admin
+DROP POLICY IF EXISTS "Delete own or admin blog images" ON storage.objects;
 CREATE POLICY "Delete own or admin blog images" ON storage.objects
   FOR DELETE USING (
     bucket_id = 'blog-images'
