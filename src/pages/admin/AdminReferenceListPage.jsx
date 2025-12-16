@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as adminReferenceService from '../../services/adminReferenceService';
-import './admin.css';
+
+import { Button } from './ui/button.jsx';
+import { Badge } from './ui/badge.jsx';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx';
 
 export default function AdminReferenceListPage() {
   const [items, setItems] = useState([]);
@@ -60,91 +63,109 @@ export default function AdminReferenceListPage() {
   };
 
   return (
-    <div className="admin-page">
-      <div className="admin-page-header">
-        <h1>레퍼런스 관리</h1>
-        <Link to="/admin/reference/new" className="admin-btn admin-btn-primary">
-          + 새 레퍼런스
-        </Link>
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">레퍼런스 관리</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Supabase 레퍼런스 카드/모달 콘텐츠를 관리합니다.</p>
+        </div>
+        <Button asChild>
+          <Link to="/admin/reference/new">+ 새 레퍼런스</Link>
+        </Button>
       </div>
 
       {loading ? (
-        <div className="admin-loading">
-          <div className="spinner"></div>
-          <p>로딩 중...</p>
-        </div>
+        <Card>
+          <CardContent className="p-10 text-center text-sm text-muted-foreground">로딩 중...</CardContent>
+        </Card>
       ) : error ? (
-        <div className="admin-error">
-          <p>{error}</p>
-          <button onClick={fetchItems} className="admin-btn">
-            다시 시도
-          </button>
-        </div>
+        <Card>
+          <CardContent className="p-10 text-center">
+            <div className="text-sm text-destructive">{error}</div>
+            <Button type="button" variant="outline" className="mt-4" onClick={fetchItems}>
+              다시 시도
+            </Button>
+          </CardContent>
+        </Card>
       ) : items.length === 0 ? (
-        <div className="admin-empty">
-          <p>레퍼런스가 없습니다.</p>
-          <Link to="/admin/reference/new" className="admin-btn admin-btn-primary">
-            첫 레퍼런스 추가하기
-          </Link>
-        </div>
+        <Card>
+          <CardContent className="p-10 text-center">
+            <div className="text-sm text-muted-foreground">레퍼런스가 없습니다.</div>
+            <Button asChild className="mt-4">
+              <Link to="/admin/reference/new">첫 레퍼런스 추가하기</Link>
+            </Button>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="admin-table-container">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>순서</th>
-                <th>타입</th>
-                <th>제목</th>
-                <th>고객사</th>
-                <th>발행</th>
-                <th>업데이트</th>
-                <th>작업</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.order ?? 0}</td>
-                  <td>{item.category || '-'}</td>
-                  <td className="admin-table-title">
-                    <Link to={`/admin/reference/edit/${item.id}`}>
-                      {(item.title || '').split('\n')[0] || '(제목 없음)'}
-                    </Link>
-                  </td>
-                  <td>{(item.client || '').split('\n')[0] || '-'}</td>
-                  <td>
-                    <span
-                      className="admin-status-badge"
-                      style={{ backgroundColor: item.is_published ? '#10b981' : '#6b7280' }}
-                    >
-                      {item.is_published ? '발행' : '비발행'}
-                    </span>
-                  </td>
-                  <td>{formatDate(item.updated_at)}</td>
-                  <td className="admin-table-actions">
-                    <Link to={`/admin/reference/edit/${item.id}`} className="admin-btn admin-btn-small">
-                      수정
-                    </Link>
-                    <button
-                      onClick={() => handlePublishToggle(item)}
-                      className={`admin-btn admin-btn-small ${item.is_published ? 'admin-btn-warning' : 'admin-btn-success'}`}
-                    >
-                      {item.is_published ? '비발행' : '발행'}
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id, item.title)}
-                      className="admin-btn admin-btn-small admin-btn-danger"
-                    >
-                      삭제
-                    </button>
-                  </td>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">목록</CardTitle>
+          </CardHeader>
+          <CardContent className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b text-left text-xs text-muted-foreground">
+                  <th className="px-3 py-2 font-medium">순서</th>
+                  <th className="px-3 py-2 font-medium">타입</th>
+                  <th className="px-3 py-2 font-medium">제목</th>
+                  <th className="px-3 py-2 font-medium">고객사</th>
+                  <th className="px-3 py-2 font-medium">발행</th>
+                  <th className="px-3 py-2 font-medium">업데이트</th>
+                  <th className="px-3 py-2 text-right font-medium">작업</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id} className="border-b last:border-b-0">
+                    <td className="px-3 py-3 align-top text-muted-foreground">{item.order ?? 0}</td>
+                    <td className="px-3 py-3 align-top">{item.category || '-'}</td>
+                    <td className="px-3 py-3 align-top">
+                      <Link
+                        to={`/admin/reference/edit/${item.id}`}
+                        className="font-medium text-foreground hover:underline"
+                      >
+                        {(item.title || '').split('\n')[0] || '(제목 없음)'}
+                      </Link>
+                    </td>
+                    <td className="px-3 py-3 align-top text-muted-foreground">
+                      {(item.client || '').split('\n')[0] || '-'}
+                    </td>
+                    <td className="px-3 py-3 align-top">
+                      <Badge variant={item.is_published ? 'success' : 'secondary'}>
+                        {item.is_published ? '발행' : '비발행'}
+                      </Badge>
+                    </td>
+                    <td className="px-3 py-3 align-top text-muted-foreground">{formatDate(item.updated_at)}</td>
+                    <td className="px-3 py-3 align-top">
+                      <div className="flex flex-wrap justify-end gap-2">
+                        <Button asChild size="sm" variant="outline">
+                          <Link to={`/admin/reference/edit/${item.id}`}>수정</Link>
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={item.is_published ? 'secondary' : 'default'}
+                          onClick={() => handlePublishToggle(item)}
+                        >
+                          {item.is_published ? '비발행' : '발행'}
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDelete(item.id, item.title)}
+                        >
+                          삭제
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
 }
-

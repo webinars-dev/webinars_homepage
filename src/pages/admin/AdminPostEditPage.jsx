@@ -5,7 +5,15 @@ import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import * as adminService from '../../services/adminBlogService';
 import { getCategories, getTags } from '../../services/blogService';
-import './admin.css';
+
+import { Badge } from './ui/badge.jsx';
+import { Button } from './ui/button.jsx';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx';
+import { Checkbox } from './ui/checkbox.jsx';
+import { Input } from './ui/input.jsx';
+import { Label } from './ui/label.jsx';
+import { Select } from './ui/select.jsx';
+import { Textarea } from './ui/textarea.jsx';
 
 const mdParser = new MarkdownIt({
   html: true,
@@ -224,239 +232,267 @@ export default function AdminPostEditPage() {
 
   if (loading) {
     return (
-      <div className="admin-page">
-        <div className="admin-loading">
-          <div className="spinner"></div>
-          <p>로딩 중...</p>
-        </div>
-      </div>
+      <Card>
+        <CardContent className="p-10 text-center text-sm text-muted-foreground">로딩 중...</CardContent>
+      </Card>
     );
   }
 
+  const statusLabel =
+    formData.status === 'draft'
+      ? '임시저장'
+      : formData.status === 'published'
+        ? '발행됨'
+        : formData.status === 'scheduled'
+          ? '예약됨'
+          : formData.status || '-';
+
+  const statusVariant =
+    formData.status === 'published'
+      ? 'success'
+      : formData.status === 'scheduled'
+        ? 'default'
+        : formData.status === 'publish_failed'
+          ? 'destructive'
+          : formData.status === 'archived'
+            ? 'outline'
+            : 'secondary';
+
   return (
-    <div className="admin-page admin-post-edit">
-      <div className="admin-page-header">
-        <h1>{isNew ? '새 글 작성' : '글 수정'}</h1>
-        <div className="admin-header-actions">
-          {lastSaved && (
-            <span className="admin-last-saved">
-              마지막 저장: {lastSaved.toLocaleTimeString('ko-KR')}
-            </span>
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">{isNew ? '새 글 작성' : '글 수정'}</h1>
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <Badge variant={statusVariant}>{statusLabel}</Badge>
+            {lastSaved && <span>마지막 저장: {lastSaved.toLocaleTimeString('ko-KR')}</span>}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="outline" onClick={() => navigate('/admin/blog')} disabled={saving}>
+            목록
+          </Button>
+          <Button type="button" variant="secondary" onClick={() => handleSubmit('draft')} disabled={saving}>
+            {saving ? '저장 중...' : '임시 저장'}
+          </Button>
+          {formData.scheduled_at && (
+            <Button type="button" variant="outline" onClick={() => handleSubmit('schedule')} disabled={saving}>
+              예약 발행
+            </Button>
           )}
+          <Button type="button" onClick={() => handleSubmit('publish')} disabled={saving}>
+            {formData.status === 'published' ? '업데이트' : '즉시 발행'}
+          </Button>
         </div>
       </div>
 
       {error && (
-        <div className="admin-error-banner">
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
         </div>
       )}
 
-      <div className="admin-post-form">
-        <div className="admin-post-form-main">
-          {/* 제목 */}
-          <div className="admin-form-group">
-            <label htmlFor="title">제목 *</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="포스트 제목을 입력하세요"
-              className="admin-input admin-input-large"
-            />
-          </div>
-
-          {/* 슬러그 */}
-          <div className="admin-form-group">
-            <label htmlFor="slug">
-              슬러그 (URL) *
-              <span className="admin-label-hint">/blog/{formData.slug || 'your-slug'}</span>
-            </label>
-            <input
-              type="text"
-              id="slug"
-              name="slug"
-              value={formData.slug}
-              onChange={handleChange}
-              placeholder="url-friendly-slug"
-              className="admin-input"
-            />
-          </div>
-
-          {/* 요약 */}
-          <div className="admin-form-group">
-            <label htmlFor="excerpt">요약 (150자 내외)</label>
-            <textarea
-              id="excerpt"
-              name="excerpt"
-              value={formData.excerpt}
-              onChange={handleChange}
-              placeholder="포스트 요약을 입력하세요 (목록에 표시됩니다)"
-              rows={3}
-              className="admin-textarea"
-            />
-          </div>
-
-          {/* Markdown 에디터 */}
-          <div className="admin-form-group admin-form-group-editor">
-            <label>본문 (Markdown)</label>
-            <MdEditor
-              ref={editorRef}
-              value={formData.content}
-              style={{ height: '500px' }}
-              renderHTML={text => mdParser.render(text)}
-              onChange={handleEditorChange}
-              onImageUpload={handleImageUpload}
-              placeholder="본문을 작성하세요... (Markdown 문법을 사용할 수 있습니다)"
-              config={{
-                view: { menu: true, md: true, html: true },
-                canView: { menu: true, md: true, html: true, both: true, fullScreen: true, hideMenu: true },
-                markdownClass: 'admin-markdown-preview',
-                imageAccept: '.jpg,.jpeg,.png,.webp,.gif'
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="admin-post-form-sidebar">
-          {/* 발행 상태 */}
-          <div className="admin-sidebar-section">
-            <h3>발행</h3>
-            <div className="admin-form-group">
-              <label>현재 상태</label>
-              <span className={`admin-status-badge admin-status-${formData.status}`}>
-                {formData.status === 'draft' && '임시저장'}
-                {formData.status === 'published' && '발행됨'}
-                {formData.status === 'scheduled' && '예약됨'}
-              </span>
-            </div>
-
-            <div className="admin-form-group">
-              <label htmlFor="scheduled_at">예약 발행 시간</label>
-              <input
-                type="datetime-local"
-                id="scheduled_at"
-                name="scheduled_at"
-                value={formData.scheduled_at}
-                onChange={handleChange}
-                className="admin-input"
-              />
-            </div>
-
-            <div className="admin-publish-buttons">
-              <button
-                onClick={() => handleSubmit('draft')}
-                disabled={saving}
-                className="admin-btn"
-              >
-                {saving ? '저장 중...' : '임시 저장'}
-              </button>
-              {formData.scheduled_at && (
-                <button
-                  onClick={() => handleSubmit('schedule')}
-                  disabled={saving}
-                  className="admin-btn admin-btn-primary"
-                >
-                  예약 발행
-                </button>
-              )}
-              <button
-                onClick={() => handleSubmit('publish')}
-                disabled={saving}
-                className="admin-btn admin-btn-success"
-              >
-                {formData.status === 'published' ? '업데이트' : '즉시 발행'}
-              </button>
-            </div>
-          </div>
-
-          {/* 대표 이미지 */}
-          <div className="admin-sidebar-section">
-            <h3>대표 이미지</h3>
-            {formData.featured_image && (
-              <div className="admin-featured-image-preview">
-                <img src={formData.featured_image} alt="대표 이미지" />
-                <button
-                  onClick={() => setFormData(prev => ({ ...prev, featured_image: '' }))}
-                  className="admin-btn admin-btn-small admin-btn-danger"
-                >
-                  제거
-                </button>
-              </div>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFeaturedImageUpload}
-              className="admin-file-input"
-            />
-          </div>
-
-          {/* 카테고리 */}
-          <div className="admin-sidebar-section">
-            <h3>카테고리</h3>
-            <select
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              className="admin-select"
-            >
-              <option value="">카테고리 선택</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* 태그 */}
-          <div className="admin-sidebar-section">
-            <h3>태그</h3>
-            <div className="admin-tag-list">
-              {allTags.map(tag => (
-                <label key={tag.id} className="admin-tag-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={formData.tag_ids.includes(tag.id)}
-                    onChange={() => handleTagToggle(tag.id)}
-                  />
-                  {tag.name}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* SEO */}
-          <div className="admin-sidebar-section">
-            <h3>SEO 설정</h3>
-            <div className="admin-form-group">
-              <label htmlFor="meta_title">메타 제목</label>
-              <input
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">콘텐츠</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">제목 *</Label>
+              <Input
                 type="text"
-                id="meta_title"
-                name="meta_title"
-                value={formData.meta_title}
+                id="title"
+                name="title"
+                value={formData.title}
                 onChange={handleChange}
-                placeholder="SEO 제목 (비워두면 포스트 제목 사용)"
-                className="admin-input"
+                placeholder="포스트 제목을 입력하세요"
+                className="h-11 text-base"
               />
             </div>
-            <div className="admin-form-group">
-              <label htmlFor="meta_description">메타 설명</label>
-              <textarea
-                id="meta_description"
-                name="meta_description"
-                value={formData.meta_description}
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">슬러그 (URL) *</Label>
+              <div className="text-xs text-muted-foreground">
+                /blog/{formData.slug || 'your-slug'}
+              </div>
+              <Input
+                type="text"
+                id="slug"
+                name="slug"
+                value={formData.slug}
                 onChange={handleChange}
-                placeholder="SEO 설명 (비워두면 요약 사용)"
+                placeholder="url-friendly-slug"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="excerpt">요약 (150자 내외)</Label>
+              <Textarea
+                id="excerpt"
+                name="excerpt"
+                value={formData.excerpt}
+                onChange={handleChange}
+                placeholder="포스트 요약을 입력하세요 (목록에 표시됩니다)"
                 rows={3}
-                className="admin-textarea"
               />
             </div>
-          </div>
+
+            <div className="space-y-2">
+              <Label>본문 (Markdown)</Label>
+              <div className="admin-form-group-editor overflow-hidden rounded-md border border-input bg-background">
+                <MdEditor
+                  ref={editorRef}
+                  value={formData.content}
+                  style={{ height: '500px' }}
+                  renderHTML={(text) => mdParser.render(text)}
+                  onChange={handleEditorChange}
+                  onImageUpload={handleImageUpload}
+                  placeholder="본문을 작성하세요... (Markdown 문법을 사용할 수 있습니다)"
+                  config={{
+                    view: { menu: true, md: true, html: true },
+                    canView: {
+                      menu: true,
+                      md: true,
+                      html: true,
+                      both: true,
+                      fullScreen: true,
+                      hideMenu: true,
+                    },
+                    markdownClass: 'admin-markdown-preview',
+                    imageAccept: '.jpg,.jpeg,.png,.webp,.gif',
+                  }}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">발행</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="scheduled_at">예약 발행 시간</Label>
+                <Input
+                  type="datetime-local"
+                  id="scheduled_at"
+                  name="scheduled_at"
+                  value={formData.scheduled_at}
+                  onChange={handleChange}
+                />
+                <p className="text-xs text-muted-foreground">
+                  예약 시간을 입력하면 “예약 발행” 버튼이 활성화됩니다.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">대표 이미지</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {formData.featured_image ? (
+                <div className="space-y-3">
+                  <div className="overflow-hidden rounded-md border bg-muted">
+                    <img src={formData.featured_image} alt="대표 이미지" className="h-auto w-full" />
+                  </div>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => setFormData((prev) => ({ ...prev, featured_image: '' }))}
+                  >
+                    제거
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-sm text-muted-foreground">업로드된 이미지가 없습니다.</div>
+              )}
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFeaturedImageUpload}
+                className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-secondary-foreground hover:file:bg-secondary/80"
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">카테고리</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Select name="category_id" value={formData.category_id} onChange={handleChange}>
+                <option value="">카테고리 선택</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </Select>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">태그</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                {allTags.map((tag) => {
+                  const checked = formData.tag_ids.includes(tag.id);
+                  return (
+                    <label
+                      key={tag.id}
+                      className={[
+                        'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
+                        checked ? 'border-primary/40 bg-primary/5' : 'border-border bg-muted/30 hover:bg-muted/50',
+                      ].join(' ')}
+                    >
+                      <Checkbox checked={checked} onChange={() => handleTagToggle(tag.id)} />
+                      {tag.name}
+                    </label>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">SEO 설정</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="meta_title">메타 제목</Label>
+                <Input
+                  type="text"
+                  id="meta_title"
+                  name="meta_title"
+                  value={formData.meta_title}
+                  onChange={handleChange}
+                  placeholder="SEO 제목 (비워두면 포스트 제목 사용)"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="meta_description">메타 설명</Label>
+                <Textarea
+                  id="meta_description"
+                  name="meta_description"
+                  value={formData.meta_description}
+                  onChange={handleChange}
+                  placeholder="SEO 설명 (비워두면 요약 사용)"
+                  rows={3}
+                />
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

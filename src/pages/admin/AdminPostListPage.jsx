@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import * as adminService from '../../services/adminBlogService';
-import './admin.css';
+
+import { Badge } from './ui/badge.jsx';
+import { Button } from './ui/button.jsx';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx';
+import { Select } from './ui/select.jsx';
 
 const STATUS_LABELS = {
   draft: '임시저장',
   published: '발행됨',
   scheduled: '예약됨',
   archived: '보관됨',
-  publish_failed: '발행실패'
+  publish_failed: '발행실패',
 };
 
-const STATUS_COLORS = {
-  draft: '#6b7280',
-  published: '#10b981',
-  scheduled: '#3b82f6',
-  archived: '#9ca3af',
-  publish_failed: '#ef4444'
+const getStatusVariant = (status) => {
+  switch (status) {
+    case 'published':
+      return 'success';
+    case 'scheduled':
+      return 'default';
+    case 'publish_failed':
+      return 'destructive';
+    case 'archived':
+      return 'outline';
+    case 'draft':
+    default:
+      return 'secondary';
+  }
 };
 
 export default function AdminPostListPage() {
@@ -109,161 +121,167 @@ export default function AdminPostListPage() {
   };
 
   return (
-    <div className="admin-page">
-      <div className="admin-page-header">
-        <h1>포스트 관리</h1>
-        <Link to="/admin/blog/new" className="admin-btn admin-btn-primary">
-          + 새 글 작성
-        </Link>
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">포스트 관리</h1>
+          <p className="mt-1 text-sm text-muted-foreground">블로그 글을 작성/발행/관리합니다.</p>
+        </div>
+        <Button asChild>
+          <Link to="/admin/blog/new">+ 새 글 작성</Link>
+        </Button>
       </div>
 
-      <div className="admin-filters">
-        <select
-          value={statusFilter}
-          onChange={(e) => handleFilterChange(e.target.value)}
-          className="admin-select"
-        >
-          <option value="">전체 상태</option>
-          <option value="draft">임시저장</option>
-          <option value="published">발행됨</option>
-          <option value="scheduled">예약됨</option>
-          <option value="publish_failed">발행실패</option>
-        </select>
-        <span className="admin-filter-count">
-          총 {pagination.total}개의 포스트
-        </span>
-      </div>
+      <Card>
+        <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <Select value={statusFilter} onChange={(e) => handleFilterChange(e.target.value)} className="w-48">
+              <option value="">전체 상태</option>
+              <option value="draft">임시저장</option>
+              <option value="published">발행됨</option>
+              <option value="scheduled">예약됨</option>
+              <option value="publish_failed">발행실패</option>
+            </Select>
+            <div className="text-sm text-muted-foreground">총 {pagination.total}개의 포스트</div>
+          </div>
+        </CardContent>
+      </Card>
 
       {loading ? (
-        <div className="admin-loading">
-          <div className="spinner"></div>
-          <p>로딩 중...</p>
-        </div>
+        <Card>
+          <CardContent className="p-10 text-center text-sm text-muted-foreground">로딩 중...</CardContent>
+        </Card>
       ) : error ? (
-        <div className="admin-error">
-          <p>{error}</p>
-          <button onClick={fetchPosts} className="admin-btn">
-            다시 시도
-          </button>
-        </div>
+        <Card>
+          <CardContent className="p-10 text-center">
+            <div className="text-sm text-destructive">{error}</div>
+            <Button type="button" variant="outline" className="mt-4" onClick={fetchPosts}>
+              다시 시도
+            </Button>
+          </CardContent>
+        </Card>
       ) : posts.length === 0 ? (
-        <div className="admin-empty">
-          <p>포스트가 없습니다.</p>
-          <Link to="/admin/blog/new" className="admin-btn admin-btn-primary">
-            첫 번째 글 작성하기
-          </Link>
-        </div>
+        <Card>
+          <CardContent className="p-10 text-center">
+            <div className="text-sm text-muted-foreground">포스트가 없습니다.</div>
+            <Button asChild className="mt-4">
+              <Link to="/admin/blog/new">첫 번째 글 작성하기</Link>
+            </Button>
+          </CardContent>
+        </Card>
       ) : (
         <>
-          <div className="admin-table-container">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>제목</th>
-                  <th>카테고리</th>
-                  <th>상태</th>
-                  <th>작성일</th>
-                  <th>발행일</th>
-                  <th>조회수</th>
-                  <th>작업</th>
-                </tr>
-              </thead>
-              <tbody>
-                {posts.map((post) => (
-                  <tr key={post.id}>
-                    <td className="admin-table-title">
-                      <Link to={`/admin/blog/edit/${post.id}`}>
-                        {post.title || '(제목 없음)'}
-                      </Link>
-                      {post.slug && (
-                        <span className="admin-table-slug">/{post.slug}</span>
-                      )}
-                    </td>
-                    <td>{post.category?.name || '-'}</td>
-                    <td>
-                      <span
-                        className="admin-status-badge"
-                        style={{ backgroundColor: STATUS_COLORS[post.status] }}
-                      >
-                        {STATUS_LABELS[post.status] || post.status}
-                      </span>
-                    </td>
-                    <td>{formatDate(post.created_at)}</td>
-                    <td>{formatDate(post.published_at)}</td>
-                    <td>{post.view_count || 0}</td>
-                    <td className="admin-table-actions">
-                      <Link
-                        to={`/admin/blog/edit/${post.id}`}
-                        className="admin-btn admin-btn-small"
-                      >
-                        수정
-                      </Link>
-                      {post.status === 'draft' && (
-                        <button
-                          onClick={() => handlePublish(post.id)}
-                          className="admin-btn admin-btn-small admin-btn-success"
-                        >
-                          발행
-                        </button>
-                      )}
-                      {post.status === 'published' && (
-                        <button
-                          onClick={() => handleUnpublish(post.id)}
-                          className="admin-btn admin-btn-small admin-btn-warning"
-                        >
-                          비발행
-                        </button>
-                      )}
-                      <button
-                        onClick={() => handleDelete(post.id, post.title)}
-                        className="admin-btn admin-btn-small admin-btn-danger"
-                      >
-                        삭제
-                      </button>
-                      {post.status === 'published' && (
-                        <a
-                          href={`/blog/${post.slug}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="admin-btn admin-btn-small"
-                        >
-                          보기
-                        </a>
-                      )}
-                    </td>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">목록</CardTitle>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="border-b text-left text-xs text-muted-foreground">
+                    <th className="px-3 py-2 font-medium">제목</th>
+                    <th className="px-3 py-2 font-medium">카테고리</th>
+                    <th className="px-3 py-2 font-medium">상태</th>
+                    <th className="px-3 py-2 font-medium">작성일</th>
+                    <th className="px-3 py-2 font-medium">발행일</th>
+                    <th className="px-3 py-2 font-medium">조회수</th>
+                    <th className="px-3 py-2 text-right font-medium">작업</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {posts.map((post) => (
+                    <tr key={post.id} className="border-b last:border-b-0">
+                      <td className="px-3 py-3 align-top">
+                        <div className="space-y-1">
+                          <Link to={`/admin/blog/edit/${post.id}`} className="font-medium text-foreground hover:underline">
+                            {post.title || '(제목 없음)'}
+                          </Link>
+                          {post.slug && <div className="text-xs text-muted-foreground">/blog/{post.slug}</div>}
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 align-top text-muted-foreground">{post.category?.name || '-'}</td>
+                      <td className="px-3 py-3 align-top">
+                        <Badge variant={getStatusVariant(post.status)}>
+                          {STATUS_LABELS[post.status] || post.status}
+                        </Badge>
+                      </td>
+                      <td className="px-3 py-3 align-top text-muted-foreground">{formatDate(post.created_at)}</td>
+                      <td className="px-3 py-3 align-top text-muted-foreground">{formatDate(post.published_at)}</td>
+                      <td className="px-3 py-3 align-top text-muted-foreground">{post.view_count || 0}</td>
+                      <td className="px-3 py-3 align-top">
+                        <div className="flex flex-wrap justify-end gap-2">
+                          <Button asChild size="sm" variant="outline">
+                            <Link to={`/admin/blog/edit/${post.id}`}>수정</Link>
+                          </Button>
+
+                          {post.status === 'draft' && (
+                            <Button type="button" size="sm" onClick={() => handlePublish(post.id)}>
+                              발행
+                            </Button>
+                          )}
+
+                          {post.status === 'published' && (
+                            <Button type="button" size="sm" variant="secondary" onClick={() => handleUnpublish(post.id)}>
+                              비발행
+                            </Button>
+                          )}
+
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDelete(post.id, post.title)}
+                          >
+                            삭제
+                          </Button>
+
+                          {post.status === 'published' && post.slug && (
+                            <Button asChild size="sm" variant="outline">
+                              <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
+                                보기
+                              </a>
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
 
           {pagination.totalPages > 1 && (
-            <div className="admin-pagination">
-              <button
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
                 disabled={currentPage <= 1}
                 onClick={() => {
                   const params = new URLSearchParams(searchParams);
                   params.set('page', String(currentPage - 1));
                   setSearchParams(params);
                 }}
-                className="admin-btn"
               >
                 이전
-              </button>
-              <span>
+              </Button>
+              <div className="text-sm text-muted-foreground">
                 {currentPage} / {pagination.totalPages}
-              </span>
-              <button
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
                 disabled={currentPage >= pagination.totalPages}
                 onClick={() => {
                   const params = new URLSearchParams(searchParams);
                   params.set('page', String(currentPage + 1));
                   setSearchParams(params);
                 }}
-                className="admin-btn"
               >
                 다음
-              </button>
+              </Button>
             </div>
           )}
         </>
