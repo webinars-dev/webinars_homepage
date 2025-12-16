@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation 
 import IndexPage from '../archive/components/index.jsx';
 import AboutPage from '../archive/components/about.jsx';
 import Services2Page from '../archive/components/services2.jsx';
-import ReferencePage from '../archive/components/reference.jsx';
 import ContactPage from '../archive/components/contact.jsx';
 import CategoryPage from '../archive/components/category__eb_af_b8-_eb_b6_84_eb_a5_98.jsx';
 import AuthorWebihomePage from '../archive/components/author_webihome.jsx';
@@ -210,8 +209,8 @@ function App() {
           <Route path="/services" element={<Services2Page />} />
           <Route path="/services/" element={<Services2Page />} />
 
-          <Route path="/reference" element={<ReferencePage />} />
-          <Route path="/reference/" element={<ReferencePage />} />
+          <Route path="/reference" element={<Reference2Page layout="masonry" />} />
+          <Route path="/reference/" element={<Reference2Page layout="masonry" />} />
           <Route path="/reference2" element={<Reference2Page />} />
           <Route path="/reference2/" element={<Reference2Page />} />
 

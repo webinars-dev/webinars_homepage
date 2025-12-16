@@ -64,31 +64,130 @@ test.describe('WEBINARS 디자인 검증', () => {
   });
 
   test('레퍼런스2 페이지 로딩', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/reference2/', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('[data-testid="reference2-grid"]', { timeout: 15000 });
 
     const legacyRowsCount = await page.locator('.wpb_row.reference').count();
     expect(legacyRowsCount).toBe(0);
+
+    await page.waitForFunction(() => {
+      const state = document.querySelector('.reference2-state');
+      if (!state) return true;
+      const text = state.textContent || '';
+      return !text.includes('로딩');
+    }, null, { timeout: 15000 });
+
+    const cardCount = await page.locator('.reference2-card').count();
+    if (cardCount === 0) test.skip(true, '등록된 카드가 없습니다.');
+
+    const squareGridCount = await page.locator('.reference2-grid--square').count();
+    expect(squareGridCount).toBeGreaterThan(0);
+
+    const spanCardCount = await page.locator('.reference2-card[class*="--span-"]').count();
+    expect(spanCardCount).toBe(0);
+  });
+
+  test('레퍼런스 페이지(3타입) 렌더링 확인', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/reference/', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('[data-testid="reference2-grid"]', { timeout: 15000 });
+
+    const legacyRowsCount = await page.locator('.wpb_row.reference').count();
+    expect(legacyRowsCount).toBe(0);
+
+    await page.waitForFunction(() => {
+      const state = document.querySelector('.reference2-state');
+      if (!state) return true;
+      const text = state.textContent || '';
+      return !text.includes('로딩');
+    }, null, { timeout: 15000 });
+
+    const cardCount = await page.locator('.reference2-card').count();
+    if (cardCount === 0) test.skip(true, '등록된 카드가 없습니다.');
+
+    const squareGridCount = await page.locator('.reference2-grid--square').count();
+    expect(squareGridCount).toBe(0);
+
+    const firstCard = page.locator('.reference2-card').first();
+    await expect(firstCard).toBeVisible();
+
+    const spans = await page.evaluate(() => {
+      const nodes = Array.from(document.querySelectorAll('.reference2-card'));
+      return nodes.map((node) => {
+        const match = Array.from(node.classList)
+          .map((className) => className.match(/reference2-card--span-(\d+)/))
+          .find(Boolean);
+        return match ? Number(match[1]) : 0;
+      });
+    });
+
+    const hasOnlyValidTypes = spans.every((span) => [4, 8, 12].includes(span));
+    expect(hasOnlyValidTypes).toBeTruthy();
+
+    const typeSet = new Set(spans);
+    expect(typeSet.size).toBeGreaterThan(0);
+    expect(typeSet.size).toBeLessThanOrEqual(3);
+
+    // 빈 칸 없이 채우기: 마지막 줄을 제외하고는 12 단위가 딱 맞아야 함
+    const rowSums = [];
+    let sum = 0;
+    for (const span of spans) {
+      sum += span;
+      if (sum === 12) {
+        rowSums.push(sum);
+        sum = 0;
+        continue;
+      }
+      if (sum > 12) {
+        rowSums.push(sum);
+        break;
+      }
+    }
+
+    const hasOverflowRow = rowSums.some((rowSum) => rowSum > 12);
+    expect(hasOverflowRow).toBeFalsy();
   });
 
   test('레퍼런스 카드 배경 이미지 로딩 확인', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/reference/', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('[data-testid="reference2-grid"]', { timeout: 15000 });
 
     await page.waitForFunction(() => {
-      const el = document.querySelector('.wpb_row.reference .modal-link .column-image-bg');
-      if (!el) return false;
-      const bg = window.getComputedStyle(el).backgroundImage || '';
-      return bg.includes('url(');
+      const state = document.querySelector('.reference2-state');
+      if (!state) return true;
+      const text = state.textContent || '';
+      return !text.includes('로딩');
     }, null, { timeout: 15000 });
 
-    const { bgUrl, absoluteUrl } = await page.evaluate(() => {
-      const el = document.querySelector('.wpb_row.reference .modal-link .column-image-bg');
-      const bg = el ? window.getComputedStyle(el).backgroundImage : '';
+    const cardCount = await page.locator('.reference2-card').count();
+    if (cardCount === 0) test.skip(true, '등록된 카드가 없습니다.');
+
+    await page.waitForFunction(() => {
+      const nodes = Array.from(document.querySelectorAll('.reference2-card-bg'));
+      return nodes.some((node) => {
+        const bg = node.style && node.style.backgroundImage ? node.style.backgroundImage : '';
+        return bg.includes('url(');
+      });
+    }, null, { timeout: 15000 });
+
+    const { bgUrl, absoluteUrl, rawBg } = await page.evaluate(() => {
+      const nodes = Array.from(document.querySelectorAll('.reference2-card-bg'));
+      const target = nodes.find((node) => {
+        const bg = node.style && node.style.backgroundImage ? node.style.backgroundImage : '';
+        return bg.includes('url(');
+      });
+
+      const bg = target ? target.style.backgroundImage : '';
       const match = bg && bg.match(/url\((?:"|')?([^"')]+)(?:"|')?\)/);
       const url = match && match[1] ? match[1] : '';
       const abs = url ? new URL(url, window.location.origin).toString() : '';
-      return { bgUrl: url, absoluteUrl: abs };
+      return { bgUrl: url, absoluteUrl: abs, rawBg: bg };
     });
+
+    expect(rawBg).toMatch(/url\(/);
+    expect(bgUrl, `rawBg=${rawBg}`).toBeTruthy();
 
     expect(bgUrl).toMatch(/\/wp-content\/uploads\//);
 
