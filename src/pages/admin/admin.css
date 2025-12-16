@@ -221,10 +221,13 @@
   width: 100%;
   padding: 10px 12px;
   font-size: 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #d1d5db !important;
   border-radius: 6px;
-  background: white;
-  color: #111827;
+  background: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  caret-color: #111827;
+  opacity: 1 !important;
   transition: border-color 0.2s;
 }
 
@@ -232,8 +235,14 @@
 .admin-textarea:focus,
 .admin-select:focus {
   outline: none;
-  border-color: #4f46e5;
+  border-color: #4f46e5 !important;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.admin-input::placeholder,
+.admin-textarea::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
 }
 
 .admin-input-large {
