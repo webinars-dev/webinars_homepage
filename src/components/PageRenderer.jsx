@@ -159,11 +159,32 @@ const normalizeWebinarsAssetUrl = (url) => {
   }
 };
 
+const isLocalHostname = (hostname = '') => {
+  if (!hostname) return false;
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1' || hostname === '0.0.0.0';
+};
+
+const isMacEnvironment = () => {
+  if (typeof navigator === 'undefined') return false;
+  const platform = navigator.platform || '';
+  const ua = navigator.userAgent || '';
+  return /Mac/i.test(platform) || /Macintosh/i.test(ua);
+};
+
+const getHangulNormalizationForm = () => {
+  // Production(Vercel/Linux)에서는 NFC가 필요하고,
+  // macOS 로컬 개발(Vite dev server)에서는 NFD URL이 실제 파일 매칭에 유리합니다.
+  if (typeof window === 'undefined') return 'NFC';
+  if (isLocalHostname(window.location.hostname) && isMacEnvironment()) return 'NFD';
+  return 'NFC';
+};
+
 // Helper function to encode Korean characters in URL
 const encodeKoreanUrl = (url) => {
   if (!url) return url;
 
   const shouldReturnRelative = !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) && !url.startsWith('//');
+  const normalizationForm = getHangulNormalizationForm();
 
   // Split URL into parts to preserve the protocol and domain
   try {
@@ -172,7 +193,7 @@ const encodeKoreanUrl = (url) => {
     // Encode each path segment separately to handle Korean filenames
     const encodedPath = urlObj.pathname
       .split('/')
-      .map((segment) => encodeURIComponent(decodeURIComponent(segment).normalize('NFC')))
+      .map((segment) => encodeURIComponent(decodeURIComponent(segment).normalize(normalizationForm)))
       .join('/');
     urlObj.pathname = encodedPath;
 
@@ -180,7 +201,7 @@ const encodeKoreanUrl = (url) => {
   } catch {
     // If URL parsing fails, try simple encoding
     return url
-      .normalize('NFC')
+      .normalize(normalizationForm)
       .replace(/[\u3131-\uD79D]/g, (char) => encodeURIComponent(char));
   }
 };

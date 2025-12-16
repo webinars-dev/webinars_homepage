@@ -70,4 +70,31 @@ test.describe('WEBINARS 디자인 검증', () => {
     const legacyRowsCount = await page.locator('.wpb_row.reference').count();
     expect(legacyRowsCount).toBe(0);
   });
+
+  test('레퍼런스 카드 배경 이미지 로딩 확인', async ({ page }) => {
+    await page.goto('/reference/', { waitUntil: 'domcontentloaded' });
+
+    await page.waitForFunction(() => {
+      const el = document.querySelector('.wpb_row.reference .modal-link .column-image-bg');
+      if (!el) return false;
+      const bg = window.getComputedStyle(el).backgroundImage || '';
+      return bg.includes('url(');
+    }, null, { timeout: 15000 });
+
+    const { bgUrl, absoluteUrl } = await page.evaluate(() => {
+      const el = document.querySelector('.wpb_row.reference .modal-link .column-image-bg');
+      const bg = el ? window.getComputedStyle(el).backgroundImage : '';
+      const match = bg && bg.match(/url\((?:"|')?([^"')]+)(?:"|')?\)/);
+      const url = match && match[1] ? match[1] : '';
+      const abs = url ? new URL(url, window.location.origin).toString() : '';
+      return { bgUrl: url, absoluteUrl: abs };
+    });
+
+    expect(bgUrl).toMatch(/\/wp-content\/uploads\//);
+
+    const response = await page.request.get(absoluteUrl);
+    expect(response.ok()).toBeTruthy();
+    const contentType = response.headers()['content-type'] || '';
+    expect(contentType).toMatch(/^image\//);
+  });
 });

@@ -274,19 +274,31 @@ const ModalContent = ({ path }) => {
 	      if (!url) return url;
 	      if (/^(data|blob):/i.test(url)) return url;
 
+	      const isLocalHostname = (hostname = '') => {
+	        if (!hostname) return false;
+	        return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1' || hostname === '0.0.0.0';
+	      };
+
+	      const isMacEnvironment = () => {
+	        const platform = navigator.platform || '';
+	        const ua = navigator.userAgent || '';
+	        return /Mac/i.test(platform) || /Macintosh/i.test(ua);
+	      };
+
+	      const normalizationForm = isLocalHostname(window.location.hostname) && isMacEnvironment() ? 'NFD' : 'NFC';
 	      const shouldReturnRelative = !/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) && !url.startsWith('//');
 
 	      try {
 	        const urlObj = new URL(url, window.location.origin);
 	        urlObj.pathname = urlObj.pathname
 	          .split('/')
-	          .map((segment) => encodeURIComponent(decodeURIComponent(segment).normalize('NFC')))
+	          .map((segment) => encodeURIComponent(decodeURIComponent(segment).normalize(normalizationForm)))
 	          .join('/');
 	        return shouldReturnRelative ? `${urlObj.pathname}${urlObj.search}${urlObj.hash}` : urlObj.toString();
 	      } catch {
 	        return url
-	          .normalize('NFC')
-	          .replace(/[\\u3131-\\uD79D]/g, (char) => encodeURIComponent(char));
+	          .normalize(normalizationForm)
+	          .replace(/[\u3131-\uD79D]/g, (char) => encodeURIComponent(char));
 	      }
 	    };
 
