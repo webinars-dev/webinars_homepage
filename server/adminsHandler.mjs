@@ -351,6 +351,96 @@ export async function handleAdminsRequest(req, res, { env = process.env } = {}) 
       return json(res, 200, { admin: author });
     }
 
+    if (req.method === 'PUT' || req.method === 'PATCH') {
+      const body = (await readJsonBody(req)) || {};
+      const userId = String(body.userId || '').trim();
+      const email = String(body.email || '').trim();
+      const password = String(body.password || '').trim();
+      const name = String(body.name || '').trim();
+
+      if (!userId) return json(res, 400, { error: 'userId가 필요합니다.' });
+      if (!email) return json(res, 400, { error: '이메일을 입력해주세요.' });
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json(res, 400, { error: '이메일 형식이 올바르지 않습니다.' });
+      if (password && password.length < 8) return json(res, 400, { error: '비밀번호는 8자 이상이어야 합니다.' });
+
+      const { data: authorRows, error: authorSelectError } = await supabaseAdmin
+        .from('authors')
+        .select('id, name, email, role, created_at')
+        .eq('id', userId)
+        .limit(1);
+
+      if (authorSelectError) return json(res, 500, { error: authorSelectError.message });
+      const authorRow = authorRows?.[0] || null;
+      if (!authorRow) return json(res, 404, { error: '관리자를 찾을 수 없습니다.' });
+      if ((authorRow.role || '').toLowerCase() !== 'admin') return json(res, 400, { error: '대상 계정이 관리자가 아닙니다.' });
+
+      let authUser = null;
+      try {
+        const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
+        if (error) throw error;
+        authUser = data?.user || null;
+      } catch (error) {
+        if (isLikelySupabaseAdminKeyError(error)) {
+          return json(res, 500, {
+            error: '서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY(또는 SUPABASE_SECRET_KEY)에 service_role/secret key를 설정해주세요.',
+          });
+        }
+        return json(res, 400, { error: error?.message || '사용자 정보를 불러오지 못했습니다.' });
+      }
+
+      if (!authUser) return json(res, 404, { error: 'Supabase Auth 사용자를 찾을 수 없습니다.' });
+
+      const authUpdate = {};
+
+      if (email && email !== authUser.email) {
+        authUpdate.email = email;
+        authUpdate.email_confirm = true;
+      }
+
+      if (password) {
+        authUpdate.password = password;
+      }
+
+      if (name) {
+        authUpdate.user_metadata = { ...(authUser.user_metadata || {}), name };
+      }
+
+      if (Object.keys(authUpdate).length) {
+        const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(userId, authUpdate);
+        if (updateError) {
+          if (isLikelySupabaseAdminKeyError(updateError)) {
+            return json(res, 500, {
+              error: '서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY(또는 SUPABASE_SECRET_KEY)에 service_role/secret key를 설정해주세요.',
+            });
+          }
+          return json(res, 400, { error: updateError.message });
+        }
+      }
+
+      const authorUpdate = {
+        ...(email ? { email } : {}),
+        ...(name ? { name } : {}),
+      };
+
+      if (Object.keys(authorUpdate).length) {
+        const { data, error } = await supabaseAdmin
+          .from('authors')
+          .update(authorUpdate)
+          .eq('id', userId)
+          .select('id, name, email, role, created_at')
+          .single();
+
+        if (error) {
+          const isUniqueError = String(error.code || '') === '23505';
+          return json(res, 400, { error: isUniqueError ? '이미 사용 중인 이메일입니다.' : error.message });
+        }
+
+        return json(res, 200, { admin: data });
+      }
+
+      return json(res, 200, { admin: authorRow });
+    }
+
     if (req.method === 'DELETE') {
       const body = (await readJsonBody(req)) || {};
       const userId = String(body.userId || '').trim();
@@ -382,7 +472,7 @@ export async function handleAdminsRequest(req, res, { env = process.env } = {}) 
       return json(res, 200, { ok: true });
     }
 
-    res.setHeader('Allow', 'GET,POST,DELETE');
+    res.setHeader('Allow', 'GET,POST,PUT,PATCH,DELETE');
     return json(res, 405, { error: `Method ${req.method} not allowed` });
   } catch (error) {
     const status = typeof error?.status === 'number' ? error.status : 500;

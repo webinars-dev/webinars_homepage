@@ -16,12 +16,21 @@ export default function AdminAdminsPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [editError, setEditError] = useState(null);
 
   const [form, setForm] = useState({
     email: '',
     name: '',
     password: '',
     createUser: true,
+  });
+
+  const [editForm, setEditForm] = useState({
+    userId: '',
+    email: '',
+    name: '',
+    password: '',
   });
 
   const currentUserId = user?.id || null;
@@ -74,6 +83,38 @@ export default function AdminAdminsPage() {
       setError(err?.message || '요청에 실패했습니다.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleEditStart = (admin) => {
+    setEditError(null);
+    setEditForm({
+      userId: admin.id,
+      email: admin.email || '',
+      name: admin.name || '',
+      password: '',
+    });
+  };
+
+  const handleEditCancel = () => {
+    setEditError(null);
+    setEditForm({ userId: '', email: '', name: '', password: '' });
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setEditing(true);
+    setEditError(null);
+
+    try {
+      await adminUserService.updateAdmin(editForm);
+      await fetchAdmins();
+      handleEditCancel();
+      alert('관리자 정보가 수정되었습니다.');
+    } catch (err) {
+      setEditError(err?.message || '수정 요청에 실패했습니다.');
+    } finally {
+      setEditing(false);
     }
   };
 
@@ -170,6 +211,64 @@ export default function AdminAdminsPage() {
         </CardContent>
       </Card>
 
+      {editForm.userId && (
+        <Card>
+          <CardHeader className="gap-2">
+            <CardTitle className="text-base">관리자 정보 수정</CardTitle>
+            <CardDescription>비밀번호는 입력한 경우에만 변경됩니다. (8자 이상)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleEditSubmit}>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="admin-edit-email">이메일</Label>
+                <Input
+                  id="admin-edit-email"
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, email: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="admin-edit-name">이름 (선택)</Label>
+                <Input
+                  id="admin-edit-name"
+                  value={editForm.name}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="admin-edit-password">새 비밀번호 (선택)</Label>
+                <Input
+                  id="admin-edit-password"
+                  type="password"
+                  value={editForm.password}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, password: e.target.value }))}
+                  placeholder="8자 이상"
+                />
+              </div>
+
+              {editError && (
+                <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive sm:col-span-2">
+                  {editError}
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-2 sm:col-span-2">
+                <Button type="submit" disabled={editing}>
+                  {editing ? '저장 중...' : '저장'}
+                </Button>
+                <Button type="button" variant="outline" disabled={editing} onClick={handleEditCancel}>
+                  취소
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
       {selfAdmin && (
         <Card>
           <CardContent className="flex flex-wrap items-center justify-between gap-2 p-4 text-sm">
@@ -215,6 +314,9 @@ export default function AdminAdminsPage() {
                       <TableCell className="text-muted-foreground">{formatDate(admin.created_at)}</TableCell>
                       <TableCell>
                         <div className="flex justify-end gap-2">
+                          <Button type="button" size="sm" variant="outline" onClick={() => handleEditStart(admin)}>
+                            수정
+                          </Button>
                           <Button
                             type="button"
                             size="sm"

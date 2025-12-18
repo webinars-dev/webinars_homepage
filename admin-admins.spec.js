@@ -42,8 +42,13 @@ test.describe('Admin Admins Page', () => {
     await expect(page.getByRole('heading', { name: '관리자 관리' })).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole('heading', { name: '관리자 목록' })).toBeVisible({ timeout: 15_000 });
     await expect(page.getByLabel('이메일')).toBeVisible();
+    await expect(page.getByRole('button', { name: '수정' }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: '수정' }).first().click();
+    await expect(page.getByRole('heading', { name: '관리자 정보 수정' })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByLabel('새 비밀번호 (선택)')).toBeVisible();
+    await page.getByRole('button', { name: '취소' }).click();
 
     await page.screenshot({ path: 'temp/playwright-admin-admins.png', fullPage: true });
   });
 });
-

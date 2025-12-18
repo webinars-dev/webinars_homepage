@@ -48,3 +48,10 @@ export async function revokeAdmin(userId) {
   });
 }
 
+export async function updateAdmin({ userId, email, name, password }) {
+  const data = await fetchJson('/api/admins', {
+    method: 'PUT',
+    body: { userId, email, name, password },
+  });
+  return data?.admin;
+}
