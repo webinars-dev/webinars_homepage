@@ -57,53 +57,55 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="admin-ui flex min-h-screen items-center justify-center bg-muted/60 p-6">
-      <Card className="w-full max-w-md" data-testid="admin-login-card">
-        <CardHeader className="gap-2 text-center">
-          <CardTitle className="text-2xl tracking-tight">WEBINARS</CardTitle>
-          <CardDescription>관리자 로그인</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {error}
+    <div className="admin-ui">
+      <div className="flex min-h-screen items-center justify-center bg-muted/60 p-6">
+        <Card className="w-full max-w-md" data-testid="admin-login-card">
+          <CardHeader className="gap-2 text-center">
+            <CardTitle className="text-2xl tracking-tight">WEBINARS</CardTitle>
+            <CardDescription>관리자 로그인</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="email">이메일</Label>
+                <Input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@example.com"
+                  required
+                  autoFocus
+                  autoComplete="username"
+                />
               </div>
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email">이메일</Label>
-              <Input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@example.com"
-                required
-                autoFocus
-                autoComplete="username"
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">비밀번호</Label>
+                <Input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">비밀번호</Label>
-              <Input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                autoComplete="current-password"
-              />
-            </div>
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? '로그인 중...' : '로그인'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? '로그인 중...' : '로그인'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
