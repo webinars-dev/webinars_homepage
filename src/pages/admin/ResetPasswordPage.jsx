@@ -86,7 +86,7 @@ export default function ResetPasswordPage() {
             <CardDescription>비밀번호 변경 완료</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            <div className="rounded-sm border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
               비밀번호가 성공적으로 변경되었습니다.
               <br />
               로그인 페이지로 이동합니다...
@@ -110,7 +110,7 @@ export default function ResetPasswordPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
                 {error}
               </div>
             )}

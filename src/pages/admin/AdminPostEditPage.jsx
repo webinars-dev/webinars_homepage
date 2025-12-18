@@ -288,7 +288,7 @@ export default function AdminPostEditPage() {
       </div>
 
       {error && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
         </div>
       )}
@@ -341,7 +341,7 @@ export default function AdminPostEditPage() {
 
             <div className="space-y-2">
               <Label>본문 (Markdown)</Label>
-              <div className="admin-form-group-editor overflow-hidden rounded-md border border-input bg-background">
+              <div className="admin-form-group-editor overflow-hidden rounded-sm border border-input bg-background">
                 <MdEditor
                   ref={editorRef}
                   value={formData.content}
@@ -398,7 +398,7 @@ export default function AdminPostEditPage() {
             <CardContent className="space-y-3">
               {formData.featured_image ? (
                 <div className="space-y-3">
-                  <div className="overflow-hidden rounded-md border bg-muted">
+                  <div className="overflow-hidden rounded-sm border bg-muted">
                     <img src={formData.featured_image} alt="대표 이미지" className="h-auto w-full" />
                   </div>
                   <Button
@@ -418,7 +418,7 @@ export default function AdminPostEditPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleFeaturedImageUpload}
-                className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-secondary-foreground hover:file:bg-secondary/80"
+                className="block w-full text-sm file:mr-4 file:rounded-sm file:border-0 file:bg-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-secondary-foreground hover:file:bg-secondary/80"
               />
             </CardContent>
           </Card>
@@ -451,7 +451,7 @@ export default function AdminPostEditPage() {
                     <label
                       key={tag.id}
                       className={[
-                        'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
+                        'flex cursor-pointer items-center gap-2 rounded-sm border px-3 py-2 text-sm transition-colors',
                         checked ? 'border-primary/40 bg-primary/5' : 'border-border bg-muted/30 hover:bg-muted/50',
                       ].join(' ')}
                     >

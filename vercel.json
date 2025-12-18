@@ -4,6 +4,6 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "rewrites": [
-    { "source": "/((?!assets/|wp/).*)", "destination": "/index.html" }
+    { "source": "/((?!assets/|wp/|api/).*)", "destination": "/index.html" }
   ]
 }

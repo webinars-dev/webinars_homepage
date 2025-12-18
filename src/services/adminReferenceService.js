@@ -99,3 +99,41 @@ export async function publishReferenceItem(id) {
 export async function unpublishReferenceItem(id) {
   return updateReferenceItem(id, { is_published: false });
 }
+
+/**
+ * 레퍼런스 이미지 업로드
+ */
+export async function uploadReferenceImage(file, referenceId = 'temp') {
+  const user = await requireUser();
+
+  // 파일 확장자 검증
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error('허용되지 않는 파일 형식입니다. (jpg, png, webp, gif만 가능)');
+  }
+
+  // 파일 크기 검증 (10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    throw new Error('파일 크기는 10MB 이하여야 합니다.');
+  }
+
+  // 파일명 생성
+  const ext = file.name.split('.').pop();
+  const fileName = `references/${referenceId}/${crypto.randomUUID()}.${ext}`;
+
+  const { data, error } = await supabase.storage
+    .from('blog-images')
+    .upload(fileName, file, {
+      cacheControl: '31536000',
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  // Public URL 반환
+  const { data: { publicUrl } } = supabase.storage
+    .from('blog-images')
+    .getPublicUrl(data.path);
+
+  return publicUrl;
+}

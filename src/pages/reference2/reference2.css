@@ -22,6 +22,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-auto-rows: 380px;
+  grid-auto-flow: dense;
   gap: 20px;
 }
 
@@ -259,6 +260,83 @@
 .reference2-modal-body img {
   max-width: 100%;
   height: auto;
+}
+
+/* 에디터에서 생성된 커스텀 클래스 스타일 */
+.reference2-modal-body .modal-title,
+.reference2-modal-body h2.modal-title {
+  font-size: 36px;
+  font-weight: 700;
+  font-family: 'hyphen', 'Noto Sans KR', sans-serif;
+  text-transform: uppercase;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+}
+
+.reference2-modal-body .modal-subtitle,
+.reference2-modal-body h5.modal-subtitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.6;
+  margin: 0 0 15px 0;
+}
+
+.reference2-modal-body .modal-section-title,
+.reference2-modal-body h5.modal-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  border-left: 3px solid #374151;
+  padding-left: 10px;
+  margin: 20px 0 5px 0;
+}
+
+/* 기존 txt36/txt18 클래스도 지원 (호환성) */
+.reference2-modal-body .txt36 {
+  font-size: 36px;
+  font-weight: 700;
+  font-family: 'hyphen', 'Noto Sans KR', sans-serif;
+  text-transform: uppercase;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+}
+
+.reference2-modal-body .txt18 {
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 0 0 10px 0;
+}
+
+.reference2-modal-body .w700 {
+  font-weight: 700;
+}
+
+.reference2-modal-body .w400 {
+  font-weight: 400;
+}
+
+.reference2-modal-body .re_1 {
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+
+.reference2-modal-body .re_1::before {
+  content: '';
+  width: 4px;
+  height: 17px;
+  display: inline-block;
+  background: #111827;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.reference2-modal-body .re_2 {
+  margin-bottom: 15px;
+}
+
+.reference2-modal-body .mt20 {
+  margin-top: 20px;
 }
 
 @media (max-width: 690px) {

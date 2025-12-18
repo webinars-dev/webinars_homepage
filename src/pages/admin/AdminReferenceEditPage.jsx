@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as adminReferenceService from '../../services/adminReferenceService';
 
@@ -8,9 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx';
 import { Checkbox } from './ui/checkbox.jsx';
 import { Input } from './ui/input.jsx';
 import { Label } from './ui/label.jsx';
-import { Select } from './ui/select.jsx';
 import { Textarea } from './ui/textarea.jsx';
-import { cn } from './ui/cn.js';
+import { RichTextEditor } from './ui/rich-text-editor.jsx';
 
 const DEFAULT_FORM = {
   category: '',
@@ -19,15 +18,8 @@ const DEFAULT_FORM = {
   image_url: '',
   modal_path: '',
   modal_html: '',
-  col_span: 4,
   order: 0,
   is_published: false,
-};
-
-const normalizeColSpan = (colSpan) => {
-  const value = Number(colSpan);
-  if (value === 8 || value === 12) return value;
-  return 4;
 };
 
 export default function AdminReferenceEditPage() {
@@ -37,8 +29,10 @@ export default function AdminReferenceEditPage() {
 
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState(DEFAULT_FORM);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (!isNew) loadItem();
@@ -60,7 +54,6 @@ export default function AdminReferenceEditPage() {
         image_url: item.image_url || '',
         modal_path: item.modal_path || '',
         modal_html: item.modal_html || '',
-        col_span: item.col_span || 4,
         order: item.order ?? 0,
         is_published: !!item.is_published,
       });
@@ -77,11 +70,42 @@ export default function AdminReferenceEditPage() {
     setFormData((prev) => ({ ...prev, [name]: nextValue }));
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+
+    try {
+      const publicUrl = await adminReferenceService.uploadReferenceImage(file, id || 'new');
+      setFormData((prev) => ({ ...prev, image_url: publicUrl }));
+    } catch (err) {
+      setError(err?.message || '이미지 업로드에 실패했습니다.');
+      alert('업로드 실패: ' + (err?.message || '알 수 없는 오류'));
+    } finally {
+      setUploading(false);
+      // 파일 입력 초기화 (같은 파일 재선택 가능하도록)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   const previewStyle = useMemo(() => {
     return formData.image_url ? { backgroundImage: `url(${formData.image_url})` } : undefined;
   }, [formData.image_url]);
 
-  const normalizedColSpan = normalizeColSpan(formData.col_span);
+  // 에디터 이미지 업로드 핸들러
+  const handleEditorImageUpload = async (file) => {
+    const publicUrl = await adminReferenceService.uploadReferenceImage(file, id || 'modal');
+    return publicUrl;
+  };
+
+  // 에디터 내용 변경 핸들러
+  const handleEditorChange = (content) => {
+    setFormData((prev) => ({ ...prev, modal_html: content }));
+  };
 
   const handleSubmit = async () => {
     if (!formData.title.trim()) {
@@ -95,7 +119,6 @@ export default function AdminReferenceEditPage() {
     try {
       const payload = {
         ...formData,
-        col_span: Number(formData.col_span) || 4,
         order: Number(formData.order) || 0,
       };
 
@@ -150,7 +173,7 @@ export default function AdminReferenceEditPage() {
       </div>
 
       {error && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        <div className="rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
         </div>
       )}
@@ -199,11 +222,38 @@ export default function AdminReferenceEditPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">이미지 · 링크</CardTitle>
+              <CardTitle className="text-base">배경 이미지</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="image_url">배경 이미지 URL</Label>
+                <Label>이미지 업로드</Label>
+                <div className="flex gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="flex-1"
+                  >
+                    {uploading ? '업로드 중...' : '파일 선택'}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  jpg, png, webp, gif (최대 10MB)
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="image_url">또는 URL 직접 입력</Label>
                 <Input
                   id="image_url"
                   name="image_url"
@@ -211,25 +261,23 @@ export default function AdminReferenceEditPage() {
                   onChange={handleChange}
                   placeholder="예) https://webinars.co.kr/wp-content/uploads/..."
                 />
-                <p className="text-xs text-muted-foreground">
-                  로컬(mac) 환경에서는 한글 경로가 자동으로 인코딩되어 표시됩니다.
-                </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="modal_path">모달 경로</Label>
-                <Input
-                  id="modal_path"
-                  name="modal_path"
-                  value={formData.modal_path}
-                  onChange={handleChange}
-                  placeholder="/2024_offline_1010/"
-                />
-                <p className="text-xs text-muted-foreground">
-                  예) <span className="font-mono">/wp/2024_offline_1010</span> 또는{' '}
-                  <span className="font-mono">/2024_offline_1010/</span>
-                </p>
-              </div>
+              {formData.image_url && (
+                <div className="space-y-2">
+                  <Label>미리보기</Label>
+                  <div className="relative aspect-video overflow-hidden rounded-sm border bg-muted">
+                    <img
+                      src={formData.image_url}
+                      alt="배경 이미지 미리보기"
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -238,43 +286,31 @@ export default function AdminReferenceEditPage() {
               <CardTitle className="text-base">모달 내용(HTML)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Textarea
-                id="modal_html"
-                name="modal_html"
+              <RichTextEditor
                 value={formData.modal_html}
-                onChange={handleChange}
-                className="min-h-56"
-                placeholder={'예) <h2 class="txt36">OFFLINE</h2>\\n<h5 class="txt18 w700">...</h5>'}
+                onChange={handleEditorChange}
+                onImageUpload={handleEditorImageUpload}
+                placeholder="모달에 표시할 내용을 입력하세요..."
               />
               <p className="text-xs text-muted-foreground">
                 비워두면 기존 아카이브 모달이 표시됩니다. 입력하면 DB의 HTML이 우선 적용됩니다.
+                <br />
+                툴바의 이미지 버튼으로 이미지를 업로드할 수 있습니다.
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">노출 · 정렬</CardTitle>
+              <CardTitle className="text-base">정렬 · 발행</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="col_span">가로 폭</Label>
-                <Select id="col_span" name="col_span" value={String(formData.col_span)} onChange={handleChange}>
-                  <option value="4">4 (기본)</option>
-                  <option value="8">8 (와이드)</option>
-                  <option value="12">12 (풀)</option>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  참고: 1000px 이하에서는 모든 카드가 한 줄로 표시됩니다.
-                </p>
-              </div>
-
+            <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="order">정렬 순서</Label>
                 <Input id="order" name="order" type="number" value={formData.order} onChange={handleChange} />
               </div>
 
-              <label className="flex items-center gap-2 text-sm text-foreground md:col-span-2">
+              <label className="flex items-center gap-2 text-sm text-foreground">
                 <Checkbox name="is_published" checked={formData.is_published} onChange={handleChange} />
                 발행
               </label>
@@ -288,56 +324,35 @@ export default function AdminReferenceEditPage() {
               <CardTitle className="text-base">카드 미리보기</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-12 gap-3">
+              <div
+                className="relative overflow-hidden rounded-sm bg-muted text-white"
+                style={{ minHeight: 280 }}
+              >
                 <div
-                  className={cn(
-                    'relative overflow-hidden rounded-xl bg-muted text-white',
-                    normalizedColSpan === 4 && 'col-span-4',
-                    normalizedColSpan === 8 && 'col-span-8',
-                    normalizedColSpan === 12 && 'col-span-12'
-                  )}
-                  style={{ minHeight: 280 }}
-                >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={previewStyle}
-                  />
-                  <div className="absolute inset-0 bg-black/60" />
-                  <div className="relative space-y-4 p-6">
-                    <div className="text-lg font-semibold leading-tight">
-                      {formData.category || 'TYPE'}
-                    </div>
-                    <div className="h-px w-5 bg-white/60" />
-                    <div className="whitespace-pre-line text-sm font-semibold leading-relaxed">
-                      {formData.title || '제목'}
-                    </div>
-                    <div className="h-px w-5 bg-white/60" />
-                    <div className="whitespace-pre-line text-sm font-semibold leading-relaxed">
-                      {formData.client || '고객사'}
-                    </div>
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={previewStyle}
+                />
+                <div className="absolute inset-0 bg-black/60" />
+                <div className="relative space-y-4 p-6">
+                  <div className="text-lg font-semibold leading-tight">
+                    {formData.category || 'TYPE'}
+                  </div>
+                  <div className="h-px w-5 bg-white/60" />
+                  <div className="whitespace-pre-line text-sm font-semibold leading-relaxed">
+                    {formData.title || '제목'}
+                  </div>
+                  <div className="h-px w-5 bg-white/60" />
+                  <div className="whitespace-pre-line text-sm font-semibold leading-relaxed">
+                    {formData.client || '고객사'}
                   </div>
                 </div>
-
-                {normalizedColSpan !== 12 && (
-                  <div
-                    className={cn(
-                      'rounded-xl border border-dashed bg-muted/30',
-                      normalizedColSpan === 8 ? 'col-span-4' : 'col-span-8'
-                    )}
-                    style={{ minHeight: 280 }}
-                  />
-                )}
               </div>
 
               <div className="text-xs text-muted-foreground">
                 <div className="flex items-center justify-between">
-                  <span>가로 폭</span>
-                  <span className="font-mono">{normalizedColSpan}</span>
-                </div>
-                <div className="mt-1 flex items-center justify-between">
-                  <span>모달 소스</span>
-                  <span className="truncate font-mono" title={formData.modal_html?.trim() ? 'modal_html' : formData.modal_path || '-'}>
-                    {formData.modal_html?.trim() ? 'modal_html' : formData.modal_path || '-'}
+                  <span>모달 HTML</span>
+                  <span className="truncate font-mono">
+                    {formData.modal_html?.trim() ? '입력됨' : '없음'}
                   </span>
                 </div>
               </div>

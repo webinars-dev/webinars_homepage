@@ -270,10 +270,46 @@ const modalContents = {
   '/webinar_live-streaming_15/': WpWebinarLiveStreaming15Page,
 };
 
+// 유연한 경로 매칭 함수 - 대소문자 무시, /wp/ 제거, 끝부분 매칭
+const findContentComponent = (inputPath) => {
+  if (!inputPath) return defaultContent;
+
+  // 정규화: /wp/ 제거, 소문자 변환, 끝 슬래시 정리
+  const normalize = (p) => {
+    let normalized = p.toLowerCase()
+      .replace(/^\/wp\//, '/')
+      .replace(/^\/webinar\//, '/')
+      .replace(/\/+$/, '');
+    if (!normalized.startsWith('/')) normalized = `/${normalized}`;
+    return normalized;
+  };
+
+  const normalizedInput = normalize(inputPath);
+
+  // 정확한 매칭 시도
+  for (const [key, component] of Object.entries(modalContents)) {
+    const normalizedKey = normalize(key);
+    if (normalizedKey === normalizedInput || normalizedKey === `${normalizedInput}/`) {
+      return component;
+    }
+  }
+
+  // 끝부분 매칭 시도 (파일명만 비교)
+  const inputBasename = normalizedInput.split('/').pop();
+  for (const [key, component] of Object.entries(modalContents)) {
+    const keyBasename = normalize(key).split('/').pop();
+    if (keyBasename === inputBasename) {
+      return component;
+    }
+  }
+
+  return defaultContent;
+};
+
 const ModalContent = ({ path }) => {
   console.log('[ModalContent] Received path:', path);
   console.log('[ModalContent] Available paths:', Object.keys(modalContents));
-  const ContentComponent = modalContents[path] || defaultContent;
+  const ContentComponent = findContentComponent(path);
   console.log('[ModalContent] Selected component:', ContentComponent.name || ContentComponent);
 
   const containerRef = useRef(null);
@@ -481,13 +517,35 @@ const ModalContent = ({ path }) => {
     <>
       {/* 원본 CSS 스타일 추가 + 모달 내 헤더/푸터 숨기기 */}
       <style>{`
-        .txt36 { font-size: 36px; }
+        .txt36 { font-size: 36px; font-weight: 700; font-family: 'hyphen', 'Noto Sans KR', sans-serif; text-transform: uppercase; }
         .txt18 { font-size: 18px !important; }
         .w700 { font-weight: 700 !important; }
         .w400 { font-weight: 400 !important; }
         .mt20 { margin-top: 20px; }
-        .re_1 { margin-bottom: 5px; }
+        .re_1 {
+          margin-bottom: 5px;
+          margin-top: 20px;
+        }
+        .re_1:before {
+          content: '';
+          width: 4px;
+          height: 17px;
+          display: inline-block;
+          background: #000;
+          vertical-align: middle;
+          margin-right: 10px;
+        }
         .re_2 { margin-bottom: 15px; }
+
+        /* 에디터에서 생성된 커스텀 클래스 */
+        .modal-title { font-size: 36px; font-weight: 700; margin-bottom: 20px; font-family: 'hyphen', 'Noto Sans KR', sans-serif; text-transform: uppercase; }
+        .modal-subtitle { font-size: 18px; font-weight: 700; line-height: 1.6; margin-bottom: 15px; }
+        .modal-section-title {
+          font-size: 18px;
+          font-weight: 700;
+          margin-top: 20px;
+          margin-bottom: 5px;
+        }
 
         #modal-ready {
           padding: 0;

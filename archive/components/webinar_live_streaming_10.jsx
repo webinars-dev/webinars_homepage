@@ -19,7 +19,7 @@ const WebinarLiveStreaming10Page = () => {
                     <img
                         decoding="async"
                         className="alignnone size-full wp-image-2150"
-                        src="https://webinars.co.kr/wp-content/uploads/2022/11/img10_1.png"
+                        src="/wp-content/uploads/2022/11/img10_1.png"
                         alt=""
                         width="920"
                         height="613"

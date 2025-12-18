@@ -5,6 +5,7 @@ import * as adminReferenceService from '../../services/adminReferenceService';
 import { Button } from './ui/button.jsx';
 import { Badge } from './ui/badge.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table.jsx';
 
 export default function AdminReferenceListPage() {
   const [items, setItems] = useState([]);
@@ -62,6 +63,7 @@ export default function AdminReferenceListPage() {
     });
   };
 
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -101,42 +103,37 @@ export default function AdminReferenceListPage() {
           <CardHeader>
             <CardTitle className="text-base">목록</CardTitle>
           </CardHeader>
-          <CardContent className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr className="border-b text-left text-xs text-muted-foreground">
-                  <th className="px-3 py-2 font-medium">순서</th>
-                  <th className="px-3 py-2 font-medium">타입</th>
-                  <th className="px-3 py-2 font-medium">제목</th>
-                  <th className="px-3 py-2 font-medium">고객사</th>
-                  <th className="px-3 py-2 font-medium">발행</th>
-                  <th className="px-3 py-2 font-medium">업데이트</th>
-                  <th className="px-3 py-2 text-right font-medium">작업</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => (
-                  <tr key={item.id} className="border-b last:border-b-0">
-                    <td className="px-3 py-3 align-top text-muted-foreground">{item.order ?? 0}</td>
-                    <td className="px-3 py-3 align-top">{item.category || '-'}</td>
-                    <td className="px-3 py-3 align-top">
-                      <Link
-                        to={`/admin/reference/edit/${item.id}`}
-                        className="font-medium text-foreground hover:underline"
-                      >
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>순서</TableHead>
+                  <TableHead>타입</TableHead>
+                  <TableHead>제목</TableHead>
+                  <TableHead>고객사</TableHead>
+                  <TableHead>발행</TableHead>
+                  <TableHead>업데이트</TableHead>
+                  <TableHead className="text-right">작업</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {items.map((item, index) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="text-muted-foreground">{index + 1}</TableCell>
+                    <TableCell>{item.category || '-'}</TableCell>
+                    <TableCell className="font-medium">
+                      <Link to={`/admin/reference/edit/${item.id}`} className="hover:underline">
                         {(item.title || '').split('\n')[0] || '(제목 없음)'}
                       </Link>
-                    </td>
-                    <td className="px-3 py-3 align-top text-muted-foreground">
-                      {(item.client || '').split('\n')[0] || '-'}
-                    </td>
-                    <td className="px-3 py-3 align-top">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{(item.client || '').split('\n')[0] || '-'}</TableCell>
+                    <TableCell>
                       <Badge variant={item.is_published ? 'success' : 'secondary'}>
                         {item.is_published ? '발행' : '비발행'}
                       </Badge>
-                    </td>
-                    <td className="px-3 py-3 align-top text-muted-foreground">{formatDate(item.updated_at)}</td>
-                    <td className="px-3 py-3 align-top">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{formatDate(item.updated_at)}</TableCell>
+                    <TableCell>
                       <div className="flex flex-wrap justify-end gap-2">
                         <Button asChild size="sm" variant="outline">
                           <Link to={`/admin/reference/edit/${item.id}`}>수정</Link>
@@ -149,20 +146,15 @@ export default function AdminReferenceListPage() {
                         >
                           {item.is_published ? '비발행' : '발행'}
                         </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleDelete(item.id, item.title)}
-                        >
+                        <Button type="button" size="sm" variant="destructive" onClick={() => handleDelete(item.id, item.title)}>
                           삭제
                         </Button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
       )}

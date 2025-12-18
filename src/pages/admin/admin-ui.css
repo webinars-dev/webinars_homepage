@@ -12,43 +12,57 @@
 
 @layer base {
   .admin-ui {
-    /* shadcn preset: radix + lyra + neutral + indigo */
+    /* shadcn preset: radix + lyra + zinc + indigo + Inter */
     --background: 1 0 0;
-    --foreground: 0.145 0 0;
+    --foreground: 0.141 0.005 285.823;
+
     --card: 1 0 0;
-    --card-foreground: 0.145 0 0;
+    --card-foreground: 0.141 0.005 285.823;
+
     --popover: 1 0 0;
-    --popover-foreground: 0.145 0 0;
+    --popover-foreground: 0.141 0.005 285.823;
+
     --primary: 0.51 0.23 277;
     --primary-foreground: 0.96 0.02 272;
+
     --secondary: 0.967 0.001 286.375;
     --secondary-foreground: 0.21 0.006 285.885;
-    --muted: 0.97 0 0;
-    --muted-foreground: 0.556 0 0;
-    --accent: 0.97 0 0;
-    --accent-foreground: 0.205 0 0;
-    --destructive: 0.58 0.22 27;
-    --destructive-foreground: 0.985 0 0;
-    --border: 0.922 0 0;
-    --input: 0.922 0 0;
-    --ring: 0.708 0 0;
-    --chart-1: 0.79 0.1 275;
-    --chart-2: 0.68 0.16 277;
-    --chart-3: 0.59 0.2 277;
-    --chart-4: 0.51 0.23 277;
-    --chart-5: 0.46 0.21 277;
-    --radius: 0.625rem;
 
+    --muted: 0.967 0.001 286.375;
+    --muted-foreground: 0.552 0.016 285.938;
+
+    --accent: 0.967 0.001 286.375;
+    --accent-foreground: 0.21 0.006 285.885;
+
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+
+    --border: 0.92 0.004 286.32;
+    --input: 0.92 0.004 286.32;
+    --ring: 0.705 0.015 286.067;
+
+    /* shadcn preset (radius=default) */
+    --radius: 0.5rem;
+
+    /* Charts */
+    --chart-1: 0.51 0.23 277;
+    --chart-2: 0.623 0.214 259.815;
+    --chart-3: 0.546 0.245 262.881;
+    --chart-4: 0.488 0.243 264.376;
+    --chart-5: 0.424 0.199 265.638;
+
+    /* Sidebar */
     --sidebar: 0.985 0 0;
-    --sidebar-foreground: 0.145 0 0;
+    --sidebar-foreground: 0.141 0.005 285.823;
     --sidebar-primary: 0.51 0.23 277;
     --sidebar-primary-foreground: 0.96 0.02 272;
-    --sidebar-accent: 0.97 0 0;
-    --sidebar-accent-foreground: 0.205 0 0;
-    --sidebar-border: 0.922 0 0;
-    --sidebar-ring: 0.708 0 0;
+    --sidebar-accent: 0.967 0.001 286.375;
+    --sidebar-accent-foreground: 0.21 0.006 285.885;
+    --sidebar-border: 0.92 0.004 286.32;
+    --sidebar-ring: 0.705 0.015 286.067;
 
     font-family:
+      'Inter',
       'Noto Sans',
       'Noto Sans KR',
       ui-sans-serif,
@@ -62,7 +76,7 @@
       'Apple SD Gothic Neo',
       'Noto Sans CJK KR',
       'Malgun Gothic',
-      sans-serif;
+      sans-serif !important;
 
     background: oklch(var(--background));
     color: oklch(var(--foreground));
@@ -71,39 +85,50 @@
   }
 
   .admin-ui.dark {
-    --background: 0.145 0 0;
+    --background: 0.141 0.005 285.823;
     --foreground: 0.985 0 0;
-    --card: 0.205 0 0;
+
+    --card: 0.21 0.006 285.885;
     --card-foreground: 0.985 0 0;
-    --popover: 0.205 0 0;
+
+    --popover: 0.21 0.006 285.885;
     --popover-foreground: 0.985 0 0;
+
     --primary: 0.59 0.2 277;
     --primary-foreground: 0.96 0.02 272;
+
     --secondary: 0.274 0.006 286.033;
     --secondary-foreground: 0.985 0 0;
-    --muted: 0.269 0 0;
-    --muted-foreground: 0.708 0 0;
-    --accent: 0.371 0 0;
+
+    --muted: 0.274 0.006 286.033;
+    --muted-foreground: 0.705 0.015 286.067;
+
+    --accent: 0.274 0.006 286.033;
     --accent-foreground: 0.985 0 0;
+
     --destructive: 0.704 0.191 22.216;
     --destructive-foreground: 0.985 0 0;
+
     --border: 1 0 0 / 10%;
     --input: 1 0 0 / 15%;
-    --ring: 0.556 0 0;
-    --chart-1: 0.79 0.1 275;
-    --chart-2: 0.68 0.16 277;
-    --chart-3: 0.59 0.2 277;
-    --chart-4: 0.51 0.23 277;
-    --chart-5: 0.46 0.21 277;
+    --ring: 0.552 0.016 285.938;
 
-    --sidebar: 0.205 0 0;
+    /* Charts */
+    --chart-1: 0.59 0.2 277;
+    --chart-2: 0.623 0.214 259.815;
+    --chart-3: 0.546 0.245 262.881;
+    --chart-4: 0.488 0.243 264.376;
+    --chart-5: 0.424 0.199 265.638;
+
+    /* Sidebar */
+    --sidebar: 0.21 0.006 285.885;
     --sidebar-foreground: 0.985 0 0;
     --sidebar-primary: 0.68 0.16 277;
     --sidebar-primary-foreground: 0.96 0.02 272;
-    --sidebar-accent: 0.269 0 0;
+    --sidebar-accent: 0.274 0.006 286.033;
     --sidebar-accent-foreground: 0.985 0 0;
     --sidebar-border: 1 0 0 / 10%;
-    --sidebar-ring: 0.556 0 0;
+    --sidebar-ring: 0.552 0.016 285.938;
   }
 
   .admin-ui :where(*, ::before, ::after) {
@@ -115,6 +140,29 @@
   .admin-ui :where(a) {
     color: inherit;
     text-decoration: none;
+  }
+
+  /* Preflight를 끈 상태(corePlugins.preflight=false)에서 브라우저 기본 UI를 최소화 */
+  .admin-ui :where(button) {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border-width: 0;
+    padding: 0;
+    text-transform: none;
+    cursor: pointer;
+  }
+
+  .admin-ui :where(input, textarea, select) {
+    appearance: none;
+    background: transparent;
+    border-width: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .admin-ui :where(select) {
+    background-image: none;
   }
 
   .admin-ui :where(button, input, textarea, select) {

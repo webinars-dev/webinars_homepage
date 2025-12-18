@@ -6,6 +6,7 @@ import { Badge } from './ui/badge.jsx';
 import { Button } from './ui/button.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx';
 import { Select } from './ui/select.jsx';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table.jsx';
 
 const STATUS_LABELS = {
   draft: '임시저장',
@@ -175,40 +176,38 @@ export default function AdminPostListPage() {
             <CardHeader>
               <CardTitle className="text-base">목록</CardTitle>
             </CardHeader>
-            <CardContent className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="border-b text-left text-xs text-muted-foreground">
-                    <th className="px-3 py-2 font-medium">제목</th>
-                    <th className="px-3 py-2 font-medium">카테고리</th>
-                    <th className="px-3 py-2 font-medium">상태</th>
-                    <th className="px-3 py-2 font-medium">작성일</th>
-                    <th className="px-3 py-2 font-medium">발행일</th>
-                    <th className="px-3 py-2 font-medium">조회수</th>
-                    <th className="px-3 py-2 text-right font-medium">작업</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>제목</TableHead>
+                    <TableHead>카테고리</TableHead>
+                    <TableHead>상태</TableHead>
+                    <TableHead>작성일</TableHead>
+                    <TableHead>발행일</TableHead>
+                    <TableHead>조회수</TableHead>
+                    <TableHead className="text-right">작업</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {posts.map((post) => (
-                    <tr key={post.id} className="border-b last:border-b-0">
-                      <td className="px-3 py-3 align-top">
+                    <TableRow key={post.id}>
+                      <TableCell>
                         <div className="space-y-1">
-                          <Link to={`/admin/blog/edit/${post.id}`} className="font-medium text-foreground hover:underline">
+                          <Link to={`/admin/blog/edit/${post.id}`} className="font-medium hover:underline">
                             {post.title || '(제목 없음)'}
                           </Link>
                           {post.slug && <div className="text-xs text-muted-foreground">/blog/{post.slug}</div>}
                         </div>
-                      </td>
-                      <td className="px-3 py-3 align-top text-muted-foreground">{post.category?.name || '-'}</td>
-                      <td className="px-3 py-3 align-top">
-                        <Badge variant={getStatusVariant(post.status)}>
-                          {STATUS_LABELS[post.status] || post.status}
-                        </Badge>
-                      </td>
-                      <td className="px-3 py-3 align-top text-muted-foreground">{formatDate(post.created_at)}</td>
-                      <td className="px-3 py-3 align-top text-muted-foreground">{formatDate(post.published_at)}</td>
-                      <td className="px-3 py-3 align-top text-muted-foreground">{post.view_count || 0}</td>
-                      <td className="px-3 py-3 align-top">
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">{post.category?.name || '-'}</TableCell>
+                      <TableCell>
+                        <Badge variant={getStatusVariant(post.status)}>{STATUS_LABELS[post.status] || post.status}</Badge>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">{formatDate(post.created_at)}</TableCell>
+                      <TableCell className="text-muted-foreground">{formatDate(post.published_at)}</TableCell>
+                      <TableCell className="text-muted-foreground">{post.view_count || 0}</TableCell>
+                      <TableCell>
                         <div className="flex flex-wrap justify-end gap-2">
                           <Button asChild size="sm" variant="outline">
                             <Link to={`/admin/blog/edit/${post.id}`}>수정</Link>
@@ -226,12 +225,7 @@ export default function AdminPostListPage() {
                             </Button>
                           )}
 
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleDelete(post.id, post.title)}
-                          >
+                          <Button type="button" size="sm" variant="destructive" onClick={() => handleDelete(post.id, post.title)}>
                             삭제
                           </Button>
 
@@ -243,11 +237,11 @@ export default function AdminPostListPage() {
                             </Button>
                           )}
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
 

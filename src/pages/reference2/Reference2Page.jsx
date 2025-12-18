@@ -2,6 +2,7 @@ import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from 'reac
 import ReactDOM from 'react-dom';
 
 import PageRenderer from '../../components/PageRenderer';
+import ModalContent from '../../components/ModalContent';
 import pageHtml from '../../../archive/pages/reference.html?raw';
 import { getPublishedReferenceItems } from '../../services/referenceService';
 import './reference2.css';
@@ -9,17 +10,14 @@ import './reference2.css';
 const WEBINARS_HOST_REGEX = /(^|\.)webinars\.co\.kr$/i;
 const StaticPageRenderer = memo(PageRenderer);
 
-const LAYOUTS = {
-  square: 'square',
-  masonry: 'masonry',
+// 타입별 col_span 값
+const TYPE_COL_SPANS = {
+  small: 4,   // 1열 x 1행
+  medium: 8,  // 2열 x 1행
+  large: 12,  // 2열 x 2행
 };
 
-const normalizeColSpan = (colSpan) => {
-  const value = Number(colSpan);
-  if (value === 8 || value === 12) return value;
-  return 4;
-};
-
+// col_span에서 size 클래스 반환
 const getColSpanSize = (colSpan) => {
   const value = Number(colSpan);
   if (value === 12) return 'large';
@@ -27,90 +25,73 @@ const getColSpanSize = (colSpan) => {
   return 'small';
 };
 
-const getColSpanUnits = (colSpan) => {
-  const normalized = normalizeColSpan(colSpan);
-  if (normalized === 12) return 2; // large: 2열
-  if (normalized === 8) return 2;  // medium: 2열
-  return 1; // small: 1열
-};
-
-const packReferenceItems = (items) => {
+// 3열 그리드를 빈틈없이 채우는 랜덤 타입 할당
+// CSS Grid의 dense 패킹과 함께 사용하여 빈틈 최소화
+const assignRandomColSpans = (items) => {
   if (!Array.isArray(items) || items.length === 0) return [];
 
-  const remaining = items.slice();
-  const packed = [];
+  const result = [];
+  let remaining = items.slice();
+  let index = 0;
 
+  // 2행 블록 단위로 처리 (large는 2행을 차지하므로)
   while (remaining.length > 0) {
-    const first = remaining.shift();
-    const firstUnits = getColSpanUnits(first.col_span);
+    const rand = Math.random();
 
-    if (firstUnits === 3) {
-      packed.push(first);
+    // large + small + small 패턴 (3개 아이템이 2행을 채움)
+    // large(2열x2행) 옆에 small 2개가 수직으로 배치
+    if (remaining.length >= 3 && rand < 0.15) {
+      result.push({ ...remaining[0], col_span: TYPE_COL_SPANS.large });
+      result.push({ ...remaining[1], col_span: TYPE_COL_SPANS.small });
+      result.push({ ...remaining[2], col_span: TYPE_COL_SPANS.small });
+      remaining = remaining.slice(3);
       continue;
     }
 
-    if (firstUnits === 2) {
-      const smallIndex = remaining.findIndex((item) => getColSpanUnits(item.col_span) === 1);
-      if (smallIndex !== -1) {
-        packed.push(first, remaining.splice(smallIndex, 1)[0]);
+    // medium + small 패턴 (2개 아이템이 1행을 채움)
+    if (remaining.length >= 2 && rand < 0.45) {
+      result.push({ ...remaining[0], col_span: TYPE_COL_SPANS.medium });
+      result.push({ ...remaining[1], col_span: TYPE_COL_SPANS.small });
+      remaining = remaining.slice(2);
+      continue;
+    }
+
+    // small + medium 패턴
+    if (remaining.length >= 2 && rand < 0.75) {
+      result.push({ ...remaining[0], col_span: TYPE_COL_SPANS.small });
+      result.push({ ...remaining[1], col_span: TYPE_COL_SPANS.medium });
+      remaining = remaining.slice(2);
+      continue;
+    }
+
+    // small + small + small 패턴 (3개 아이템이 1행을 채움)
+    if (remaining.length >= 3) {
+      result.push({ ...remaining[0], col_span: TYPE_COL_SPANS.small });
+      result.push({ ...remaining[1], col_span: TYPE_COL_SPANS.small });
+      result.push({ ...remaining[2], col_span: TYPE_COL_SPANS.small });
+      remaining = remaining.slice(3);
+      continue;
+    }
+
+    // 남은 아이템 처리
+    if (remaining.length === 2) {
+      // 2개 남음: medium 또는 small+small
+      if (Math.random() < 0.5) {
+        result.push({ ...remaining[0], col_span: TYPE_COL_SPANS.medium });
+        result.push({ ...remaining[1], col_span: TYPE_COL_SPANS.small });
       } else {
-        packed.push(first);
+        result.push({ ...remaining[0], col_span: TYPE_COL_SPANS.small });
+        result.push({ ...remaining[1], col_span: TYPE_COL_SPANS.small });
       }
-      continue;
+      remaining = [];
+    } else if (remaining.length === 1) {
+      // 1개 남음: small
+      result.push({ ...remaining[0], col_span: TYPE_COL_SPANS.small });
+      remaining = [];
     }
-
-    const wideIndex = remaining.findIndex((item) => getColSpanUnits(item.col_span) === 2);
-    const firstSmallIndex = remaining.findIndex((item) => getColSpanUnits(item.col_span) === 1);
-    const secondSmallIndex =
-      firstSmallIndex === -1
-        ? -1
-        : remaining.findIndex(
-            (item, index) => index !== firstSmallIndex && getColSpanUnits(item.col_span) === 1
-          );
-
-    const canFillWithWide = wideIndex !== -1;
-    const canFillWithTwoSmalls = firstSmallIndex !== -1 && secondSmallIndex !== -1;
-
-    if (canFillWithWide && canFillWithTwoSmalls) {
-      const wideCost = wideIndex;
-      const smallCost = Math.max(firstSmallIndex, secondSmallIndex);
-
-      if (wideCost <= smallCost) {
-        packed.push(first, remaining.splice(wideIndex, 1)[0]);
-        continue;
-      }
-
-      const [smallA, smallB] =
-        firstSmallIndex < secondSmallIndex ? [firstSmallIndex, secondSmallIndex] : [secondSmallIndex, firstSmallIndex];
-      const second = remaining.splice(smallB, 1)[0];
-      const firstOther = remaining.splice(smallA, 1)[0];
-      packed.push(first, firstOther, second);
-      continue;
-    }
-
-    if (canFillWithWide) {
-      packed.push(first, remaining.splice(wideIndex, 1)[0]);
-      continue;
-    }
-
-    if (canFillWithTwoSmalls) {
-      const [smallA, smallB] =
-        firstSmallIndex < secondSmallIndex ? [firstSmallIndex, secondSmallIndex] : [secondSmallIndex, firstSmallIndex];
-      const second = remaining.splice(smallB, 1)[0];
-      const firstOther = remaining.splice(smallA, 1)[0];
-      packed.push(first, firstOther, second);
-      continue;
-    }
-
-    if (firstSmallIndex !== -1) {
-      packed.push(first, remaining.splice(firstSmallIndex, 1)[0]);
-      continue;
-    }
-
-    packed.push(first);
   }
 
-  return packed;
+  return result;
 };
 
 const normalizeWebinarsAssetUrl = (url) => {
@@ -211,12 +192,12 @@ const DEFAULT_MODAL_HTML = `
 </div>
 `;
 
-function Reference2Grid({ items, loading, error, layout = LAYOUTS.square, onOpenModal }) {
+function Reference2Grid({ items, loading, error, onOpenModal }) {
+  // 랜덤 col_span 할당 (빈틈 없는 그리드)
   const arrangedItems = useMemo(() => {
     const safeItems = Array.isArray(items) ? items : [];
-    if (layout === LAYOUTS.masonry) return packReferenceItems(safeItems);
-    return safeItems;
-  }, [items, layout]);
+    return assignRandomColSpans(safeItems);
+  }, [items]);
 
   const cards = useMemo(() => {
     return arrangedItems.map((item) => {
@@ -229,7 +210,6 @@ function Reference2Grid({ items, loading, error, layout = LAYOUTS.square, onOpen
       // 모든 모달 가능 카드는 React 모달 사용 (WordPress 모달 회피)
       const cardClassName = [
         'reference2-card',
-        layout === LAYOUTS.square ? 'reference2-card--square' : '',
         spanClassName,
         hasModal ? 'reference2-card--has-modal' : '',
       ]
@@ -246,8 +226,14 @@ function Reference2Grid({ items, loading, error, layout = LAYOUTS.square, onOpen
         // WordPress 모달 시스템의 이벤트 가로채기 방지 (네이티브 이벤트 사용)
         e.nativeEvent?.stopImmediatePropagation?.();
 
-        // modal_html이 있으면 해당 HTML 사용, 없으면 기본 "준비 중" 메시지 표시
-        onOpenModal?.(hasModalHtml ? item.modal_html : DEFAULT_MODAL_HTML);
+        // modal_html이 있으면 HTML 사용, modal_path가 있으면 ModalContent로 표시
+        if (hasModalHtml) {
+          onOpenModal?.({ html: item.modal_html, path: null });
+        } else if (hasModalPath) {
+          onOpenModal?.({ html: null, path: item.modal_path });
+        } else {
+          onOpenModal?.({ html: DEFAULT_MODAL_HTML, path: null });
+        }
       };
 
       return (
@@ -273,17 +259,10 @@ function Reference2Grid({ items, loading, error, layout = LAYOUTS.square, onOpen
         </div>
       );
     });
-  }, [arrangedItems, layout, onOpenModal]);
-
-  const gridClassName = [
-    'reference2-grid',
-    layout === LAYOUTS.square ? 'reference2-grid--square' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  }, [arrangedItems, onOpenModal]);
 
   return (
-    <div className="reference2-wrap" data-testid="reference2-grid" data-layout={layout}>
+    <div className="reference2-wrap" data-testid="reference2-grid">
       {loading ? (
         <div className="reference2-state">로딩 중...</div>
       ) : error ? (
@@ -291,7 +270,7 @@ function Reference2Grid({ items, loading, error, layout = LAYOUTS.square, onOpen
       ) : cards.length === 0 ? (
         <div className="reference2-state">등록된 레퍼런스가 없습니다.</div>
       ) : (
-        <div className={gridClassName}>
+        <div className="reference2-grid">
           {cards}
         </div>
       )}
@@ -344,9 +323,11 @@ const encodeKoreanUrlsInHtml = (html) => {
   );
 };
 
-function HtmlModal({ html, onClose }) {
+function HtmlModal({ html, path, onClose }) {
+  const isOpen = !!(html || path);
+
   useEffect(() => {
-    if (!html) return () => {};
+    if (!isOpen) return () => {};
 
     // 스크롤 위치 저장
     const scrollY = window.scrollY;
@@ -369,9 +350,9 @@ function HtmlModal({ html, onClose }) {
       // 스크롤 위치 복원
       window.scrollTo(scrollX, scrollY);
     };
-  }, [html, onClose]);
+  }, [isOpen, onClose]);
 
-  if (!html) return null;
+  if (!isOpen) return null;
 
   return ReactDOM.createPortal(
     <div className="reference2-modal-overlay" onClick={onClose}>
@@ -379,25 +360,28 @@ function HtmlModal({ html, onClose }) {
         <button className="reference2-modal-close" onClick={onClose} aria-label="닫기">
           ×
         </button>
-        <div
-          className="reference2-modal-body"
-          dangerouslySetInnerHTML={{ __html: encodeKoreanUrlsInHtml(html) }}
-        />
+        <div className="reference2-modal-body">
+          {path ? (
+            <ModalContent path={path} />
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: encodeKoreanUrlsInHtml(html) }} />
+          )}
+        </div>
       </div>
     </div>,
     document.body
   );
 }
 
-export default function Reference2Page({ layout = LAYOUTS.square } = {}) {
+export default function Reference2Page() {
   const [mountNode, setMountNode] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modalHtml, setModalHtml] = useState(null);
+  const [modalData, setModalData] = useState({ html: null, path: null });
 
-  const handleOpenModal = (html) => setModalHtml(html);
-  const handleCloseModal = () => setModalHtml(null);
+  const handleOpenModal = ({ html, path }) => setModalData({ html, path });
+  const handleCloseModal = () => setModalData({ html: null, path: null });
 
   useLayoutEffect(() => {
     const container = document.querySelector('#modal-ready');
@@ -453,10 +437,10 @@ export default function Reference2Page({ layout = LAYOUTS.square } = {}) {
       <StaticPageRenderer html={pageHtml} />
       {mountNode &&
         ReactDOM.createPortal(
-          <Reference2Grid items={items} loading={loading} error={error} layout={layout} onOpenModal={handleOpenModal} />,
+          <Reference2Grid items={items} loading={loading} error={error} onOpenModal={handleOpenModal} />,
           mountNode
         )}
-      <HtmlModal html={modalHtml} onClose={handleCloseModal} />
+      <HtmlModal html={modalData.html} path={modalData.path} onClose={handleCloseModal} />
     </>
   );
 }

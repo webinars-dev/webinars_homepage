@@ -51,9 +51,10 @@ import { BlogIndexPage, BlogPostPage, BlogCategoryPage, BlogTagPage } from './pa
 import Reference2Page from './pages/reference2/Reference2Page.jsx';
 
 // 관리자 페이지
-import { AdminLayout, AdminLoginPage, AdminPostListPage, AdminPostEditPage, AdminReferenceListPage, AdminReferenceEditPage } from './pages/admin';
+import { AdminLayout, AdminLoginPage, AdminPostListPage, AdminPostEditPage, AdminReferenceListPage, AdminReferenceEditPage, AdminAdminsPage } from './pages/admin';
 import ResetPasswordPage from './pages/admin/ResetPasswordPage.jsx';
 import { AuthProvider } from './hooks/useAuth.jsx';
+import RequireAdmin from './pages/admin/RequireAdmin.jsx';
 
 // 에러 바운더리 컴포넌트
 class ErrorBoundary extends React.Component {
@@ -271,12 +272,41 @@ function App() {
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
           <Route path="/admin" element={<AdminLayout />}>
-            <Route path="blog" element={<AdminPostListPage />} />
-            <Route path="blog/new" element={<AdminPostEditPage />} />
-            <Route path="blog/edit/:id" element={<AdminPostEditPage />} />
+            <Route
+              path="blog"
+              element={
+                <RequireAdmin>
+                  <AdminPostListPage />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="blog/new"
+              element={
+                <RequireAdmin>
+                  <AdminPostEditPage />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="blog/edit/:id"
+              element={
+                <RequireAdmin>
+                  <AdminPostEditPage />
+                </RequireAdmin>
+              }
+            />
             <Route path="reference" element={<AdminReferenceListPage />} />
             <Route path="reference/new" element={<AdminReferenceEditPage />} />
             <Route path="reference/edit/:id" element={<AdminReferenceEditPage />} />
+            <Route
+              path="admins"
+              element={
+                <RequireAdmin>
+                  <AdminAdminsPage />
+                </RequireAdmin>
+              }
+            />
           </Route>
 
           <Route

@@ -4,16 +4,16 @@ import { cva } from 'class-variance-authority';
 import { cn } from './cn';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background',
+  'inline-flex items-center rounded-sm border px-2 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/90',
+        default: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/90',
         secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        destructive: 'border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/90',
+        destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline: 'text-foreground',
-        success: 'border-transparent bg-emerald-600 text-white shadow hover:bg-emerald-600/90',
-        warning: 'border-transparent bg-amber-500 text-white shadow hover:bg-amber-500/90',
+        success: 'border-transparent bg-emerald-600 text-white hover:bg-emerald-600/90',
+        warning: 'border-transparent bg-amber-500 text-white hover:bg-amber-500/90',
       },
     },
     defaultVariants: {
