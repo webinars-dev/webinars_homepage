@@ -6,7 +6,50 @@ const json = (res, status, payload) => {
   res.end(JSON.stringify(payload));
 };
 
+const pickFirstString = (...values) => {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim()) return value.trim();
+  }
+  return null;
+};
+
+const decodeJwtPayload = (token) => {
+  try {
+    const parts = String(token || '').split('.');
+    if (parts.length < 2) return null;
+    const payload = parts[1];
+    const b64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = b64 + '='.repeat((4 - (b64.length % 4)) % 4);
+    return JSON.parse(Buffer.from(padded, 'base64').toString('utf8'));
+  } catch {
+    return null;
+  }
+};
+
+const isLikelySupabaseAdminKeyError = (error) => {
+  const message = String(error?.message || '');
+  const lower = message.toLowerCase();
+  return (
+    lower.includes('service_role') ||
+    lower.includes('admin api') ||
+    lower.includes('invalid api key') ||
+    lower.includes('apikey') ||
+    lower.includes('not authorized')
+  );
+};
+
 const readJsonBody = async (req) => {
+  if (req?.body) {
+    if (typeof req.body === 'string') {
+      try {
+        return JSON.parse(req.body);
+      } catch {
+        throw new Error('Invalid JSON body');
+      }
+    }
+    return req.body;
+  }
+
   return await new Promise((resolve, reject) => {
     let raw = '';
     req.on('data', (chunk) => {
@@ -32,10 +75,32 @@ const getBearerToken = (req) => {
 };
 
 const requireEnv = (env) => {
-  const url = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-  const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = pickFirstString(
+    env.SUPABASE_URL,
+    env.VITE_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.WEBI_SUPABASE_URL
+  );
+  const serviceRoleKey = pickFirstString(
+    env.SUPABASE_SERVICE_ROLE_KEY,
+    env.SUPABASE_SECRET_KEY,
+    env.SUPABASE_SECRET_API_KEY,
+    env.SUPABASE_SECRET,
+    env.SUPABASE_SERVICE_KEY
+  );
   if (!url) throw new Error('Missing SUPABASE_URL');
-  if (!serviceRoleKey) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
+  if (!serviceRoleKey) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY (or SUPABASE_SECRET_KEY)');
+
+  const publishableKey = pickFirstString(env.VITE_SUPABASE_ANON_KEY, env.SUPABASE_ANON_KEY, env.SUPABASE_PUBLISHABLE_KEY);
+  if (publishableKey && publishableKey === serviceRoleKey) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is set to anon/publishable key (needs service_role/secret key)');
+  }
+
+  const payload = decodeJwtPayload(serviceRoleKey);
+  if (payload?.role && payload.role !== 'service_role') {
+    throw new Error(`SUPABASE_SERVICE_ROLE_KEY role is "${payload.role}" (needs "service_role")`);
+  }
+
   return { url, serviceRoleKey };
 };
 
@@ -82,14 +147,32 @@ const requireAdminActor = async (supabaseAdmin, token) => {
   return user;
 };
 
+const findAuthUserIdByEmailInAuthors = async (supabaseAdmin, email) => {
+  const { data, error } = await supabaseAdmin
+    .from('authors')
+    .select('id')
+    .eq('email', email)
+    .limit(1);
+
+  if (error) throw error;
+  return data?.[0]?.id || null;
+};
+
 const findAuthUserByEmail = async (supabaseAdmin, email) => {
   const perPage = 200;
-  for (let page = 1; page <= 50; page += 1) {
+  const lowerEmail = email.toLowerCase();
+  let totalPages = null;
+
+  for (let page = 1; page <= 200; page += 1) {
+    if (typeof totalPages === 'number' && page > totalPages) break;
     const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage });
     if (error) throw error;
     const users = data?.users || [];
-    const found = users.find((u) => (u.email || '').toLowerCase() === email.toLowerCase());
+    const found = users.find((u) => (u.email || '').toLowerCase() === lowerEmail);
     if (found) return found;
+    if (typeof data?.total === 'number') {
+      totalPages = Math.ceil(data.total / perPage);
+    }
     if (users.length < perPage) break;
   }
   return null;
@@ -104,17 +187,24 @@ const upsertAuthorAdmin = async (supabaseAdmin, { userId, email, name }) => {
 
   if (selectError) throw selectError;
 
+  const existingRow = existing?.[0] || null;
+  const fallbackName = email?.split('@')?.[0] || 'Admin';
+
   const payload = {
     id: userId,
     email,
-    name: name || email?.split('@')?.[0] || 'Admin',
+    name: name || existingRow?.name || fallbackName,
     role: 'admin',
   };
 
   if (existing?.length) {
     const { data, error } = await supabaseAdmin
       .from('authors')
-      .update({ role: 'admin', name: payload.name, email: payload.email })
+      .update({
+        role: 'admin',
+        email: payload.email,
+        ...(name ? { name: payload.name } : {}),
+      })
       .eq('id', userId)
       .select('id, name, email, role, created_at')
       .single();
@@ -208,6 +298,11 @@ export async function handleAdminsRequest(req, res, { env = process.env } = {}) 
         });
 
         if (error) {
+          if (isLikelySupabaseAdminKeyError(error)) {
+            return json(res, 500, {
+              error: '서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY(또는 SUPABASE_SECRET_KEY)에 service_role/secret key를 설정해주세요.',
+            });
+          }
           const alreadyExists = String(error.message || '').toLowerCase().includes('already');
           if (!alreadyExists) return json(res, 400, { error: error.message });
         } else {
@@ -216,7 +311,32 @@ export async function handleAdminsRequest(req, res, { env = process.env } = {}) 
       }
 
       if (!authUser) {
-        authUser = await findAuthUserByEmail(supabaseAdmin, email);
+        const authorUserId = await findAuthUserIdByEmailInAuthors(supabaseAdmin, email).catch(() => null);
+        if (authorUserId) {
+          const { data, error } = await supabaseAdmin.auth.admin.getUserById(authorUserId);
+          if (error) {
+            if (isLikelySupabaseAdminKeyError(error)) {
+              return json(res, 500, {
+                error: '서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY(또는 SUPABASE_SECRET_KEY)에 service_role/secret key를 설정해주세요.',
+              });
+            }
+          } else {
+            authUser = data?.user || null;
+          }
+        }
+      }
+
+      if (!authUser) {
+        try {
+          authUser = await findAuthUserByEmail(supabaseAdmin, email);
+        } catch (error) {
+          if (isLikelySupabaseAdminKeyError(error)) {
+            return json(res, 500, {
+              error: '서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY(또는 SUPABASE_SECRET_KEY)에 service_role/secret key를 설정해주세요.',
+            });
+          }
+          throw error;
+        }
       }
 
       if (!authUser) {
@@ -266,7 +386,11 @@ export async function handleAdminsRequest(req, res, { env = process.env } = {}) 
     return json(res, 405, { error: `Method ${req.method} not allowed` });
   } catch (error) {
     const status = typeof error?.status === 'number' ? error.status : 500;
+    if (isLikelySupabaseAdminKeyError(error)) {
+      return json(res, 500, {
+        error: '서버 설정 오류: SUPABASE_SERVICE_ROLE_KEY(또는 SUPABASE_SECRET_KEY)에 service_role/secret key를 설정해주세요.',
+      });
+    }
     return json(res, status, { error: error?.message || 'Unknown error' });
   }
 }
-
