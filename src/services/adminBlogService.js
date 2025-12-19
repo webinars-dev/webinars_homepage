@@ -127,6 +127,13 @@ export async function createPost(postData) {
     postFields.scheduled_at = null;
   }
 
+  const now = new Date().toISOString();
+  if (postFields.status === 'published' && !postFields.published_at) {
+    postFields.published_at = now;
+    postFields.published_by = user.id;
+    postFields.scheduled_at = null;
+  }
+
   // 포스트 생성
   const { data: post, error } = await supabase
     .from('posts')
@@ -134,8 +141,8 @@ export async function createPost(postData) {
       ...postFields,
       author_id: author.id,
       status: postFields.status || 'draft',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      created_at: now,
+      updated_at: now
     })
     .select()
     .single();
@@ -175,6 +182,22 @@ export async function updatePost(id, postData) {
   // 빈 문자열을 null로 변환 (timestamp 필드)
   if (postFields.scheduled_at === '') {
     postFields.scheduled_at = null;
+  }
+
+  if (postFields.status === 'published') {
+    const { data: currentPost, error: currentError } = await supabase
+      .from('posts')
+      .select('status, published_at')
+      .eq('id', id)
+      .single();
+
+    if (currentError) throw currentError;
+
+    if (!currentPost?.published_at || currentPost?.status !== 'published') {
+      postFields.published_at = new Date().toISOString();
+      postFields.published_by = user.id;
+      postFields.scheduled_at = null;
+    }
   }
 
   // 포스트 업데이트

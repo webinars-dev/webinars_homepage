@@ -20,13 +20,15 @@ export async function getPosts({ page = 1, categorySlug, tagSlug } = {}) {
       excerpt,
       featured_image,
       published_at,
+      created_at,
       view_count,
       author:authors!posts_author_id_fkey(id, name, avatar_url),
       category:categories(id, name, slug)
     `, { count: 'exact' })
     .eq('status', 'published')
     .is('deleted_at', null)
-    .order('published_at', { ascending: false });
+    .order('published_at', { ascending: false, nullsFirst: true })
+    .order('created_at', { ascending: false });
 
   // 카테고리 필터
   if (categorySlug) {
@@ -209,13 +211,15 @@ export async function getRelatedPosts(postId, categoryId, limit = 3) {
       title,
       excerpt,
       featured_image,
-      published_at
+      published_at,
+      created_at
     `)
     .eq('status', 'published')
     .is('deleted_at', null)
     .eq('category_id', categoryId)
     .neq('id', postId)
-    .order('published_at', { ascending: false })
+    .order('published_at', { ascending: false, nullsFirst: true })
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) {
