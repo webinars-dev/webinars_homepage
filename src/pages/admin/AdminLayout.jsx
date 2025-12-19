@@ -62,20 +62,6 @@ function AdminLayoutContent() {
                   대시보드
                 </NavLink>
                 <NavLink
-                  to="/admin/analytics"
-                  className={({ isActive }) =>
-                    cn(
-                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
-                    )
-                  }
-                >
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                    <path d="M3 3h2v18H3V3zm16 10h2v8h-2v-8zM7 13h2v8H7v-8zm4-6h2v14h-2V7zm4 4h2v10h-2V11z" />
-                  </svg>
-                  통계분석
-                </NavLink>
-                <NavLink
                   to="/admin/blog"
                   end
                   className={({ isActive }) =>
@@ -133,6 +119,21 @@ function AdminLayoutContent() {
                     <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                   </svg>
                   새 레퍼런스
+                </NavLink>
+
+                <NavLink
+                  to="/admin/analytics"
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    )
+                  }
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M3 3h2v18H3V3zm16 10h2v8h-2v-8zM7 13h2v8H7v-8zm4-6h2v14h-2V7zm4 4h2v10h-2V11z" />
+                  </svg>
+                  통계분석
                 </NavLink>
 
                 <Separator className="my-3 bg-sidebar-border" />
