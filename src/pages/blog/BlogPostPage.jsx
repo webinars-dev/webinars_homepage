@@ -122,20 +122,7 @@ export default function BlogPostPage() {
           {post.excerpt && <p className="post-excerpt">{post.excerpt}</p>}
 
           <div className="post-meta">
-            {post.author && (
-              <div className="post-author">
-                {post.author.avatar_url && (
-                  <img
-                    src={post.author.avatar_url}
-                    alt={post.author.name}
-                    className="author-avatar"
-                  />
-                )}
-                <span className="author-name">{post.author.name}</span>
-              </div>
-            )}
             <span className="post-date">{publishedDate}</span>
-            <span className="post-views">조회 {post.view_count}</span>
           </div>
 
           {post.tags && post.tags.length > 0 && (
@@ -159,25 +146,6 @@ export default function BlogPostPage() {
         <article className="post-content">
           <MarkdownRenderer content={post.content} />
         </article>
-
-        {/* 작성자 정보 */}
-        {post.author && post.author.bio && (
-          <div className="post-author-box">
-            <div className="author-info">
-              {post.author.avatar_url && (
-                <img
-                  src={post.author.avatar_url}
-                  alt={post.author.name}
-                  className="author-avatar-large"
-                />
-              )}
-              <div className="author-details">
-                <h3>{post.author.name}</h3>
-                <p>{post.author.bio}</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* 이전/다음 포스트 네비게이션 */}
         <nav className="post-navigation">
