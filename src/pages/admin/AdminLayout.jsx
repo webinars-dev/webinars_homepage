@@ -37,7 +37,7 @@ function AdminLayoutContent() {
       <div className="flex min-h-screen">
         <aside className="flex h-screen w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
           <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-6">
-            <Link to={isAdmin ? '/admin/blog' : '/admin/reference'} className="flex items-baseline gap-2">
+            <Link to="/admin" className="flex items-baseline gap-2">
               <span className="text-base font-semibold tracking-tight">WEBINARS</span>
               <span className="text-xs font-medium text-muted-foreground">Admin</span>
             </Link>
@@ -46,6 +46,21 @@ function AdminLayoutContent() {
           <nav className="flex-1 space-y-1 p-3">
             {isAdmin ? (
               <>
+                <NavLink
+                  to="/admin"
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    )
+                  }
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+                  </svg>
+                  대시보드
+                </NavLink>
                 <NavLink
                   to="/admin/blog"
                   end
@@ -125,6 +140,21 @@ function AdminLayoutContent() {
               </>
             ) : (
               <>
+                <NavLink
+                  to="/admin"
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    )
+                  }
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+                  </svg>
+                  대시보드
+                </NavLink>
                 <NavLink
                   to="/admin/reference"
                   end
