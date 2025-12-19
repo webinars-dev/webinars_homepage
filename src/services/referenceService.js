@@ -17,6 +17,8 @@ export async function getPublishedReferenceItems() {
     .select('id, category, title, client, image_url, modal_path, modal_html, col_span, order, created_at, updated_at')
     .eq('is_published', true)
     .is('deleted_at', null)
+    .order('order', { ascending: true })
+    .order('updated_at', { ascending: false })
     .order('created_at', { ascending: false });
 
   if (error) {
