@@ -42,6 +42,18 @@ test.describe('Admin Admins Page', () => {
     await expect(page.getByRole('heading', { name: '관리자 관리' })).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole('heading', { name: '관리자 목록' })).toBeVisible({ timeout: 15_000 });
     await expect(page.getByLabel('이메일')).toBeVisible();
+    const createUserCheckbox = page.getByLabel('새 계정 생성');
+    const passwordInput = page.locator('#admin-password');
+    await expect(createUserCheckbox).toBeChecked();
+    await expect(passwordInput).toBeEnabled();
+
+    await createUserCheckbox.click();
+    await expect(createUserCheckbox).not.toBeChecked();
+    await expect(passwordInput).toBeDisabled();
+
+    await createUserCheckbox.click();
+    await expect(createUserCheckbox).toBeChecked();
+    await expect(passwordInput).toBeEnabled();
     await expect(page.getByRole('button', { name: '수정' }).first()).toBeVisible();
 
     await page.getByRole('button', { name: '수정' }).first().click();
