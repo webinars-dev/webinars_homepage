@@ -44,8 +44,15 @@ test.describe('Admin Admins Page', () => {
     await expect(page.getByLabel('이메일')).toBeVisible();
     const createUserCheckbox = page.getByLabel('새 계정 생성');
     const passwordInput = page.locator('#admin-password');
+    const passwordToggle = page.getByRole('button', { name: '초기 비밀번호 보기' });
     await expect(createUserCheckbox).toBeChecked();
     await expect(passwordInput).toBeEnabled();
+    await expect(passwordToggle).toBeVisible();
+
+    await passwordToggle.click();
+    await expect(passwordInput).toHaveAttribute('type', 'text');
+    await page.getByRole('button', { name: '초기 비밀번호 숨기기' }).click();
+    await expect(passwordInput).toHaveAttribute('type', 'password');
 
     await createUserCheckbox.click();
     await expect(createUserCheckbox).not.toBeChecked();

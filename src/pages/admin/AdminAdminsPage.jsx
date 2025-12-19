@@ -10,6 +10,48 @@ import { Input } from './ui/input.jsx';
 import { Label } from './ui/label.jsx';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table.jsx';
 
+function EyeIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+function EyeOffIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path d="M4 4l16 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path
+        d="M9.9 9.9A3 3 0 0 0 14.1 14.1"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M6.2 6.2C3.7 8 2.5 12 2.5 12s3.5 7 9.5 7c2.1 0 3.9-.6 5.4-1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.5 5.3c5.1 1.4 7 6.7 7 6.7s-1.4 2.8-4.2 4.8"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function AdminAdminsPage() {
   const { user } = useAuth();
   const [admins, setAdmins] = useState([]);
@@ -18,6 +60,8 @@ export default function AdminAdminsPage() {
   const [error, setError] = useState(null);
   const [editing, setEditing] = useState(false);
   const [editError, setEditError] = useState(null);
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
+  const [showEditPassword, setShowEditPassword] = useState(false);
 
   const [form, setForm] = useState({
     email: '',
@@ -77,6 +121,7 @@ export default function AdminAdminsPage() {
     try {
       await adminUserService.upsertAdmin(form);
       setForm({ email: '', name: '', password: '', createUser: true });
+      setShowCreatePassword(false);
       await fetchAdmins();
       alert('관리자 권한이 적용되었습니다.');
     } catch (err) {
@@ -88,6 +133,7 @@ export default function AdminAdminsPage() {
 
   const handleEditStart = (admin) => {
     setEditError(null);
+    setShowEditPassword(false);
     setEditForm({
       userId: admin.id,
       email: admin.email || '',
@@ -98,6 +144,7 @@ export default function AdminAdminsPage() {
 
   const handleEditCancel = () => {
     setEditError(null);
+    setShowEditPassword(false);
     setEditForm({ userId: '', email: '', name: '', password: '' });
   };
 
@@ -172,14 +219,28 @@ export default function AdminAdminsPage() {
               <Label htmlFor="admin-password">
                 초기 비밀번호 {form.createUser ? <span className="text-destructive">(필수)</span> : '(선택)'}
               </Label>
-              <Input
-                id="admin-password"
-                type="password"
-                value={form.password}
-                onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
-                placeholder="8자 이상"
-                disabled={!form.createUser}
-              />
+              <div className="relative">
+                <Input
+                  id="admin-password"
+                  type={showCreatePassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
+                  placeholder="8자 이상"
+                  disabled={!form.createUser}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2"
+                  onClick={() => setShowCreatePassword((prev) => !prev)}
+                  disabled={!form.createUser}
+                  aria-label={showCreatePassword ? '초기 비밀번호 숨기기' : '초기 비밀번호 보기'}
+                >
+                  {showCreatePassword ? <EyeOffIcon /> : <EyeIcon />}
+                </Button>
+              </div>
             </div>
 
             <div className="flex items-center gap-2 sm:col-span-2">
@@ -241,13 +302,26 @@ export default function AdminAdminsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="admin-edit-password">새 비밀번호 (선택)</Label>
-                <Input
-                  id="admin-edit-password"
-                  type="password"
-                  value={editForm.password}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, password: e.target.value }))}
-                  placeholder="8자 이상"
-                />
+                <div className="relative">
+                  <Input
+                    id="admin-edit-password"
+                    type={showEditPassword ? 'text' : 'password'}
+                    value={editForm.password}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, password: e.target.value }))}
+                    placeholder="8자 이상"
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2"
+                    onClick={() => setShowEditPassword((prev) => !prev)}
+                    aria-label={showEditPassword ? '새 비밀번호 숨기기' : '새 비밀번호 보기'}
+                  >
+                    {showEditPassword ? <EyeOffIcon /> : <EyeIcon />}
+                  </Button>
+                </div>
               </div>
 
               {editError && (
