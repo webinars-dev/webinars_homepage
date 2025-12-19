@@ -44,7 +44,7 @@ function AdminLayoutContent() {
           </div>
 
           <nav className="flex-1 space-y-1 p-3">
-            {isAdmin && (
+            {isAdmin ? (
               <>
                 <NavLink
                   to="/admin/blog"
@@ -75,6 +75,39 @@ function AdminLayoutContent() {
                   </svg>
                   새 글 작성
                 </NavLink>
+
+                <NavLink
+                  to="/admin/reference"
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    )
+                  }
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h16v2H4v-2z" />
+                  </svg>
+                  레퍼런스 관리
+                </NavLink>
+                <NavLink
+                  to="/admin/reference/new"
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    )
+                  }
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                  새 레퍼런스
+                </NavLink>
+
+                <Separator className="my-3 bg-sidebar-border" />
+
                 <NavLink
                   to="/admin/admins"
                   className={({ isActive }) =>
@@ -89,40 +122,40 @@ function AdminLayoutContent() {
                   </svg>
                   관리자 관리
                 </NavLink>
-
-                <Separator className="my-3 bg-sidebar-border" />
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to="/admin/reference"
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    )
+                  }
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h16v2H4v-2z" />
+                  </svg>
+                  레퍼런스 관리
+                </NavLink>
+                <NavLink
+                  to="/admin/reference/new"
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    )
+                  }
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                  새 레퍼런스
+                </NavLink>
               </>
             )}
-
-            <NavLink
-              to="/admin/reference"
-              end
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                  isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
-                )
-              }
-            >
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                <path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h16v2H4v-2z" />
-              </svg>
-              레퍼런스 관리
-            </NavLink>
-            <NavLink
-              to="/admin/reference/new"
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 rounded-sm px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                  isActive && 'bg-sidebar-accent text-sidebar-accent-foreground'
-                )
-              }
-            >
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-              </svg>
-              새 레퍼런스
-            </NavLink>
           </nav>
 
           <div className="border-t border-sidebar-border p-4">
