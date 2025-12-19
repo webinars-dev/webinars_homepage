@@ -26,6 +26,26 @@ export default function BlogIndexPage() {
     ? categories.find((c) => c.slug === categorySlug)
     : null;
 
+  const buildFilterLink = (next) => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('page');
+
+    if (next.category === null) {
+      params.delete('category');
+    } else if (typeof next.category === 'string') {
+      params.set('category', next.category);
+    }
+
+    if (next.tag === null) {
+      params.delete('tag');
+    } else if (typeof next.tag === 'string') {
+      params.set('tag', next.tag);
+    }
+
+    const qs = params.toString();
+    return qs ? `/blog?${qs}` : '/blog';
+  };
+
   return (
     <BlogLayout title="블로그">
       <SEOHead
@@ -44,6 +64,26 @@ export default function BlogIndexPage() {
               <p className="blog-subtitle">웨비나스의 인사이트와 소식을 만나보세요</p>
             </div>
           </div>
+
+          {categories.length > 0 && (
+            <nav className="blog-category-nav" aria-label="블로그 카테고리">
+              <Link
+                to={buildFilterLink({ category: null, tag: tagSlug || undefined })}
+                className={`blog-category-pill ${!categorySlug ? 'active' : ''}`}
+              >
+                전체
+              </Link>
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  to={buildFilterLink({ category: category.slug, tag: tagSlug || undefined })}
+                  className={`blog-category-pill ${categorySlug === category.slug ? 'active' : ''}`}
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </nav>
+          )}
         </div>
       </div>
 
@@ -184,6 +224,39 @@ export default function BlogIndexPage() {
           justify-content: space-between;
           align-items: flex-end;
           gap: 20px;
+        }
+
+        .blog-category-nav {
+          margin-top: 22px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .blog-category-pill {
+          display: inline-flex;
+          align-items: center;
+          height: 34px;
+          padding: 0 14px;
+          border-radius: 999px;
+          background: #f5f5f5;
+          color: #333333;
+          border: 1px solid #e0e0e0;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        .blog-category-pill:hover {
+          background: #efefef;
+          border-color: #d6d6d6;
+        }
+
+        .blog-category-pill.active {
+          background: #000000;
+          border-color: #000000;
+          color: #ffffff;
         }
 
         .blog-content-wrapper {

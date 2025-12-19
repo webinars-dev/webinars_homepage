@@ -5,6 +5,7 @@ test.describe('Blog Post Page', () => {
     await page.goto('/blog');
 
     await expect(page.getByRole('link', { name: '글 작성' })).toHaveCount(0);
+    await expect(page.getByRole('navigation', { name: '블로그 카테고리' })).toBeVisible();
 
     const firstPostLink = page.locator('.blog-list-link').first();
     await expect(firstPostLink).toBeVisible({ timeout: 30_000 });
