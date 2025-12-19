@@ -618,6 +618,15 @@
   background: white;
 }
 
+.admin-ui .admin-form-group-editor .rc-md-editor textarea,
+.admin-ui .admin-form-group-editor .rc-md-editor .sec-md .input {
+  color: oklch(var(--foreground)) !important;
+}
+
+.admin-ui .admin-form-group-editor .rc-md-editor textarea::placeholder {
+  color: oklch(var(--muted-foreground)) !important;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .admin-post-form {
