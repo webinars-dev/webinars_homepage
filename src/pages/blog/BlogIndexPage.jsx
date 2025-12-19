@@ -136,9 +136,6 @@ export default function BlogIndexPage() {
                     총 {total}개의 글 중 {(page - 1) * 12 + 1}-
                     {Math.min(page * 12, total)}번째
                   </p>
-                  <Link to="/admin/blog/new" className="blog-write-link">
-                    글 작성
-                  </Link>
                 </div>
               </>
             )}
@@ -370,18 +367,6 @@ export default function BlogIndexPage() {
           font-size: 14px;
         }
 
-        .blog-write-link {
-          display: inline-block;
-          margin-top: 12px;
-          color: #aaa;
-          font-size: 12px;
-          text-decoration: none;
-          transition: color 0.2s;
-        }
-
-        .blog-write-link:hover {
-          color: #666;
-        }
       `}</style>
     </BlogLayout>
   );

@@ -4,6 +4,8 @@ test.describe('Blog Post Page', () => {
   test('작성자/조회수 메타 숨김', async ({ page }) => {
     await page.goto('/blog');
 
+    await expect(page.getByRole('link', { name: '글 작성' })).toHaveCount(0);
+
     const firstPostLink = page.locator('.blog-list-link').first();
     await expect(firstPostLink).toBeVisible({ timeout: 30_000 });
     await firstPostLink.click();
@@ -13,4 +15,3 @@ test.describe('Blog Post Page', () => {
     await expect(page.locator('.post-author-box')).toHaveCount(0);
   });
 });
-
