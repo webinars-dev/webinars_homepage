@@ -51,7 +51,7 @@ import { BlogIndexPage, BlogPostPage, BlogCategoryPage, BlogTagPage } from './pa
 import Reference2Page from './pages/reference2/Reference2Page.jsx';
 
 // 관리자 페이지
-import { AdminLayout, AdminLoginPage, AdminDashboardPage, AdminPostListPage, AdminPostEditPage, AdminReferenceListPage, AdminReferenceEditPage, AdminAdminsPage } from './pages/admin';
+import { AdminLayout, AdminLoginPage, AdminDashboardPage, AdminAnalyticsPage, AdminPostListPage, AdminPostEditPage, AdminReferenceListPage, AdminReferenceEditPage, AdminAdminsPage } from './pages/admin';
 import ResetPasswordPage from './pages/admin/ResetPasswordPage.jsx';
 import { AuthProvider } from './hooks/useAuth.jsx';
 import RequireAdmin from './pages/admin/RequireAdmin.jsx';
@@ -273,6 +273,14 @@ function App() {
           <Route path="/admin/reset-password" element={<ResetPasswordPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboardPage />} />
+            <Route
+              path="analytics"
+              element={
+                <RequireAdmin>
+                  <AdminAnalyticsPage />
+                </RequireAdmin>
+              }
+            />
             <Route
               path="blog"
               element={
