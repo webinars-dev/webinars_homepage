@@ -184,6 +184,7 @@ export default function AdminPostListPage() {
                     <TableHead>카테고리</TableHead>
                     <TableHead>상태</TableHead>
                     <TableHead>작성일</TableHead>
+                    <TableHead>업데이트일</TableHead>
                     <TableHead>발행일</TableHead>
                     <TableHead>조회수</TableHead>
                     <TableHead className="text-right">작업</TableHead>
@@ -205,6 +206,7 @@ export default function AdminPostListPage() {
                         <Badge variant={getStatusVariant(post.status)}>{STATUS_LABELS[post.status] || post.status}</Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{formatDate(post.created_at)}</TableCell>
+                      <TableCell className="text-muted-foreground">{formatDate(post.updated_at)}</TableCell>
                       <TableCell className="text-muted-foreground">{formatDate(post.published_at)}</TableCell>
                       <TableCell className="text-muted-foreground">{post.view_count || 0}</TableCell>
                       <TableCell>

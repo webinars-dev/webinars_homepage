@@ -26,6 +26,7 @@ export async function getAdminPosts({ page = 1, pageSize = 20, status } = {}) {
       category:categories(id, name, slug)
     `, { count: 'exact' })
     .is('deleted_at', null)
+    .order('updated_at', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false });
 
   if (status) {
