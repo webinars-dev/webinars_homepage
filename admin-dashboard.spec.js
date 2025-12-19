@@ -41,5 +41,6 @@ test.describe('Admin Dashboard', () => {
     await expect(page.getByRole('heading', { name: '대시보드' })).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole('link', { name: 'GA4 열기' })).toBeVisible();
     await expect(page.getByText('레퍼런스', { exact: true })).toBeVisible();
+    await expect(page.locator('text=/is not a function/i')).toHaveCount(0);
   });
 });

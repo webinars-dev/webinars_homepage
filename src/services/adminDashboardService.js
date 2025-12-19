@@ -31,7 +31,7 @@ const sumPostViews = async () => {
 };
 
 const getExactCount = async (query) => {
-  const { count, error } = await query.select('id', { count: 'exact', head: true });
+  const { count, error } = await query;
   if (error) throw error;
   return count || 0;
 };
@@ -39,13 +39,17 @@ const getExactCount = async (query) => {
 export async function getBlogStats() {
   if (!supabase) return null;
 
-  const base = () => supabase.from('posts').is('deleted_at', null);
+  const baseCount = () =>
+    supabase
+      .from('posts')
+      .select('id', { count: 'exact', head: true })
+      .is('deleted_at', null);
 
   const [total, published, draft, scheduled, totalViewsResult, recentResult] = await Promise.all([
-    getExactCount(base()),
-    getExactCount(base().eq('status', 'published')),
-    getExactCount(base().eq('status', 'draft')),
-    getExactCount(base().eq('status', 'scheduled')),
+    getExactCount(baseCount()),
+    getExactCount(baseCount().eq('status', 'published')),
+    getExactCount(baseCount().eq('status', 'draft')),
+    getExactCount(baseCount().eq('status', 'scheduled')),
     sumPostViews(),
     supabase
       .from('posts')
@@ -71,11 +75,15 @@ export async function getBlogStats() {
 export async function getReferenceStats() {
   if (!supabase) return null;
 
-  const base = () => supabase.from('reference_items').is('deleted_at', null);
+  const baseCount = () =>
+    supabase
+      .from('reference_items')
+      .select('id', { count: 'exact', head: true })
+      .is('deleted_at', null);
 
   const [total, published, recentResult] = await Promise.all([
-    getExactCount(base()),
-    getExactCount(base().eq('is_published', true)),
+    getExactCount(baseCount()),
+    getExactCount(baseCount().eq('is_published', true)),
     supabase
       .from('reference_items')
       .select('id, title, category, updated_at, is_published')
