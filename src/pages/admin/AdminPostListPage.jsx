@@ -38,6 +38,9 @@ export default function AdminPostListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, id: null, title: '' });
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const statusFilter = searchParams.get('status') || '';
@@ -68,16 +71,29 @@ export default function AdminPostListPage() {
     }
   };
 
-  const handleDelete = async (id, title) => {
-    if (!window.confirm(`"${title}" 포스트를 삭제하시겠습니까?`)) {
-      return;
-    }
+  const handleDeleteClick = (id, title) => {
+    setDeleteError(null);
+    setDeleteDialog({ open: true, id, title: title || '(제목 없음)' });
+  };
 
+  const handleDeleteCancel = () => {
+    if (deleting) return;
+    setDeleteError(null);
+    setDeleteDialog({ open: false, id: null, title: '' });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteDialog.id) return;
+    setDeleting(true);
+    setDeleteError(null);
     try {
-      await adminService.deletePost(id);
+      await adminService.deletePost(deleteDialog.id);
+      setDeleteDialog({ open: false, id: null, title: '' });
       fetchPosts();
     } catch (err) {
-      alert('삭제 실패: ' + err.message);
+      setDeleteError(err?.message || '삭제에 실패했습니다.');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -227,7 +243,7 @@ export default function AdminPostListPage() {
                             </Button>
                           )}
 
-                          <Button type="button" size="sm" variant="destructive" onClick={() => handleDelete(post.id, post.title)}>
+                          <Button type="button" size="sm" variant="destructive" onClick={() => handleDeleteClick(post.id, post.title)}>
                             삭제
                           </Button>
 
@@ -281,6 +297,37 @@ export default function AdminPostListPage() {
             </div>
           )}
         </>
+      )}
+
+      {deleteDialog.open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-md rounded-sm bg-background p-4 shadow-lg">
+            <div className="space-y-2">
+              <div className="text-base font-semibold">포스트 삭제</div>
+              <div className="text-sm text-muted-foreground">"{deleteDialog.title}" 포스트를 삭제하시겠습니까?</div>
+              <div className="text-xs text-muted-foreground">삭제된 포스트는 목록에서 숨김 처리됩니다.</div>
+            </div>
+
+            {deleteError && (
+              <div className="mt-4 rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {deleteError}
+              </div>
+            )}
+
+            <div className="mt-4 flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={handleDeleteCancel} disabled={deleting}>
+                취소
+              </Button>
+              <Button type="button" variant="destructive" onClick={handleDeleteConfirm} disabled={deleting}>
+                {deleting ? '삭제 중...' : '삭제'}
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

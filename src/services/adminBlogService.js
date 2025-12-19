@@ -1,5 +1,33 @@
 import { supabase } from '../lib/supabase';
 
+const requireAccessToken = async () => {
+  if (!supabase) throw new Error('Supabase is not configured');
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  const token = data?.session?.access_token;
+  if (!token) throw new Error('Not authenticated');
+  return token;
+};
+
+const fetchJson = async (url, { method = 'GET', body } = {}) => {
+  const token = await requireAccessToken();
+
+  const response = await fetch(url, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data?.error || `Request failed (${response.status})`);
+  }
+  return data;
+};
+
 /**
  * 관리자용 포스트 목록 조회 (모든 상태)
  */
@@ -245,20 +273,10 @@ export async function updatePost(id, postData) {
  * 포스트 삭제 (soft delete)
  */
 export async function deletePost(id) {
-  if (!supabase) throw new Error('Supabase is not configured');
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Not authenticated');
-
-  const { error } = await supabase
-    .from('posts')
-    .update({
-      deleted_at: new Date().toISOString(),
-      deleted_by: user.id
-    })
-    .eq('id', id);
-
-  if (error) throw error;
+  await fetchJson('/api/posts', {
+    method: 'DELETE',
+    body: { postId: id },
+  });
 }
 
 /**

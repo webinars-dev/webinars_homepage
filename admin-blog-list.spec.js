@@ -41,5 +41,13 @@ test.describe('Admin Blog List', () => {
     await page.goto('/admin/blog');
     await expect(page.getByRole('heading', { name: '포스트 관리' })).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('thead')).toContainText('업데이트일');
+
+    const deleteButtons = page.getByRole('button', { name: '삭제' });
+    if ((await deleteButtons.count()) > 0) {
+      await deleteButtons.first().click();
+      await expect(page.getByRole('dialog')).toContainText('포스트 삭제');
+      await page.getByRole('button', { name: '취소' }).click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    }
   });
 });
