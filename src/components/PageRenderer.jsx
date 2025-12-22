@@ -1021,6 +1021,22 @@ const PageRenderer = ({ html }) => {
 
         // Fix: Add radio button circles via JavaScript
         // CSS ::before doesn't work reliably on SPA navigation, so we always use JS
+        const applyRadioCircleStyles = (scope = document) => {
+          const radioInputs = scope.querySelectorAll('input[type="radio"]');
+          radioInputs.forEach((input) => {
+            const label = input.nextElementSibling;
+            if (!label || label.tagName !== 'LABEL') return;
+
+            const span = label.querySelector('span');
+            const circle = span?.querySelector('.radio-circle');
+            if (!circle) return;
+
+            circle.style.background = input.checked
+              ? 'radial-gradient(circle, #333 0%, #333 35%, #fff 35%, #fff 100%)'
+              : '#fff';
+          });
+        };
+
         const radioInputs = document.querySelectorAll('input[type="radio"]');
         radioInputs.forEach((input) => {
           const label = input.nextElementSibling;
@@ -1042,20 +1058,15 @@ const PageRenderer = ({ html }) => {
                 cursor: pointer;
               `;
               span.insertBefore(circle, span.firstChild);
+            }
 
-              // Update circle on input change
-              const updateCircle = () => {
-                if (input.checked) {
-                  circle.style.background = 'radial-gradient(circle, #333 0%, #333 35%, #fff 35%, #fff 100%)';
-                } else {
-                  circle.style.background = '#fff';
-                }
-              };
-              input.addEventListener('change', updateCircle);
-              updateCircle(); // Initial state
+            if (input.dataset.radioCircleBound !== 'true') {
+              input.addEventListener('change', () => applyRadioCircleStyles());
+              input.dataset.radioCircleBound = 'true';
             }
           }
         });
+        applyRadioCircleStyles();
       });
     });
   }, [pageData.bodyContent]);
