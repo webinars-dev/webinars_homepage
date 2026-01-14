@@ -27,7 +27,7 @@ export async function getPosts({ page = 1, categorySlug, tagSlug } = {}) {
     `, { count: 'exact' })
     .eq('status', 'published')
     .is('deleted_at', null)
-    .order('published_at', { ascending: false, nullsFirst: true })
+    .order('published_at', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false });
 
   // 카테고리 필터
