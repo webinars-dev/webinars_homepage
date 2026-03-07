@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import LegacyModalPageLayout from './LegacyModalPageLayout.jsx';
 
 // Import images
 import image1_3 from '../assets/images/image-1-3.jpg';
@@ -586,6 +587,8 @@ const ModalContent = ({ path }) => {
         .modal-content .related-post-wrap,
         .modal-content #footer-outer,
         .modal-content footer,
+        .modal-content .footer_partner,
+        .modal-content .teldiv,
         .modal-content .nectar-mobile-only,
         .modal-content .slide-out-widget-area-toggle,
         .modal-content nav,
@@ -655,15 +658,17 @@ const ModalContent = ({ path }) => {
         }}>
         {/* Prevent nested modals by intercepting modal events */}
         <div onClick={(e) => e.stopPropagation()}>
-          {dbModalHtml ? (
-            /id=(?:"|')modal-ready(?:"|')/i.test(dbModalHtml) ? (
-              <div dangerouslySetInnerHTML={{ __html: dbModalHtml }} />
+          <LegacyModalPageLayout>
+            {dbModalHtml ? (
+              /id=(?:"|')modal-ready(?:"|')/i.test(dbModalHtml) ? (
+                <div dangerouslySetInnerHTML={{ __html: dbModalHtml }} />
+              ) : (
+                <div id="modal-ready" dangerouslySetInnerHTML={{ __html: dbModalHtml }} />
+              )
             ) : (
-              <div id="modal-ready" dangerouslySetInnerHTML={{ __html: dbModalHtml }} />
-            )
-          ) : (
-            <ContentComponent />
-          )}
+              <ContentComponent />
+            )}
+          </LegacyModalPageLayout>
         </div>
       </div>
     </>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 
 import IndexPage from '../archive/components/index.jsx';
 import AboutPage from '../archive/components/about.jsx';
@@ -8,6 +8,7 @@ import ContactPage from '../archive/components/contact.jsx';
 import CategoryPage from '../archive/components/category__eb_af_b8-_eb_b6_84_eb_a5_98.jsx';
 import AuthorWebihomePage from '../archive/components/author_webihome.jsx';
 import ContactThankYou from './components/ContactThankYou.jsx';
+import LegacyModalPageLayout from './components/LegacyModalPageLayout.jsx';
 
 // 모달용 wp_ 페이지 imports
 import Wp2023Offline1201Page from '../archive/components/wp_2023_offline_1201.jsx';
@@ -193,6 +194,14 @@ function LocalLinkAdapter() {
   return null;
 }
 
+function LegacyModalRouteShell() {
+  return (
+    <LegacyModalPageLayout>
+      <Outlet />
+    </LegacyModalPageLayout>
+  );
+}
+
 // 메인 App 컴포넌트
 function App() {
   return (
@@ -226,35 +235,37 @@ function App() {
           <Route path="/author/webihome/" element={<AuthorWebihomePage />} />
 
           {/* 모달용 wp_ 페이지 라우트 */}
-          <Route path="/2023_offline_1201/" element={<Wp2023Offline1201Page />} />
-          <Route path="/2024_hybrid_4/" element={<Wp2024Hybrid4Page />} />
-          <Route path="/2024_hybrid_5/" element={<Wp2024Hybrid5Page />} />
-          <Route path="/2024_hybrid_8/" element={<Wp2024Hybrid8Page />} />
-          <Route path="/2024_offline_0705/" element={<Wp2024Offline0705Page />} />
-          <Route path="/2024_offline_0904/" element={<Wp2024Offline0904Page />} />
-          <Route path="/2024_offline_0927/" element={<Wp2024Offline0927Page />} />
-          <Route path="/2024_offline_1010/" element={<Wp2024Offline1010Page />} />
-          <Route path="/2024_offline_1028/" element={<Wp2024Offline1028Page />} />
-          <Route path="/2024_offline_2/" element={<Wp2024Offline2Page />} />
-          <Route path="/2024_offline_3/" element={<Wp2024Offline3Page />} />
-          <Route path="/2024_offline_6/" element={<Wp2024Offline6Page />} />
-          <Route path="/2024_offline_9/" element={<Wp2024Offline9Page />} />
-          <Route path="/2024_offline_acts2024/" element={<Wp2024OfflineActs2024Page />} />
-          <Route path="/2024_offline_rmaf0715/" element={<Wp2024OfflineRmaf0715Page />} />
-          <Route path="/hybrid_1/" element={<WpHybrid1Page />} />
-          <Route path="/hybrid_2/" element={<WpHybrid2Page />} />
-          <Route path="/hybrid_3/" element={<WpHybrid3Page />} />
-          <Route path="/hybrid_5/" element={<WpHybrid5Page />} />
-          <Route path="/hybrid_6/" element={<WpHybrid6Page />} />
-          <Route path="/hybrid_7/" element={<WpHybrid7Page />} />
-          <Route path="/hybrid_8/" element={<WpHybrid8Page />} />
-          <Route path="/hybrid_9/" element={<WpHybrid9Page />} />
-          <Route path="/hybrid_11/" element={<WpHybrid11Page />} />
-          <Route path="/hybrid_12/" element={<WpHybrid12Page />} />
-          <Route path="/solution_4/" element={<WpSolution4Page />} />
-          <Route path="/webinar_live-streaming_13/" element={<WpWebinarLiveStreaming13Page />} />
-          <Route path="/webinar_live-streaming_14/" element={<WpWebinarLiveStreaming14Page />} />
-          <Route path="/webinar_live-streaming_15/" element={<WpWebinarLiveStreaming15Page />} />
+          <Route element={<LegacyModalRouteShell />}>
+            <Route path="/2023_offline_1201/" element={<Wp2023Offline1201Page />} />
+            <Route path="/2024_hybrid_4/" element={<Wp2024Hybrid4Page />} />
+            <Route path="/2024_hybrid_5/" element={<Wp2024Hybrid5Page />} />
+            <Route path="/2024_hybrid_8/" element={<Wp2024Hybrid8Page />} />
+            <Route path="/2024_offline_0705/" element={<Wp2024Offline0705Page />} />
+            <Route path="/2024_offline_0904/" element={<Wp2024Offline0904Page />} />
+            <Route path="/2024_offline_0927/" element={<Wp2024Offline0927Page />} />
+            <Route path="/2024_offline_1010/" element={<Wp2024Offline1010Page />} />
+            <Route path="/2024_offline_1028/" element={<Wp2024Offline1028Page />} />
+            <Route path="/2024_offline_2/" element={<Wp2024Offline2Page />} />
+            <Route path="/2024_offline_3/" element={<Wp2024Offline3Page />} />
+            <Route path="/2024_offline_6/" element={<Wp2024Offline6Page />} />
+            <Route path="/2024_offline_9/" element={<Wp2024Offline9Page />} />
+            <Route path="/2024_offline_acts2024/" element={<Wp2024OfflineActs2024Page />} />
+            <Route path="/2024_offline_rmaf0715/" element={<Wp2024OfflineRmaf0715Page />} />
+            <Route path="/hybrid_1/" element={<WpHybrid1Page />} />
+            <Route path="/hybrid_2/" element={<WpHybrid2Page />} />
+            <Route path="/hybrid_3/" element={<WpHybrid3Page />} />
+            <Route path="/hybrid_5/" element={<WpHybrid5Page />} />
+            <Route path="/hybrid_6/" element={<WpHybrid6Page />} />
+            <Route path="/hybrid_7/" element={<WpHybrid7Page />} />
+            <Route path="/hybrid_8/" element={<WpHybrid8Page />} />
+            <Route path="/hybrid_9/" element={<WpHybrid9Page />} />
+            <Route path="/hybrid_11/" element={<WpHybrid11Page />} />
+            <Route path="/hybrid_12/" element={<WpHybrid12Page />} />
+            <Route path="/solution_4/" element={<WpSolution4Page />} />
+            <Route path="/webinar_live-streaming_13/" element={<WpWebinarLiveStreaming13Page />} />
+            <Route path="/webinar_live-streaming_14/" element={<WpWebinarLiveStreaming14Page />} />
+            <Route path="/webinar_live-streaming_15/" element={<WpWebinarLiveStreaming15Page />} />
+          </Route>
 
           {/* WEBINAR 서브디렉토리 경로들 */}
           <Route path="/WEBINAR/2024_design_publication_1/" element={<Webinar2024DesignPublication1Page />} />

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PageRenderer from '../../src/components/PageRenderer';
+import PublicPageLayout from '../../src/components/PublicPageLayout';
 import pageHtml from '../pages/contact.html?raw';
 
 const RECAPTCHA_SCRIPT_ID = 'salesforce-webtolead-recaptcha';
@@ -163,7 +164,11 @@ const ContactPage = () => {
     };
   }, []);
 
-  return <PageRenderer html={pageHtml} />;
+  return (
+    <PublicPageLayout footerThemeSourceHtml={pageHtml}>
+      <PageRenderer html={pageHtml} stripLegacyFooter />
+    </PublicPageLayout>
+  );
 };
 
 export default ContactPage;

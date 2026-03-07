@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import PageRenderer from '../../components/PageRenderer';
 import ModalContent from '../../components/ModalContent';
+import PublicPageLayout from '../../components/PublicPageLayout';
 import pageHtml from '../../../archive/pages/reference.html?raw';
 import { getPublishedReferenceItems } from '../../services/referenceService';
 import './reference2.css';
@@ -434,12 +435,14 @@ export default function Reference2Page() {
 
   return (
     <>
-      <StaticPageRenderer html={pageHtml} />
-      {mountNode &&
-        ReactDOM.createPortal(
-          <Reference2Grid items={items} loading={loading} error={error} onOpenModal={handleOpenModal} />,
-          mountNode
-        )}
+      <PublicPageLayout footerThemeSourceHtml={pageHtml}>
+        <StaticPageRenderer html={pageHtml} stripLegacyFooter />
+        {mountNode &&
+          ReactDOM.createPortal(
+            <Reference2Grid items={items} loading={loading} error={error} onOpenModal={handleOpenModal} />,
+            mountNode
+          )}
+      </PublicPageLayout>
       <HtmlModal html={modalData.html} path={modalData.path} onClose={handleCloseModal} />
     </>
   );

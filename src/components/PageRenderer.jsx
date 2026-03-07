@@ -32,13 +32,103 @@ const parseAttributes = (attrString = '') => {
   return attributes;
 };
 
-const extractPageData = (html) => {
+const LEGACY_FOOTER_COPY = '© 2023년 주식회사 웨비나스. 모든 저작권 소유.';
+const MODERN_FOOTER_COPY = '© 2022년 주식회사 웨비나스. 모든 저작권 소유.';
+
+const removeLegacyDarkFooters = (doc) => {
+  if (!doc?.body) return;
+
+  doc.body.querySelectorAll('#footer-outer').forEach((footer) => {
+    const footerText = footer.textContent || '';
+    const footerStyle = (footer.getAttribute('style') || '').toLowerCase();
+
+    if (!footerText.includes(LEGACY_FOOTER_COPY)) return;
+    if (!footerStyle.includes('#1a1a2e')) return;
+
+    footer.remove();
+  });
+};
+
+const removeDuplicateLegacyFooter = (doc) => {
+  if (!doc?.body) return;
+
+  const hasModernFooter = doc.body.textContent?.includes(MODERN_FOOTER_COPY);
+  if (!hasModernFooter) return;
+
+  removeLegacyDarkFooters(doc);
+};
+
+const normalizeTextContent = (text = '') => text.replace(/\s+/g, ' ').trim();
+
+const isLegacyFooterSpacerRow = (node) => {
+  if (!node?.matches?.('.wpb_row.vc_row-fluid.vc_row')) return false;
+  if (!node.querySelector('.divider-wrap')) return false;
+
+  const trimmedText = (node.textContent || '').replace(/\s+/g, '');
+  const hasMeaningfulContent = Boolean(node.querySelector('h1, h2, h3, h4, h5, h6, p, img, a'));
+
+  return !trimmedText && !hasMeaningfulContent;
+};
+
+const isLegacyFooterDivider = (node) => (
+  node?.matches?.('.divider-wrap') &&
+  !normalizeTextContent(node.textContent)
+);
+
+const removeLegacyPublicFooterSections = (doc) => {
+  if (!doc?.body) return;
+
+  const footerPartner = doc.body.querySelector('.footer_partner');
+  const footerSection = footerPartner?.closest('.wpb_row.vc_row-fluid.vc_row.full-width-content')
+    || footerPartner?.closest('.wpb_row.vc_row-fluid.vc_row');
+
+  if (footerSection) {
+    const nextSibling = footerSection.nextElementSibling;
+    footerSection.remove();
+
+    if (isLegacyFooterSpacerRow(nextSibling)) {
+      nextSibling.remove();
+    }
+  }
+
+  if (!footerSection) {
+    const legacyFooterRows = Array.from(
+      doc.body.querySelectorAll('.wpb_row.vc_row-fluid.vc_row.inner_row')
+    ).filter((row) => {
+      const rowText = normalizeTextContent(row.textContent || '');
+      return (
+        row.querySelector('.InnerRow_Footer, .teldiv, .footer_inform') ||
+        rowText.includes(MODERN_FOOTER_COPY) ||
+        rowText.includes('PARTNERSHIP')
+      );
+    });
+
+    legacyFooterRows.forEach((row) => {
+      const nextSibling = row.nextElementSibling;
+      row.remove();
+
+      if (isLegacyFooterSpacerRow(nextSibling) || isLegacyFooterDivider(nextSibling)) {
+        nextSibling.remove();
+      }
+    });
+  }
+
+  doc.body.querySelectorAll('.teldiv').forEach((node) => node.remove());
+};
+
+const extractPageData = (html, { stripLegacyFooter = false } = {}) => {
   if (typeof window === 'undefined' || typeof DOMParser === 'undefined') {
     return { bodyAttrs: {}, bodyContent: html, title: '', headNodes: [] };
   }
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
+  if (stripLegacyFooter) {
+    removeLegacyPublicFooterSections(doc);
+    removeLegacyDarkFooters(doc);
+  } else {
+    removeDuplicateLegacyFooter(doc);
+  }
 
   const bodyAttrs = doc.body
     ? Array.from(doc.body.attributes).reduce((acc, attr) => {
@@ -145,12 +235,15 @@ const normalizeWebinarsAssetUrl = (url) => {
   if (/^(data|blob):/i.test(url)) return url;
 
   try {
-    const isAbsolute = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) || url.startsWith('//');
     const base = window.location.origin;
-    const urlObj = isAbsolute ? new URL(url) : new URL(url, base);
+    const urlObj = new URL(url, base);
 
     if (WEBINARS_HOST_REGEX.test(urlObj.hostname)) {
-      return `${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+      const localizedPath = urlObj.pathname.startsWith('/wp/font/')
+        ? urlObj.pathname.replace('/wp/font/', '/fonts/')
+        : urlObj.pathname;
+
+      return `${localizedPath}${urlObj.search}${urlObj.hash}`;
     }
 
     return url;
@@ -231,6 +324,14 @@ const rewriteSrcset = (srcset = '') =>
 
 const normalizeDomAssetUrls = (root) => {
   if (!root) return;
+
+  root.querySelectorAll('style').forEach((styleNode) => {
+    if (!styleNode.textContent) return;
+    const rewritten = rewriteCssAssetUrls(styleNode.textContent);
+    if (rewritten !== styleNode.textContent) {
+      styleNode.textContent = rewritten;
+    }
+  });
 
   root.querySelectorAll('[data-nectar-img-src]').forEach((node) => {
     const raw = node.getAttribute('data-nectar-img-src');
@@ -656,7 +757,7 @@ const Modal = ({ isOpen, onClose, path }) => {
   );
 };
 
-const PageRenderer = ({ html }) => {
+const PageRenderer = ({ html, stripLegacyFooter = false }) => {
   const containerRef = useRef(null);
   const isInsideModal = useContext(ModalContext);
   const [modalState, setModalState] = useState({
@@ -664,7 +765,10 @@ const PageRenderer = ({ html }) => {
     path: null
   });
 
-  const pageData = useMemo(() => extractPageData(html), [html]);
+  const pageData = useMemo(
+    () => extractPageData(html, { stripLegacyFooter }),
+    [html, stripLegacyFooter]
+  );
 
   useEffect(() => {
     // Don't change document title when inside a modal

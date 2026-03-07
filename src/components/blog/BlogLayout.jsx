@@ -1,172 +1,211 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import PublicPageLayout from '../PublicPageLayout';
 
-/**
- * 블로그 레이아웃 컴포넌트
- * 기존 Salient 테마와 일관된 헤더/푸터를 사용
- */
-export default function BlogLayout({ children, title = '블로그' }) {
+const BODY_ATTRIBUTES = {
+  'data-header-color': 'custom',
+  'data-force-header-trans-color': 'light',
+  'data-slide-out-widget-area': 'true',
+  'data-slide-out-widget-area-style': 'fullscreen-alt',
+  'data-user-set-ocm': 'off',
+  'data-full-width-header': 'true',
+  'data-bg-header': 'false',
+};
+
+const LOGO_IMAGES = [
+  {
+    className: 'stnd skip-lazy default-logo',
+    src: '/wp-content/uploads/2022/11/img_logo2.png',
+  },
+  {
+    className: 'starting-logo skip-lazy default-logo',
+    src: '/wp-content/uploads/2022/11/img_logo.png',
+  },
+  {
+    className: 'starting-logo dark-version skip-lazy default-logo',
+    src: '/wp-content/uploads/2022/11/img_logo2.png',
+  },
+];
+
+const MENU_ITEMS = [
+  {
+    id: 'menu-item-1685',
+    label: 'about',
+    to: '/about/',
+    className: 'menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1685',
+  },
+  {
+    id: 'menu-item-1689',
+    label: 'services',
+    to: '/services2/',
+    className: 'menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1689',
+  },
+  {
+    id: 'menu-item-1688',
+    label: 'reference',
+    to: '/reference/',
+    className: 'menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1688',
+  },
+  {
+    id: 'menu-item-1686',
+    label: 'Contact',
+    to: '/contact/',
+    className: 'menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-1686',
+  },
+  {
+    id: 'menu-item-blog',
+    label: 'Blog',
+    to: '/blog/',
+    className: 'menu-item menu-item-type-custom menu-item-object-custom nectar-regular-menu-item menu-item-blog',
+  },
+];
+
+const normalizePath = (path = '/') => (path.endsWith('/') ? path : `${path}/`);
+
+const isCurrentMenuItem = (pathname, menuPath) => {
+  const currentPath = normalizePath(pathname);
+  const currentMenuPath = normalizePath(menuPath);
+
+  if (currentMenuPath === '/blog/') {
+    return currentPath === currentMenuPath || currentPath.startsWith('/blog/');
+  }
+
+  return currentPath === currentMenuPath;
+};
+
+export default function BlogLayout({ children }) {
   const location = useLocation();
-  const containerRef = useRef(null);
 
   useEffect(() => {
-    // 페이지 이동 시 스크롤 최상단으로
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
-    // Salient 테마 스타일 적용을 위한 body 클래스
-    document.body.classList.add('material', 'blog-page');
-    document.body.setAttribute('data-header-color', 'dark');
+    const body = document.body;
+    const hadMaterialClass = body.classList.contains('material');
+    const hadBlogPageClass = body.classList.contains('blog-page');
+    const previousAttrs = Object.fromEntries(
+      Object.keys(BODY_ATTRIBUTES).map((name) => [name, body.getAttribute(name)])
+    );
+
+    body.classList.add('material', 'blog-page');
+    Object.entries(BODY_ATTRIBUTES).forEach(([name, value]) => {
+      body.setAttribute(name, value);
+    });
 
     return () => {
-      document.body.classList.remove('blog-page');
+      if (!hadMaterialClass) {
+        body.classList.remove('material');
+      }
+      if (!hadBlogPageClass) {
+        body.classList.remove('blog-page');
+      }
+
+      Object.entries(previousAttrs).forEach(([name, value]) => {
+        if (value === null) {
+          body.removeAttribute(name);
+          return;
+        }
+
+        body.setAttribute(name, value);
+      });
     };
   }, []);
 
   return (
-    <div id="ajax-content-wrap" ref={containerRef}>
-      {/* 헤더 - 메인 사이트와 동일한 스타일 */}
-      <div id="header-space" data-header-mobile-fixed="1" style={{ height: '0px' }}></div>
+    <div id="ajax-content-wrap">
+      <div id="header-space" data-header-mobile-fixed="1"></div>
 
       <div
         id="header-outer"
         data-has-menu="true"
-        data-using-logo="1"
-        data-format="default"
-        data-header-resize="0"
-        data-cart="false"
-        data-transparency-option="0"
-        data-box-shadow="small"
-        data-shrink-num="6"
-        data-full-width="true"
-        data-using-secondary="0"
+        data-has-buttons="no"
+        data-header-button_style="default"
+        data-using-pr-menu="false"
         data-mobile-fixed="1"
         data-ptnm="false"
         data-lhe="animated_underline"
+        data-user-set-bg="#ffffff"
+        data-format="default"
+        data-permanent-transparent="false"
+        data-megamenu-rt="1"
+        data-remove-fixed="0"
+        data-header-resize="0"
+        data-cart="false"
+        data-transparency-option=""
+        data-box-shadow="none"
+        data-shrink-num="6"
+        data-using-secondary="0"
+        data-using-logo="1"
+        data-logo-height="24"
+        data-m-logo-height="21"
+        data-padding="36"
+        data-full-width="true"
+        data-condense="false"
         data-remove-border="true"
-        className="transparent entrance-animation"
-        style={{
-          background: '#ffffff',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10000,
-          boxShadow: '0 1px 0 rgba(0,0,0,0.06)'
-        }}
+        className="detached at-top entrance-animation"
       >
-        <header id="top" style={{ padding: '20px 0' }}>
-          <div className="container" style={{ maxWidth: '1180px', margin: '0 auto', padding: '0 20px' }}>
-            <div className="row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <header id="top">
+          <div className="container">
+            <div className="row">
               <div className="col span_3">
                 <Link
                   id="logo"
                   to="/"
-                  style={{ display: 'inline-block' }}
+                  data-supplied-ml-starting-dark="false"
+                  data-supplied-ml-starting="false"
+                  data-supplied-ml="false"
                 >
-                  <img
-                    className="stnd skip-lazy default-logo"
-                    width="190"
-                    height="32"
-                    alt="WEBINARS"
-                    src="/wp-content/uploads/2022/11/img_logo2.png"
-                    style={{ height: '24px', width: 'auto' }}
-                  />
+                  {LOGO_IMAGES.map((image) => (
+                    <img
+                      key={image.className}
+                      className={image.className}
+                      width="380"
+                      height="64"
+                      alt="WEBINARS - 통합 프로모션의 새로운 표준"
+                      src={image.src}
+                      srcSet={`${image.src} 1x, ${image.src} 2x`}
+                    />
+                  ))}
                 </Link>
               </div>
 
-              <div className="col span_9" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <nav>
-                  <ul
-                    className="sf-menu"
-                    style={{
-                      display: 'flex',
-                      gap: '30px',
-                      listStyle: 'none',
-                      margin: 0,
-                      padding: 0
-                    }}
-                  >
-                    <li className="menu-item">
-                      <Link to="/about/" style={navLinkStyle}>
-                        <span className="menu-title-text">ABOUT</span>
-                      </Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link to="/services2/" style={navLinkStyle}>
-                        <span className="menu-title-text">SERVICES</span>
-                      </Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link to="/reference/" style={navLinkStyle}>
-                        <span className="menu-title-text">REFERENCE</span>
-                      </Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link to="/contact/" style={navLinkStyle}>
-                        <span className="menu-title-text">CONTACT</span>
-                      </Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link to="/blog/" style={navLinkStyle}>
-                        <span className="menu-title-text">BLOG</span>
-                      </Link>
-                    </li>
+              <div className="col span_9 col_last">
+                <nav aria-label="주요 메뉴">
+                  <ul className="sf-menu sf-js-enabled sf-arrows">
+                    {MENU_ITEMS.map((item) => {
+                      const isCurrent = isCurrentMenuItem(location.pathname, item.to);
+                      const itemClassName = isCurrent
+                        ? `${item.className} current-menu-item current_page_item`
+                        : item.className;
+
+                      return (
+                        <li key={item.id} id={item.id} className={itemClassName}>
+                          <Link to={item.to} aria-current={isCurrent ? 'page' : undefined}>
+                            <span className="menu-title-text" style={{ color: '#000000' }}>{item.label}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
+
+                  <ul className="buttons sf-menu" data-user-set-ocm="off" />
                 </nav>
               </div>
             </div>
           </div>
         </header>
+
+        <div className="bg-color-stripe"></div>
       </div>
 
-      {/* 메인 콘텐츠 */}
-      <div className="container-wrap" style={{ paddingTop: '70px' }}>
-        <div className="main-content">
-          {children}
-        </div>
-      </div>
-
-      {/* 푸터 - 기존 사이트와 동일한 스타일 */}
-      <div
-        id="footer-outer"
-        data-midnight="light"
-        style={{
-          background: '#ffffff',
-          padding: '40px 0 30px',
-          borderTop: '1px solid #eee'
-        }}
-      >
-        <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', paddingLeft: '60px', paddingRight: '20px' }}>
-          {/* 회사 정보 - 좌측 정렬 (기존 사이트와 동일) */}
-          <div style={{ textAlign: 'left' }}>
-            <h5 style={{ fontSize: '16px', color: '#111111', textAlign: 'left', fontWeight: 'bold', margin: 0 }}>
-              &copy; 2022년 주식회사 웨비나스. 모든 저작권 소유.
-            </h5>
-            <div style={{ height: '20px' }}></div>
-            <h5 style={{ fontSize: '14px', color: '#111111', lineHeight: '24px', textAlign: 'left', fontWeight: '700', margin: 0 }}>
-              대표 박재오<br />
-              07208 서울특별시 영등포구 선유로49길 23, 209호
-            </h5>
-            <h5 style={{ fontSize: '14px', color: '#111111', lineHeight: '24px', textAlign: 'left', fontWeight: '700', margin: 0 }}>
-              전화 02 6342 6834, 팩스 02 6342 6849, 이메일 sales@webinars.co.kr
-            </h5>
+      <PublicPageLayout>
+        <div className="container-wrap blog-container-wrap">
+          <div className="main-content">
+            {children}
           </div>
         </div>
-      </div>
-
-      {/* 컨택 아이콘 - 기존 이미지 사용 */}
-      <div className="teldiv" style={{
-        position: 'fixed',
-        bottom: '30px',
-        right: '30px',
-        zIndex: 99999
-      }}>
-        <Link to="/contact/">
-          <img decoding="async" src="/images/ui/tel.png" alt="Contact" />
-        </Link>
-      </div>
+      </PublicPageLayout>
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
@@ -177,50 +216,44 @@ export default function BlogLayout({ children, title = '블로그' }) {
           -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 블로그 GNB 메뉴 스타일 - 흰색 배경에 검은색 텍스트 */
-        .blog-page #header-outer .menu-item a,
-        .blog-page #header-outer .menu-item a span {
-          color: #000000 !important;
-          font-weight: 900 !important;
-          font-size: 20px !important;
-          text-transform: uppercase !important;
-          letter-spacing: 0 !important;
-          line-height: 14px !important;
-          font-family: 'hyphen', 'Noto Sans KR', sans-serif !important;
+        .blog-page .blog-container-wrap {
+          padding-top: 0;
         }
 
-        .blog-page #header-outer .menu-item a:hover,
-        .blog-page #header-outer .menu-item a:hover span {
-          color: #0066cc !important;
+        .blog-page #header-outer {
+          background: transparent;
+          box-shadow: none;
         }
 
-        .footer-col a:hover {
+        .blog-page #header-outer nav {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .blog-page #header-outer nav > .sf-menu {
+          display: flex;
+          align-items: center;
+        }
+
+        .blog-page #header-outer nav > .buttons.sf-menu {
+          display: none;
+        }
+
+        .blog-page .footer-col a:hover {
           color: #fff !important;
         }
 
-        /* 모바일 반응형 */
-        @media (max-width: 768px) {
-          #header-outer nav {
-            display: none;
+        @media (max-width: 999px) {
+          .blog-page #header-outer nav {
+            justify-content: flex-start;
           }
 
-          .container-wrap {
-            padding-top: 60px !important;
+          .blog-page #header-outer nav > .sf-menu {
+            flex-wrap: wrap;
           }
+
         }
       `}</style>
     </div>
   );
 }
-
-const navLinkStyle = {
-  color: '#000000',
-  textDecoration: 'none',
-  fontSize: '20px',
-  fontWeight: '900',
-  textTransform: 'uppercase',
-  letterSpacing: '0',
-  lineHeight: '14px',
-  fontFamily: "'hyphen', 'Noto Sans KR', sans-serif",
-  transition: 'color 0.2s'
-};
