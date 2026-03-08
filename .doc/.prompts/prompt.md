@@ -45,7 +45,7 @@ WordPress 미러 사이트에서 마이그레이션된 하이브리드 아키텍
 cd /Users/jaeohpark/내\ 드라이브\(Jaeoh.Park@webinars.co.kr\)/Development/dev/webinars_home/webinars_v3
 
 # 개발 서버 실행 (포트 3000)
-npm run dev
+port=5000 npm run dev
 
 # 프로덕션 빌드
 npm run build

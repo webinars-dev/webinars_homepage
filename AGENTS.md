@@ -1,3 +1,11 @@
+
+
+# Tesk Process
+- 태스크 진행시 jira mcp 를 사용하여  https://webinars2012.atlassian.net/jira/software/c/projects/WH/boards/142 에 Backlog에 이슈를 등록하고 태스크를 진행. 
+  진행시에는 Selected for Development, 테스트시에는 TEST, 완료시에는 Done으로 이동. 푸시요청시 푸시 완료 후 Deployment 로 이동
+- Done 으로 변경시 해결 방안도 정리해서 추가
+
+
 # Repository Guidelines
 
 ## Project Structure & Module Organization

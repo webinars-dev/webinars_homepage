@@ -1431,3 +1431,8 @@ div#slide-out-widget-area .inner {
 .wpb_row.reference .modal-link .divider-small-border {
   background-color: rgba(255, 255, 255, 0.55) !important;
 }
+
+/* services2 페이지 - 더보기 버튼 아래 여백 */
+#fws_691d761b6fe53 {
+  padding-bottom: 100px !important;
+}

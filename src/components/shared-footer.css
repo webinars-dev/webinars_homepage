@@ -1,7 +1,7 @@
 .shared-footer {
   background: var(--footer-bg, #ffffff);
   border-top: 1px solid var(--footer-border, #eeeeee);
-  padding: 40px 0 30px;
+  padding: 60px 0 30px;
 }
 
 .shared-footer__content {
