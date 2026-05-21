@@ -646,6 +646,48 @@ const hydrateNectarMedia = (root) => {
   }
 };
 
+const ensureMobileBlogMenuItem = (root) => {
+  if (!root || typeof document === 'undefined') return;
+
+  const slideOutArea = root.querySelector?.('#slide-out-widget-area')
+    || document.querySelector('#slide-out-widget-area');
+  if (!slideOutArea) return;
+
+  const primaryMenu = slideOutArea.querySelector(
+    '.off-canvas-menu-container .menu:not(.secondary-header-items)'
+  );
+  if (!primaryMenu) return;
+
+  const revealMenuItem = (item) => {
+    item.style.opacity = '1';
+    item.style.transform = 'none';
+    item.style.webkitTransform = 'none';
+  };
+
+  Array.from(primaryMenu.children).forEach((item) => {
+    if (item instanceof HTMLElement) revealMenuItem(item);
+  });
+
+  const hasBlogLink = primaryMenu.querySelector('a[href$="/blog/"], a[href*="/blog/"]');
+  if (hasBlogLink) {
+    const existingItem = hasBlogLink.closest('li');
+    if (existingItem) revealMenuItem(existingItem);
+    return;
+  }
+
+  const blogItem = document.createElement('li');
+  blogItem.id = 'menu-item-blog-mobile';
+  blogItem.className = 'menu-item menu-item-type-post_type menu-item-object-page menu-item-blog';
+  revealMenuItem(blogItem);
+
+  const blogLink = document.createElement('a');
+  blogLink.href = '/blog/';
+  blogLink.textContent = 'Blog';
+
+  blogItem.appendChild(blogLink);
+  primaryMenu.appendChild(blogItem);
+};
+
 // Modal Component
 const Modal = ({ isOpen, onClose, path }) => {
   useEffect(() => {
@@ -835,6 +877,7 @@ const PageRenderer = ({ html, stripLegacyFooter = false }) => {
 
     // Now hydrate (but this will skip .has-animation elements due to our fix)
     hydrateNectarMedia(containerRef.current);
+    ensureMobileBlogMenuItem(containerRef.current);
 
     // Fix #header-space height for fixed header (single pass to avoid multiple layout shifts)
     const fixHeaderSpace = () => {
@@ -1460,6 +1503,7 @@ const PageRenderer = ({ html, stripLegacyFooter = false }) => {
           menuToggleLink.classList.add('open', 'animating');
           menuToggleLink.setAttribute('aria-expanded', 'true');
           slideOutArea.style.display = 'block';
+          ensureMobileBlogMenuItem(document.body);
           document.body.style.overflow = 'hidden';
         }
       }
@@ -1516,6 +1560,7 @@ const PageRenderer = ({ html, stripLegacyFooter = false }) => {
     setTimeout(() => {
       normalizeDomAssetUrls(document.body);
       hydrateNectarMedia(document.body);
+      ensureMobileBlogMenuItem(document.body);
 
       // Fix: Restore ALL animation elements after modal closes
       // The IntersectionObserver has already unobserved elements that were animated,
