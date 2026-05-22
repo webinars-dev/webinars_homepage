@@ -332,7 +332,7 @@ export async function unpublishPost(id) {
 /**
  * 이미지 업로드
  */
-export async function uploadImage(file, postId = 'temp') {
+export async function uploadImage(file, postId = 'temp', purpose = 'content') {
   if (!supabase) throw new Error('Supabase is not configured');
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -351,7 +351,12 @@ export async function uploadImage(file, postId = 'temp') {
 
   // 파일명 생성
   const ext = file.name.split('.').pop();
-  const fileName = `${user.id}/${postId}/${crypto.randomUUID()}.${ext}`;
+  const safePurpose = String(purpose || 'content')
+    .normalize('NFC')
+    .replace(/[^a-zA-Z0-9_-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') || 'content';
+  const fileName = `posts/${postId}/${safePurpose}-${crypto.randomUUID()}.${ext}`;
 
   const { data, error } = await supabase.storage
     .from('blog-images')

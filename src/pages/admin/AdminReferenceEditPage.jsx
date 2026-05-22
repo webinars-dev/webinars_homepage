@@ -78,7 +78,7 @@ export default function AdminReferenceEditPage() {
     setError(null);
 
     try {
-      const publicUrl = await adminReferenceService.uploadReferenceImage(file, id || 'new');
+      const publicUrl = await adminReferenceService.uploadReferenceImage(file, id || 'new', 'card');
       setFormData((prev) => ({ ...prev, image_url: publicUrl }));
     } catch (err) {
       setError(err?.message || '이미지 업로드에 실패했습니다.');
@@ -98,7 +98,7 @@ export default function AdminReferenceEditPage() {
 
   // 에디터 이미지 업로드 핸들러
   const handleEditorImageUpload = async (file) => {
-    const publicUrl = await adminReferenceService.uploadReferenceImage(file, id || 'modal');
+    const publicUrl = await adminReferenceService.uploadReferenceImage(file, id || 'modal', 'modal');
     return publicUrl;
   };
 

@@ -137,7 +137,7 @@ export default function AdminPostEditPage() {
 
   const handleImageUpload = async (file) => {
     try {
-      const url = await adminService.uploadImage(file, id || 'temp');
+      const url = await adminService.uploadImage(file, id || 'temp', 'content');
       return url;
     } catch (err) {
       alert('이미지 업로드 실패: ' + err.message);
@@ -150,7 +150,7 @@ export default function AdminPostEditPage() {
     if (!file) return;
 
     try {
-      const url = await adminService.uploadImage(file, id || 'temp');
+      const url = await adminService.uploadImage(file, id || 'temp', 'featured');
       setFormData(prev => ({ ...prev, featured_image: url }));
     } catch (err) {
       alert('이미지 업로드 실패: ' + err.message);

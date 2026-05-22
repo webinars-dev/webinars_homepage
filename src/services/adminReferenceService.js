@@ -144,7 +144,7 @@ export async function unpublishReferenceItem(id) {
 /**
  * 레퍼런스 이미지 업로드
  */
-export async function uploadReferenceImage(file, referenceId = 'temp') {
+export async function uploadReferenceImage(file, referenceId = 'temp', purpose = 'image') {
   const user = await requireUser();
 
   // 파일 확장자 검증
@@ -161,7 +161,12 @@ export async function uploadReferenceImage(file, referenceId = 'temp') {
   // 파일명 생성
   const fallbackExt = IMAGE_TYPE_TO_EXTENSION[file.type] || 'bin';
   const ext = file.name?.includes('.') ? file.name.split('.').pop() : fallbackExt;
-  const fileName = `references/${referenceId}/${crypto.randomUUID()}.${ext}`;
+  const safePurpose = String(purpose || 'image')
+    .normalize('NFC')
+    .replace(/[^a-zA-Z0-9_-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') || 'image';
+  const fileName = `references/${referenceId}/${safePurpose}-${crypto.randomUUID()}.${ext}`;
 
   const { data, error } = await supabase.storage
     .from('blog-images')
@@ -234,7 +239,7 @@ export async function replaceEmbeddedReferenceImages(html, referenceId = 'modal'
     let publicUrl = uploadedUrls.get(src);
     if (!publicUrl) {
       const file = dataUrlToFile(src, index + 1);
-      publicUrl = await uploadReferenceImage(file, referenceId);
+      publicUrl = await uploadReferenceImage(file, referenceId, 'modal');
       uploadedUrls.set(src, publicUrl);
     }
 
