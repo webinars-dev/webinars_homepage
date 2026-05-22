@@ -1438,3 +1438,14 @@ body #slide-out-widget-area.fullscreen-alt .slide_out_area_close,
 #fws_691d761b6fe53 {
   padding-bottom: 100px !important;
 }
+
+/* =====================================================
+   Header scroll 복원 보정
+   ===================================================== */
+
+body[data-hhun="1"] #header-outer.at-top {
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}

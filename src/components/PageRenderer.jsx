@@ -919,6 +919,31 @@ const PageRenderer = ({ html, stripLegacyFooter = false }) => {
       let lastScrollY = window.scrollY;
       let ticking = false;
       const headerHeight = headerOuter.offsetHeight || 96;
+      let topRestoreTimer = null;
+
+      const restoreHeaderAtTop = () => {
+        const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        if (currentScrollY > 10) return false;
+
+        headerOuter.classList.add('at-top');
+        headerOuter.classList.remove('scrolling', 'invisible', 'scrolled-down');
+        headerOuter.style.transform = '';
+        headerOuter.style.opacity = '';
+        headerOuter.style.visibility = '';
+        lastScrollY = currentScrollY;
+        return true;
+      };
+
+      const scheduleTopRestore = () => {
+        if (topRestoreTimer) {
+          window.clearTimeout(topRestoreTimer);
+        }
+
+        topRestoreTimer = window.setTimeout(() => {
+          restoreHeaderAtTop();
+          topRestoreTimer = null;
+        }, 180);
+      };
 
       const updateHeader = () => {
         const currentScrollY = window.scrollY;
@@ -927,9 +952,7 @@ const PageRenderer = ({ html, stripLegacyFooter = false }) => {
 
         // At top of page
         if (currentScrollY <= 10) {
-          headerOuter.classList.add('at-top');
-          headerOuter.classList.remove('scrolling', 'invisible');
-          headerOuter.style.transform = '';
+          restoreHeaderAtTop();
         }
         // Scrolling down - hide header
         else if (scrollingDown && currentScrollY > headerHeight) {
@@ -953,17 +976,38 @@ const PageRenderer = ({ html, stripLegacyFooter = false }) => {
           requestAnimationFrame(updateHeader);
           ticking = true;
         }
+        scheduleTopRestore();
+      };
+
+      const onScrollSettled = () => {
+        scheduleTopRestore();
       };
 
       // Store handler reference for cleanup
       window.__salientFallbackScrollHandler = onScroll;
       window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('scrollend', onScrollSettled, { passive: true });
+      window.addEventListener('touchend', onScrollSettled, { passive: true });
+      window.addEventListener('wheel', onScrollSettled, { passive: true });
+      window.__salientFallbackHeaderCleanup = () => {
+        if (topRestoreTimer) {
+          window.clearTimeout(topRestoreTimer);
+          topRestoreTimer = null;
+        }
+        window.removeEventListener('scrollend', onScrollSettled);
+        window.removeEventListener('touchend', onScrollSettled);
+        window.removeEventListener('wheel', onScrollSettled);
+      };
     };
 
     // Cleanup previous handler if exists
     if (window.__salientFallbackScrollHandler) {
       window.removeEventListener('scroll', window.__salientFallbackScrollHandler);
       window.__salientFallbackScrollHandler = null;
+    }
+    if (window.__salientFallbackHeaderCleanup) {
+      window.__salientFallbackHeaderCleanup();
+      window.__salientFallbackHeaderCleanup = null;
     }
 
     // Delay slightly to ensure DOM is ready
