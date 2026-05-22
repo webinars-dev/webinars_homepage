@@ -60,6 +60,48 @@ function writeCsv(filePath, rows, headers) {
   fs.writeFileSync(filePath, `${lines.join('\n')}\n`);
 }
 
+function parseCsvLine(line) {
+  const values = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    const next = line[i + 1];
+
+    if (char === '"' && inQuotes && next === '"') {
+      current += '"';
+      i += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      values.push(current);
+      current = '';
+      continue;
+    }
+
+    current += char;
+  }
+
+  values.push(current);
+  return values;
+}
+
+function readCsv(filePath) {
+  const lines = fs.readFileSync(filePath, 'utf8').trim().split(/\r?\n/);
+  const headers = parseCsvLine(lines.shift() || '');
+  return lines.filter(Boolean).map((line) => {
+    const values = parseCsvLine(line);
+    return Object.fromEntries(headers.map((header, index) => [header, values[index] || '']));
+  });
+}
+
 function timestampKstForPath() {
   return new Intl.DateTimeFormat('sv-SE', {
     timeZone: 'Asia/Seoul',
@@ -343,6 +385,48 @@ async function uploadOrReuse(supabase, objectPath, buffer, contentType, dryRun) 
   throw error;
 }
 
+async function listStorageObjects(supabase, prefix = '') {
+  const objects = [];
+  const pageSize = 1000;
+
+  async function walk(currentPrefix) {
+    let offset = 0;
+    while (true) {
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .list(currentPrefix, {
+          limit: pageSize,
+          offset,
+          sortBy: { column: 'name', order: 'asc' },
+        });
+
+      if (error) throw error;
+      const entries = data || [];
+      for (const entry of entries) {
+        const objectPath = currentPrefix ? `${currentPrefix}/${entry.name}` : entry.name;
+        if (entry.metadata) {
+          objects.push({
+            name: objectPath,
+            id: entry.id,
+            updated_at: entry.updated_at,
+            created_at: entry.created_at,
+            last_accessed_at: entry.last_accessed_at,
+            metadata: entry.metadata,
+          });
+        } else {
+          await walk(objectPath);
+        }
+      }
+
+      if (entries.length < pageSize) break;
+      offset += pageSize;
+    }
+  }
+
+  await walk(prefix);
+  return objects;
+}
+
 function buildRowUpdates(rows, tableName, fieldNames, urlMap) {
   const updates = [];
 
@@ -406,43 +490,68 @@ async function updateRows(supabase, rowUpdates) {
 }
 
 async function rollback(supabase, backupDir) {
-  const referencePath = path.join(backupDir, 'reference_items.before.json');
-  const postPath = path.join(backupDir, 'posts.before.json');
-  if (!fs.existsSync(referencePath) || !fs.existsSync(postPath)) {
-    throw new Error(`Rollback backup files are missing in ${backupDir}`);
+  const mappingPath = path.join(backupDir, 'url-mapping.csv');
+  if (!fs.existsSync(mappingPath)) {
+    throw new Error(`Rollback mapping file is missing: ${mappingPath}`);
   }
 
-  const referenceRows = JSON.parse(fs.readFileSync(referencePath, 'utf8'));
-  const postRows = JSON.parse(fs.readFileSync(postPath, 'utf8'));
-  let restored = 0;
+  const mappings = readCsv(mappingPath).filter((row) => row.table_name && row.row_id && row.field && row.old_url && row.new_url);
+  const grouped = new Map();
 
-  for (const row of referenceRows) {
-    const { error } = await supabase
-      .from('reference_items')
-      .update({
-        image_url: row.image_url,
-        modal_html: row.modal_html,
-      })
-      .eq('id', row.id);
-
-    if (error) throw error;
-    restored += 1;
+  for (const mapping of mappings) {
+    const key = `${mapping.table_name}:${mapping.row_id}`;
+    const current = grouped.get(key) || {
+      table_name: mapping.table_name,
+      row_id: mapping.row_id,
+      fields: new Map(),
+    };
+    const fieldMappings = current.fields.get(mapping.field) || [];
+    fieldMappings.push(mapping);
+    current.fields.set(mapping.field, fieldMappings);
+    grouped.set(key, current);
   }
 
-  for (const row of postRows) {
-    const { error } = await supabase
-      .from('posts')
-      .update({
-        featured_image: row.featured_image,
-        content: row.content,
-      })
-      .eq('id', row.id);
+  let updatedRows = 0;
+  let replacements = 0;
 
-    if (error) throw error;
-    restored += 1;
+  for (const group of grouped.values()) {
+    const fields = [...group.fields.keys()];
+    const { data: currentRow, error: selectError } = await supabase
+      .from(group.table_name)
+      .select(['id', ...fields].join(','))
+      .eq('id', group.row_id)
+      .single();
+
+    if (selectError) throw selectError;
+
+    const patch = {};
+    for (const [field, fieldMappings] of group.fields.entries()) {
+      let next = currentRow?.[field] || '';
+      const original = next;
+      for (const mapping of fieldMappings) {
+        if (next.includes(mapping.new_url)) {
+          const before = next;
+          next = next.split(mapping.new_url).join(mapping.old_url);
+          replacements += before === next ? 0 : 1;
+        }
+      }
+      if (next !== original) {
+        patch[field] = next;
+      }
+    }
+
+    if (Object.keys(patch).length > 0) {
+      const { error: updateError } = await supabase
+        .from(group.table_name)
+        .update(patch)
+        .eq('id', group.row_id);
+
+      if (updateError) throw updateError;
+      updatedRows += 1;
+    }
   }
 
-  return restored;
+  return { updatedRows, replacements };
 }
 
 async function main() {
@@ -460,8 +569,8 @@ async function main() {
 
   const rollbackDir = args.get('rollback');
   if (rollbackDir) {
-    const restored = await rollback(supabase, path.resolve(String(rollbackDir)));
-    console.log(JSON.stringify({ mode: 'rollback', restored_rows: restored }, null, 2));
+    const result = await rollback(supabase, path.resolve(String(rollbackDir)));
+    console.log(JSON.stringify({ mode: 'rollback', ...result }, null, 2));
     return;
   }
 
@@ -476,6 +585,7 @@ async function main() {
   const runDir = path.join(outDir, `${apply ? 'phase2-apply' : 'phase2-dry-run'}-${timestampKstForPath()}`);
   fs.mkdirSync(runDir, { recursive: true });
 
+  const storageObjectsBefore = apply ? await listStorageObjects(supabase) : [];
   const { referenceRows, postRows } = await fetchRows(supabase);
   const candidates = collectCandidates(referenceRows, postRows, Number.isFinite(limit) && limit > 0 ? limit : null);
   const uploadByUrl = new Map();
@@ -544,7 +654,7 @@ async function main() {
     ...buildRowUpdates(postRows, 'posts', ['featured_image', 'content'], urlMap),
   ];
 
-  await writeBackups(runDir, referenceRows, postRows, mappingRows, rowUpdates);
+  await writeBackups(runDir, referenceRows, postRows, mappingRows, rowUpdates, storageObjectsBefore);
 
   if (apply) {
     await updateRows(supabase, rowUpdates);
