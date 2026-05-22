@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "crawl": "node crawler-improved.js",
     "audit:image-storage:phase2": "node scripts/audit-image-storage-phase2.mjs",
+    "migrate:image-storage:phase2": "node scripts/migrate-image-storage-phase2.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
