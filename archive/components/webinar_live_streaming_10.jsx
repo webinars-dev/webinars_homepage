@@ -19,7 +19,7 @@ const WebinarLiveStreaming10Page = () => {
                     <img
                         decoding="async"
                         className="alignnone size-full wp-image-2150"
-                        src="/wp-content/uploads/2022/11/img10_1.png"
+                        src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/wp-content/uploads/2022/11/img10_1-c7e62599d3c5.png"
                         alt=""
                         width="920"
                         height="613"

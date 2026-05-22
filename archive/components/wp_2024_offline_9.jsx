@@ -40,7 +40,7 @@ const Wp2024Offline9Page = () => {
 		<div class="row">
 			<div class="col span_3">
 								<a id="logo" href="https://webinars.co.kr" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false">
-					<img class="stnd skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 2x" /><img class="starting-logo skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png 2x" /><img class="starting-logo dark-version skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 2x" />				</a>
+					<img class="stnd skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png" srcset="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 1x, https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 2x" /><img class="starting-logo skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo-09a62f6e1ff7.png" srcset="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo-09a62f6e1ff7.png 1x, https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo-09a62f6e1ff7.png 2x" /><img class="starting-logo dark-version skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png" srcset="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 1x, https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 2x" />				</a>
 							</div>
 
 			<div class="col span_9 col_last">
@@ -121,7 +121,7 @@ const Wp2024Offline9Page = () => {
 • 강연집 제작<br />
 • LED 무대 조성<br />
 • 프리뷰룸 운영</h5>
-<div class="mt30"><img fetchpriority="high" decoding="async" class="alignnone size-full wp-image-2150" src="http://webinars.co.kr/wp-content/uploads/2024/02/img9_1_2024.png" alt="" width="920" height="516" /></div>
+<div class="mt30"><img fetchpriority="high" decoding="async" class="alignnone size-full wp-image-2150" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/wp-content/uploads/2024/02/img9_1_2024-ac4f48e16143.png" alt="" width="920" height="516" /></div>
 </div></div>        
       </div>
       

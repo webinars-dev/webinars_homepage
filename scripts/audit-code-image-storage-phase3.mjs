@@ -114,7 +114,7 @@ function storagePathFor(ref) {
   const pathname = decodePathname(publicPathname(ref.url)).normalize('NFC');
   const ext = extensionFromUrl(ref.url);
   const parsed = path.parse(pathname);
-  const baseName = parsed.name.replace(/[^a-zA-Z0-9가-힣._-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'image';
+  const baseName = parsed.name.replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'image';
   const prefix = parsed.dir.replace(/^\/+/, '').replace(/[^a-zA-Z0-9/_-]+/g, '-').replace(/\/+/g, '/');
   return `site-assets/${prefix}/${baseName}-${ref.source_hash.slice(0, 12)}.${ext}`.normalize('NFC');
 }

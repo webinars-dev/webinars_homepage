@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { assertNoLegacyImageReferences } from '../lib/imageStorageValidation';
 
 const isMissingTableError = (error) => {
   if (!error) return false;
@@ -95,6 +96,13 @@ export async function getReferenceItemById(id) {
 
 export async function createReferenceItem(fields) {
   await requireUser();
+  assertNoLegacyImageReferences(
+    {
+      image_url: fields?.image_url,
+      modal_html: fields?.modal_html,
+    },
+    '레퍼런스'
+  );
 
   const { data, error } = await supabase
     .from('reference_items')
@@ -108,6 +116,13 @@ export async function createReferenceItem(fields) {
 
 export async function updateReferenceItem(id, fields) {
   await requireUser();
+  assertNoLegacyImageReferences(
+    {
+      image_url: fields?.image_url,
+      modal_html: fields?.modal_html,
+    },
+    '레퍼런스'
+  );
 
   const { data, error } = await supabase
     .from('reference_items')

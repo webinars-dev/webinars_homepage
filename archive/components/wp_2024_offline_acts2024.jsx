@@ -40,7 +40,7 @@ const Wp2024OfflineActs2024Page = () => {
 		<div class="row">
 			<div class="col span_3">
 								<a id="logo" href="https://webinars.co.kr" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false" data-supplied-ml="false">
-					<img class="stnd skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 2x" /><img class="starting-logo skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo.png 2x" /><img class="starting-logo dark-version skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png" srcset="https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 1x, https://webinars.co.kr/wp-content/uploads/2022/11/img_logo2.png 2x" />				</a>
+					<img class="stnd skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png" srcset="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 1x, https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 2x" /><img class="starting-logo skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo-09a62f6e1ff7.png" srcset="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo-09a62f6e1ff7.png 1x, https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo-09a62f6e1ff7.png 2x" /><img class="starting-logo dark-version skip-lazy default-logo" width="380" height="64" alt="WEBINARS - 통합 프로모션의 새로운 표준" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png" srcset="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 1x, https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/common/branding/img_logo2-ac94199e16b4.png 2x" />				</a>
 							</div>
 
 			<div class="col span_9 col_last">
@@ -119,10 +119,10 @@ const Wp2024OfflineActs2024Page = () => {
 • 국내외 온·오프라인 참가자 초청 및 관리<br />
 • 사전녹화 진행 및 영상 편집<br />
 • 웹플라이어 제작 및 유관기관 홍보</h5>
-<p><img fetchpriority="high" decoding="async" src="http://webinars.co.kr/wp-content/uploads/2024/12/사진-1-1-e1733724341198.jpg" alt="" width="1920" height="1280" /><br />
-<img decoding="async" src="http://webinars.co.kr/wp-content/uploads/2024/12/사진-2-6.jpg" alt="" width="1920" height="1081" /><br />
-<img decoding="async" src="http://webinars.co.kr/wp-content/uploads/2024/12/사진-3-4.jpg" alt="" width="1920" height="1276" /><br />
-<img decoding="async" src="http://webinars.co.kr/wp-content/uploads/2024/12/사진-5-4.jpg" alt="" width="1920" height="1156" /><br />
+<p><img fetchpriority="high" decoding="async" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/wp-content/uploads/2024/12/1-1-e1733724341198-91f1c49d6781.jpg" alt="" width="1920" height="1280" /><br />
+<img decoding="async" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/wp-content/uploads/2024/12/2-6-737ca85b1c10.jpg" alt="" width="1920" height="1081" /><br />
+<img decoding="async" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/wp-content/uploads/2024/12/3-4-0eb584187faf.jpg" alt="" width="1920" height="1276" /><br />
+<img decoding="async" src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/wp-content/uploads/2024/12/5-4-67a942f0067b.jpg" alt="" width="1920" height="1156" /><br />
 </p>
 </div></div>        
       </div>

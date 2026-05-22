@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { assertNoLegacyImageReferences } from '../lib/imageStorageValidation';
 
 const requireAccessToken = async () => {
   if (!supabase) throw new Error('Supabase is not configured');
@@ -150,6 +151,13 @@ export async function createPost(postData) {
   }
 
   const { tag_ids, ...postFields } = postData;
+  assertNoLegacyImageReferences(
+    {
+      featured_image: postFields.featured_image,
+      content: postFields.content,
+    },
+    '블로그'
+  );
 
   // 빈 문자열을 null로 변환 (timestamp 필드)
   if (postFields.scheduled_at === '') {
@@ -207,6 +215,13 @@ export async function updatePost(id, postData) {
   if (!user) throw new Error('Not authenticated');
 
   const { tag_ids, ...postFields } = postData;
+  assertNoLegacyImageReferences(
+    {
+      featured_image: postFields.featured_image,
+      content: postFields.content,
+    },
+    '블로그'
+  );
 
   // 빈 문자열을 null로 변환 (timestamp 필드)
   if (postFields.scheduled_at === '') {

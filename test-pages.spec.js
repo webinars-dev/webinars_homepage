@@ -189,7 +189,7 @@ test.describe('WEBINARS 디자인 검증', () => {
     expect(rawBg).toMatch(/url\(/);
     expect(bgUrl, `rawBg=${rawBg}`).toBeTruthy();
 
-    expect(bgUrl).toMatch(/\/wp-content\/uploads\//);
+    expect(bgUrl).toMatch(/(\/wp-content\/uploads\/|\/storage\/v1\/object\/public\/blog-images\/)/);
 
     const response = await page.request.get(absoluteUrl);
     expect(response.ok()).toBeTruthy();

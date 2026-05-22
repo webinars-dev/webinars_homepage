@@ -22,7 +22,7 @@ const Webinar2024Offline7Page = () => {
                     <img
                         decoding="async"
                         className="alignnone size-full wp-image-2150"
-                        src="/wp-content/uploads/2024/02/img7_1_2024.png"
+                        src="https://eskwngynvszukwrvhkrw.supabase.co/storage/v1/object/public/blog-images/site-assets/wp-content/uploads/2024/02/img7_1_2024-8a1ce340f4ab.png"
                         alt="헌법재판연구원 제12회 국제학술심포지엄"
                         width="920"
                         height="575"
