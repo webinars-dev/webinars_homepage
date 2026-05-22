@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import PublicPageLayout from '../PublicPageLayout';
 
@@ -75,10 +75,31 @@ const isCurrentMenuItem = (pathname, menuPath) => {
 
 export default function BlogLayout({ children }) {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const body = document.body;
@@ -269,12 +290,51 @@ export default function BlogLayout({ children }) {
 
                   <ul className="buttons sf-menu" data-user-set-ocm="off" />
                 </nav>
+
+                <button
+                  type="button"
+                  className={`blog-mobile-menu-toggle${isMobileMenuOpen ? ' is-open' : ''}`}
+                  aria-label={isMobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
+                  aria-controls="blog-mobile-menu"
+                  aria-expanded={isMobileMenuOpen}
+                  onClick={() => setIsMobileMenuOpen((open) => !open)}
+                >
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
               </div>
             </div>
           </div>
         </header>
 
         <div className="bg-color-stripe"></div>
+      </div>
+
+      <div
+        id="blog-mobile-menu"
+        className={`blog-mobile-menu${isMobileMenuOpen ? ' is-open' : ''}`}
+        hidden={!isMobileMenuOpen}
+      >
+        <nav aria-label="모바일 주요 메뉴">
+          <ul>
+            {MENU_ITEMS.map((item) => {
+              const isCurrent = isCurrentMenuItem(location.pathname, item.to);
+
+              return (
+                <li key={`mobile-${item.id}`}>
+                  <Link
+                    to={item.to}
+                    aria-current={isCurrent ? 'page' : undefined}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
       </div>
 
       <PublicPageLayout>
@@ -317,12 +377,38 @@ export default function BlogLayout({ children }) {
           display: none;
         }
 
+        .blog-page .blog-mobile-menu-toggle,
+        .blog-page .blog-mobile-menu {
+          display: none;
+        }
+
         .blog-page .footer-col a:hover {
           color: #fff !important;
         }
 
         @media (max-width: 999px) {
+          .blog-page #header-outer .container,
+          .blog-page #header-outer .container .row {
+            width: 100%;
+          }
+
+          .blog-page #header-outer .container .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+
+          .blog-page #header-outer .col.span_3 {
+            width: auto;
+          }
+
+          .blog-page #header-outer .col.span_9.col_last {
+            width: auto;
+            margin-left: auto;
+          }
+
           .blog-page #header-outer nav {
+            display: none !important;
             justify-content: flex-start;
           }
 
@@ -330,6 +416,87 @@ export default function BlogLayout({ children }) {
             flex-wrap: wrap;
           }
 
+          .blog-page .blog-mobile-menu-toggle {
+            display: inline-flex;
+            position: relative;
+            z-index: 10005;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            cursor: pointer;
+          }
+
+          .blog-page .blog-mobile-menu-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #071c34;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+          }
+
+          .blog-page .blog-mobile-menu-toggle.is-open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+          }
+
+          .blog-page .blog-mobile-menu-toggle.is-open span:nth-child(2) {
+            opacity: 0;
+          }
+
+          .blog-page .blog-mobile-menu-toggle.is-open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+          }
+
+          .blog-page .blog-mobile-menu {
+            display: block;
+            position: fixed;
+            top: 65px;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            background: #fff;
+            border-top: 1px solid rgba(7, 28, 52, 0.08);
+            box-shadow: 0 18px 42px rgba(7, 28, 52, 0.14);
+          }
+
+          .blog-page .blog-mobile-menu[hidden] {
+            display: none;
+          }
+
+          .blog-page .blog-mobile-menu nav {
+            display: block !important;
+          }
+
+          .blog-page .blog-mobile-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px 28px 18px;
+          }
+
+          .blog-page .blog-mobile-menu li {
+            border-bottom: 1px solid rgba(7, 28, 52, 0.08);
+          }
+
+          .blog-page .blog-mobile-menu li:last-child {
+            border-bottom: 0;
+          }
+
+          .blog-page .blog-mobile-menu a {
+            display: block;
+            padding: 17px 0;
+            color: #071c34;
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+          }
         }
       `}</style>
     </div>

@@ -130,4 +130,31 @@ test.describe('블로그 GNB', () => {
         transform: 'translateY(0px)',
       });
   });
+
+  test('태블릿 폭에서는 모바일 메뉴 버튼으로 GNB를 열 수 있다', async ({ page }) => {
+    await page.setViewportSize({ width: 840, height: 964 });
+    await page.goto(BLOG_PAGE_URL, { waitUntil: 'domcontentloaded' });
+
+    const toggle = page.locator('.blog-mobile-menu-toggle');
+    const mobileMenu = page.locator('#blog-mobile-menu');
+
+    await expect(toggle).toBeVisible();
+    await expect(page.locator('#header-outer nav[aria-label="주요 메뉴"]')).toBeHidden();
+    await expect(mobileMenu).toBeHidden();
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(mobileMenu).toBeVisible();
+    await expect(mobileMenu.locator('a')).toHaveText([
+      'about',
+      'services',
+      'reference',
+      'Contact',
+      'Blog',
+    ]);
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(mobileMenu).toBeHidden();
+  });
 });
