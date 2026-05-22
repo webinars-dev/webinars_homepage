@@ -13,6 +13,7 @@
     "crawl": "node crawler-improved.js",
     "audit:image-storage:phase2": "node scripts/audit-image-storage-phase2.mjs",
     "audit:image-storage:phase3": "node scripts/audit-code-image-storage-phase3.mjs",
+    "audit:image-storage:phase4": "node scripts/audit-public-wp-unused-phase4.mjs",
     "migrate:image-storage:phase2": "node scripts/migrate-image-storage-phase2.mjs",
     "migrate:image-storage:phase3": "node scripts/migrate-code-image-storage-phase3.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
