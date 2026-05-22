@@ -90,4 +90,44 @@ test.describe('블로그 GNB', () => {
     expect(underline.hovered).toBe(true);
     expect(underline.borderTopColor).toBe('rgb(0, 0, 0)');
   });
+
+  test('아래로 스크롤하면 GNB가 숨겨지고 위로 스크롤하면 다시 보인다', async ({ page }) => {
+    await page.goto(BLOG_PAGE_URL, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#header-outer', { timeout: 15_000 });
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(100);
+
+    await page.evaluate(() => window.scrollTo(0, 700));
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const header = document.querySelector('#header-outer');
+          return {
+            className: header?.className || '',
+            transform: header?.style.transform || '',
+          };
+        })
+      )
+      .toMatchObject({
+        className: expect.stringContaining('invisible'),
+        transform: expect.stringContaining('translateY(-'),
+      });
+
+    await page.evaluate(() => window.scrollTo(0, 200));
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const header = document.querySelector('#header-outer');
+          return {
+            className: header?.className || '',
+            transform: header?.style.transform || '',
+          };
+        })
+      )
+      .toMatchObject({
+        className: expect.not.stringContaining('invisible'),
+        transform: 'translateY(0px)',
+      });
+  });
 });
