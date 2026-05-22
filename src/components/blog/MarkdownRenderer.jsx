@@ -19,8 +19,10 @@ const customSchema = {
   tagNames: [...(defaultSchema.tagNames || []), 'iframe'],
   attributes: {
     ...defaultSchema.attributes,
-    img: ['src', 'alt', 'title', 'width', 'height', 'loading'],
-    p: [...(defaultSchema.attributes?.p || []), 'align'],
+    div: [...(defaultSchema.attributes?.div || []), 'style', 'dataMarkdownStyle'],
+    img: ['src', 'alt', 'title', 'width', 'height', 'loading', 'style', 'dataMarkdownStyle'],
+    p: [...(defaultSchema.attributes?.p || []), 'align', 'style', 'dataMarkdownStyle'],
+    span: [...(defaultSchema.attributes?.span || []), 'style', 'dataMarkdownStyle'],
     a: ['href', 'title', 'target', 'rel'],
     code: ['className'],
     iframe: [
@@ -39,6 +41,107 @@ const customSchema = {
   },
 };
 
+const SAFE_INLINE_STYLE_PROPERTIES = new Set([
+  'align-items',
+  'display',
+  'flex-wrap',
+  'gap',
+  'height',
+  'justify-content',
+  'margin',
+  'margin-bottom',
+  'margin-left',
+  'margin-right',
+  'margin-top',
+  'max-width',
+  'min-width',
+  'text-align',
+  'width',
+]);
+
+const toReactStyleName = (property) =>
+  property.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+
+const toCssStyleName = (property) =>
+  property.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`);
+
+const appendSafeInlineStyle = (safeStyle, property, value) => {
+  const cssProperty = toCssStyleName(property).toLowerCase();
+
+  if (!SAFE_INLINE_STYLE_PROPERTIES.has(cssProperty)) return safeStyle;
+  if (typeof value !== 'string' && typeof value !== 'number') return safeStyle;
+  if (typeof value === 'string' && /expression\s*\(|javascript\s*:|url\s*\(/i.test(value)) {
+    return safeStyle;
+  }
+
+  safeStyle[toReactStyleName(cssProperty)] = value;
+  return safeStyle;
+};
+
+const toSafeInlineStyle = (style) => {
+  if (!style) return undefined;
+
+  if (typeof style === 'object') {
+    return Object.entries(style).reduce(
+      (safeStyle, [property, value]) =>
+        appendSafeInlineStyle(safeStyle, property, value),
+      {}
+    );
+  }
+
+  if (typeof style !== 'string') return undefined;
+
+  return style
+    .split(';')
+    .map((declaration) => declaration.trim())
+    .filter(Boolean)
+    .reduce((safeStyle, declaration) => {
+      const separatorIndex = declaration.indexOf(':');
+      if (separatorIndex === -1) return safeStyle;
+
+      const property = declaration.slice(0, separatorIndex).trim().toLowerCase();
+      const value = declaration.slice(separatorIndex + 1).trim();
+
+      return appendSafeInlineStyle(safeStyle, property, value);
+    }, {});
+};
+
+const toSafeInlineStyleAttribute = (style) => {
+  const safeStyle = toSafeInlineStyle(style);
+  if (!safeStyle || Object.keys(safeStyle).length === 0) return '';
+
+  return Object.entries(safeStyle)
+    .map(([property, value]) => `${toCssStyleName(property)}:${value}`)
+    .join(';');
+};
+
+const withSafeInlineStyle = (props) => {
+  const { style, dataMarkdownStyle, ...restProps } = props;
+  const { ['data-markdown-style']: dataMarkdownStyleAttr, ...rest } = restProps;
+  const safeStyle = toSafeInlineStyle(style || dataMarkdownStyle || dataMarkdownStyleAttr);
+
+  if (!safeStyle || Object.keys(safeStyle).length === 0) return rest;
+  return { ...rest, style: safeStyle };
+};
+
+const preserveSafeInlineStyles = () => (tree) => {
+  const visit = (node) => {
+    if (node?.type === 'element' && node.properties?.style) {
+      const safeStyle = toSafeInlineStyleAttribute(node.properties.style);
+
+      if (safeStyle) {
+        node.properties.dataMarkdownStyle = safeStyle;
+      }
+    }
+
+    if (Array.isArray(node?.children)) {
+      node.children.forEach(visit);
+    }
+  };
+
+  visit(tree);
+};
+
 // iframe src 검증 컴포넌트
 const validateIframeSrc = (src) => {
   if (!src) return false;
@@ -52,6 +155,18 @@ const validateIframeSrc = (src) => {
 
 // 커스텀 컴포넌트
 const components = {
+  div: ({ node, children, ...props }) => (
+    <div {...withSafeInlineStyle(props)}>{children}</div>
+  ),
+
+  p: ({ node, children, ...props }) => (
+    <p {...withSafeInlineStyle(props)}>{children}</p>
+  ),
+
+  span: ({ node, children, ...props }) => (
+    <span {...withSafeInlineStyle(props)}>{children}</span>
+  ),
+
   // iframe 검증
   iframe: ({ node, ...props }) => {
     if (!validateIframeSrc(props.src)) {
@@ -69,9 +184,12 @@ const components = {
   },
 
   // 이미지에 lazy loading 추가
-  img: ({ node, ...props }) => (
-    <img {...props} loading="lazy" className="markdown-image" />
-  ),
+  img: ({ node, className, ...props }) => {
+    const safeProps = withSafeInlineStyle(props);
+    const imageClassName = ['markdown-image', className].filter(Boolean).join(' ');
+
+    return <img {...safeProps} loading="lazy" className={imageClassName} />;
+  },
 
   // 외부 링크에 target="_blank" 추가
   a: ({ node, children, ...props }) => {
@@ -128,6 +246,7 @@ export default function MarkdownRenderer({ content }) {
       <ReactMarkdown
         rehypePlugins={[
           rehypeRaw,
+          preserveSafeInlineStyles,
           [rehypeSanitize, customSchema],
           rehypeSlug,
           rehypeHighlight,
