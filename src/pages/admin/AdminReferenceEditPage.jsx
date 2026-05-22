@@ -117,18 +117,37 @@ export default function AdminReferenceEditPage() {
     setError(null);
 
     try {
+      const modalImageResult = await adminReferenceService.replaceEmbeddedReferenceImages(
+        formData.modal_html,
+        id || 'new'
+      );
       const payload = {
         ...formData,
+        modal_html: modalImageResult.html,
         order: Number(formData.order) || 0,
       };
 
       if (isNew) {
         const created = await adminReferenceService.createReferenceItem(payload);
-        alert('생성되었습니다.');
+        if (modalImageResult.convertedCount > 0) {
+          setFormData((prev) => ({ ...prev, modal_html: modalImageResult.html }));
+        }
+        alert(
+          modalImageResult.convertedCount > 0
+            ? `생성되었습니다. base64 이미지 ${modalImageResult.convertedCount}개를 Storage URL로 변환했습니다.`
+            : '생성되었습니다.'
+        );
         navigate(`/admin/reference/edit/${created.id}`, { replace: true });
       } else {
         await adminReferenceService.updateReferenceItem(id, payload);
-        alert('저장되었습니다.');
+        if (modalImageResult.convertedCount > 0) {
+          setFormData((prev) => ({ ...prev, modal_html: modalImageResult.html }));
+        }
+        alert(
+          modalImageResult.convertedCount > 0
+            ? `저장되었습니다. base64 이미지 ${modalImageResult.convertedCount}개를 Storage URL로 변환했습니다.`
+            : '저장되었습니다.'
+        );
         navigate('/admin/reference');
       }
     } catch (err) {
