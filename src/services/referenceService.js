@@ -80,3 +80,51 @@ export async function getPublishedReferenceItems(options = {}) {
     if (timeoutId) globalThis.clearTimeout(timeoutId);
   }
 }
+
+/**
+ * 공개용 레퍼런스 모달 HTML (카드 클릭 시 단건 지연 로드)
+ */
+export async function getReferenceModalHtmlById(id, options = {}) {
+  if (!supabase || !id) return '';
+
+  const timeoutMs = options.timeoutMs ?? DEFAULT_REFERENCE_ITEMS_TIMEOUT_MS;
+  const controller = typeof AbortController === 'function' ? new AbortController() : null;
+  const timeoutId =
+    controller && Number.isFinite(timeoutMs) && timeoutMs > 0
+      ? globalThis.setTimeout(() => controller.abort(), timeoutMs)
+      : null;
+
+  try {
+    let query = supabase
+      .from('reference_items')
+      .select('modal_html')
+      .eq('id', id)
+      .eq('is_published', true)
+      .is('deleted_at', null)
+      .limit(1);
+
+    if (controller && typeof query.abortSignal === 'function') {
+      query = query.abortSignal(controller.signal);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      if (isMissingTableError(error)) return '';
+      if (isUnavailableError(error)) {
+        throw new Error('모달 콘텐츠를 불러오지 못했습니다.');
+      }
+      console.error('Error fetching reference modal html:', error);
+      throw error;
+    }
+
+    return data?.[0]?.modal_html || '';
+  } catch (error) {
+    if (isUnavailableError(error)) {
+      throw new Error('모달 콘텐츠를 불러오지 못했습니다.');
+    }
+    throw error;
+  } finally {
+    if (timeoutId) globalThis.clearTimeout(timeoutId);
+  }
+}

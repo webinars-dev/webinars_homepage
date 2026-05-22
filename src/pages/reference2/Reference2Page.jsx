@@ -5,7 +5,7 @@ import PageRenderer from '../../components/PageRenderer';
 import ModalContent from '../../components/ModalContent';
 import PublicPageLayout from '../../components/PublicPageLayout';
 import pageHtml from '../../../archive/pages/reference.html?raw';
-import { getPublishedReferenceItems } from '../../services/referenceService';
+import { getPublishedReferenceItems, getReferenceModalHtmlById } from '../../services/referenceService';
 import './reference2.css';
 
 const WEBINARS_HOST_REGEX = /(^|\.)webinars\.co\.kr$/i;
@@ -206,7 +206,8 @@ function Reference2Grid({ items, loading, error, onOpenModal }) {
       const spanClassName = `reference2-card--${sizeClass}`;
       const hasModalHtml = !!item.modal_html?.trim();
       const hasModalPath = !!item.modal_path;
-      const hasModal = hasModalHtml || hasModalPath;
+      const hasModalId = !!item.id;
+      const hasModal = hasModalHtml || hasModalPath || hasModalId;
 
       // 모든 모달 가능 카드는 React 모달 사용 (WordPress 모달 회피)
       const cardClassName = [
@@ -229,11 +230,13 @@ function Reference2Grid({ items, loading, error, onOpenModal }) {
 
         // modal_html이 있으면 HTML 사용, modal_path가 있으면 ModalContent로 표시
         if (hasModalHtml) {
-          onOpenModal?.({ html: item.modal_html, path: null });
+          onOpenModal?.({ html: item.modal_html, path: null, id: null });
         } else if (hasModalPath) {
-          onOpenModal?.({ html: null, path: item.modal_path });
+          onOpenModal?.({ html: null, path: item.modal_path, id: null });
+        } else if (hasModalId) {
+          onOpenModal?.({ html: null, path: null, id: item.id });
         } else {
-          onOpenModal?.({ html: DEFAULT_MODAL_HTML, path: null });
+          onOpenModal?.({ html: DEFAULT_MODAL_HTML, path: null, id: null });
         }
       };
 
@@ -324,8 +327,11 @@ const encodeKoreanUrlsInHtml = (html) => {
   );
 };
 
-function HtmlModal({ html, path, onClose }) {
-  const isOpen = !!(html || path);
+function HtmlModal({ html, path, id, onClose }) {
+  const [loadedHtml, setLoadedHtml] = useState('');
+  const [modalLoading, setModalLoading] = useState(false);
+  const [modalError, setModalError] = useState(null);
+  const isOpen = !!(html || path || id);
 
   useEffect(() => {
     if (!isOpen) return () => {};
@@ -353,7 +359,45 @@ function HtmlModal({ html, path, onClose }) {
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!id || html || path) {
+      setLoadedHtml('');
+      setModalError(null);
+      setModalLoading(false);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const loadModalHtml = async () => {
+      setLoadedHtml('');
+      setModalError(null);
+      setModalLoading(true);
+
+      try {
+        const nextHtml = await getReferenceModalHtmlById(id);
+        if (cancelled) return;
+        setLoadedHtml(nextHtml || DEFAULT_MODAL_HTML);
+      } catch (err) {
+        if (cancelled) return;
+        setModalError(err?.message || '모달 콘텐츠를 불러오지 못했습니다.');
+      } finally {
+        if (!cancelled) setModalLoading(false);
+      }
+    };
+
+    loadModalHtml();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [html, id, path]);
+
   if (!isOpen) return null;
+
+  const modalHtml = html || loadedHtml;
 
   return ReactDOM.createPortal(
     <div className="reference2-modal-overlay" onClick={onClose}>
@@ -364,8 +408,12 @@ function HtmlModal({ html, path, onClose }) {
         <div className="reference2-modal-body">
           {path ? (
             <ModalContent path={path} />
+          ) : modalLoading ? (
+            <div className="reference2-state">로딩 중...</div>
+          ) : modalError ? (
+            <div className="reference2-state reference2-state--error">{modalError}</div>
           ) : (
-            <div dangerouslySetInnerHTML={{ __html: encodeKoreanUrlsInHtml(html) }} />
+            <div dangerouslySetInnerHTML={{ __html: encodeKoreanUrlsInHtml(modalHtml || DEFAULT_MODAL_HTML) }} />
           )}
         </div>
       </div>
@@ -379,10 +427,10 @@ export default function Reference2Page() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modalData, setModalData] = useState({ html: null, path: null });
+  const [modalData, setModalData] = useState({ html: null, path: null, id: null });
 
-  const handleOpenModal = ({ html, path }) => setModalData({ html, path });
-  const handleCloseModal = () => setModalData({ html: null, path: null });
+  const handleOpenModal = ({ html, path, id }) => setModalData({ html, path, id });
+  const handleCloseModal = () => setModalData({ html: null, path: null, id: null });
 
   useLayoutEffect(() => {
     const container = document.querySelector('#modal-ready');
@@ -443,7 +491,7 @@ export default function Reference2Page() {
             mountNode
           )}
       </PublicPageLayout>
-      <HtmlModal html={modalData.html} path={modalData.path} onClose={handleCloseModal} />
+      <HtmlModal html={modalData.html} path={modalData.path} id={modalData.id} onClose={handleCloseModal} />
     </>
   );
 }
