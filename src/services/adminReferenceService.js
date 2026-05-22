@@ -6,6 +6,35 @@ const isMissingTableError = (error) => {
   return typeof error.message === 'string' && error.message.includes('reference_items');
 };
 
+const ADMIN_REFERENCE_LIST_COLUMNS = [
+  'id',
+  'category',
+  'title',
+  'client',
+  'image_url',
+  'modal_path',
+  'col_span',
+  'order',
+  'is_published',
+  'created_at',
+  'updated_at',
+].join(', ');
+
+const ADMIN_REFERENCE_LIST_COLUMNS_WITH_MODAL_HTML = [
+  'id',
+  'category',
+  'title',
+  'client',
+  'image_url',
+  'modal_path',
+  'modal_html',
+  'col_span',
+  'order',
+  'is_published',
+  'created_at',
+  'updated_at',
+].join(', ');
+
 const requireUser = async () => {
   if (!supabase) throw new Error('Supabase is not configured');
   const { data: { user }, error } = await supabase.auth.getUser();
@@ -14,12 +43,15 @@ const requireUser = async () => {
   return user;
 };
 
-export async function getAdminReferenceItems() {
+export async function getAdminReferenceItems(options = {}) {
   if (!supabase) return [];
+  const columns = options.includeModalHtml
+    ? ADMIN_REFERENCE_LIST_COLUMNS_WITH_MODAL_HTML
+    : ADMIN_REFERENCE_LIST_COLUMNS;
 
   const { data, error } = await supabase
     .from('reference_items')
-    .select('id, category, title, client, image_url, modal_path, modal_html, col_span, order, is_published, created_at, updated_at')
+    .select(columns)
     .is('deleted_at', null)
     .order('order', { ascending: true })
     .order('updated_at', { ascending: false });
@@ -58,7 +90,7 @@ export async function createReferenceItem(fields) {
   const { data, error } = await supabase
     .from('reference_items')
     .insert(fields)
-    .select()
+    .select('id')
     .single();
 
   if (error) throw error;
@@ -72,7 +104,7 @@ export async function updateReferenceItem(id, fields) {
     .from('reference_items')
     .update(fields)
     .eq('id', id)
-    .select()
+    .select('id')
     .single();
 
   if (error) throw error;

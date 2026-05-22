@@ -150,7 +150,8 @@ export default function AdminReferenceListPage() {
     setReorderError(null);
 
     try {
-      const sorted = [...items].sort((a, b) => {
+      const reorderItems = await adminReferenceService.getAdminReferenceItems({ includeModalHtml: true });
+      const sorted = [...reorderItems].sort((a, b) => {
         const aTime = getEventDate(a)?.getTime() ?? 0;
         const bTime = getEventDate(b)?.getTime() ?? 0;
         return bTime - aTime;
