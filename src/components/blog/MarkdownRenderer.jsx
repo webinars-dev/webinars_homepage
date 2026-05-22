@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 
@@ -19,6 +20,7 @@ const customSchema = {
   attributes: {
     ...defaultSchema.attributes,
     img: ['src', 'alt', 'title', 'width', 'height', 'loading'],
+    p: [...(defaultSchema.attributes?.p || []), 'align'],
     a: ['href', 'title', 'target', 'rel'],
     code: ['className'],
     iframe: [
@@ -125,9 +127,10 @@ export default function MarkdownRenderer({ content }) {
     <div className="markdown-content">
       <ReactMarkdown
         rehypePlugins={[
+          rehypeRaw,
+          [rehypeSanitize, customSchema],
           rehypeSlug,
           rehypeHighlight,
-          [rehypeSanitize, customSchema],
         ]}
         components={components}
       >
@@ -185,10 +188,11 @@ export default function MarkdownRenderer({ content }) {
         }
 
         .markdown-image {
+          display: block;
           max-width: 100%;
           height: auto;
           border-radius: 8px;
-          margin: 24px 0;
+          margin: 24px auto;
         }
 
         .markdown-iframe-container {
