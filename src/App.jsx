@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 
 import IndexPage from '../archive/components/index.jsx';
@@ -202,12 +202,24 @@ function LegacyModalRouteShell() {
   );
 }
 
+function RouteScrollReset() {
+  const { pathname, search, hash } = useLocation();
+
+  useLayoutEffect(() => {
+    if (hash || typeof window === 'undefined') return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname, search, hash]);
+
+  return null;
+}
+
 // 메인 App 컴포넌트
 function App() {
   return (
     <AuthProvider>
       <Router>
         <LocalLinkAdapter />
+        <RouteScrollReset />
         <ErrorBoundary>
           <Routes>
           <Route path="/" element={<IndexPage />} />

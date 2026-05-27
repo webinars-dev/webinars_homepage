@@ -37,7 +37,7 @@ export default function SharedFooter({ theme = DEFAULT_FOOTER_THEME }) {
             <h5 className="shared-footer__info-text">
               대표 박재오
               <br />
-              07208 서울특별시 영등포구 선유로49길 23, 209호
+              07255 서울특별시 영등포구 선유로 130, 1509호
             </h5>
             <h5 className="shared-footer__info-text">
               전화 02 6342 6834, 팩스 02 6342 6849, 이메일{' '}
